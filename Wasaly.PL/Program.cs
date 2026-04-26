@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Wasaly.PL.Data;
+using Wasaly.DAL.Data.Context;
 
 namespace Wasaly.PL
 {

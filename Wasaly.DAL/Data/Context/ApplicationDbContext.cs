@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Wasaly.PL.Data
+namespace Wasaly.DAL.Data.Context
 {
     public class ApplicationDbContext : IdentityDbContext
     {
