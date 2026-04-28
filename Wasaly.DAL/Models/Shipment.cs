@@ -40,8 +40,11 @@ namespace Wasaly.DAL.Models
         public int DropLocationId { get; set; }
         public Location DropLocation { get; set; }
 
-        public int? ShipmentTrackingId { get; set; }
-        public ShipmentTracking ShipmentTracking { get; set; }
+        //public int? ShipmentTrackingId { get; set; }
+        //public ShipmentTracking ShipmentTracking { get; set; }
+
+        //public int? ShipmentTrackingId { get; set; }
+        public List<ShipmentTracking>? ShipmentTrackings { get; set; }
 
         public int? CourierAssignmentId { get; set; }
         public CourierAssignment CourierAssignment { get; set; }

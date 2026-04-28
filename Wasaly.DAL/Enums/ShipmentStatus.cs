@@ -8,9 +8,9 @@ namespace Wasaly.DAL.Enums
 {
     public enum ShipmentStatus
     {
-        Created = 1,
-        Accepted = 2,
-        PickedUp = 3,
-        Delivered = 4
+        Created ,
+        Accepted ,
+        PickedUp ,
+        Delivered 
     }
 }
