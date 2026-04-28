@@ -11,8 +11,6 @@ namespace Wasaly.DAL.Models
     {
         public int Id { get; set; }
 
-        
-
         public ShipmentStatus Status { get; set; }
 
         public DateTime TimeStamp { get; set; }
@@ -20,6 +18,7 @@ namespace Wasaly.DAL.Models
         public string Note { get; set; }
 
         //relationships
-        public List<Shipment> Shipment { get; set; }
+        public int? ShipmentId { get; set; }
+        public Shipment Shipment { get; set; }
     }
 }

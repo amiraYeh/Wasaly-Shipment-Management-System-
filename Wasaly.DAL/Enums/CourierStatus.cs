@@ -8,8 +8,8 @@ namespace Wasaly.DAL.Enums
 {
     public enum CourierStatus
     {
-        Assigned=1,
-        Accepted = 2,
-        Rejected = 3
+        Assigned,
+        Accepted ,
+        Rejected 
     }
 }
