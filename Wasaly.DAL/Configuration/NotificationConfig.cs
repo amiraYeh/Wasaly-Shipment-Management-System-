@@ -25,9 +25,9 @@ namespace Wasaly.DAL.Configuration
             builder.Property(x => x.IsRead)
                    .HasDefaultValue(false);
 
-            builder.HasOne(c => c.WasalyIdentityUser)
-              .WithOne()
-              .HasForeignKey<Courier>(c => c.WasalyIdentityUserId);
+            builder.HasOne(n => n.WasalyIdentityUser)
+            .WithMany(u => u.notifications)
+            .HasForeignKey(n => n.WasalyIdentityUserId);
         }
     }
 }
