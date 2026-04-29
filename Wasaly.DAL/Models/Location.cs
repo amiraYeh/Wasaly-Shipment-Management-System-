@@ -19,6 +19,7 @@ namespace Wasaly.DAL.Models
         //relationships
         public ICollection<Shipment> PickupShipments { get; set; }
         public ICollection<Shipment> DropShipments { get; set; }
+        public ICollection<WasalyIdentityUser> Users { get; set; }
 
     }
 }

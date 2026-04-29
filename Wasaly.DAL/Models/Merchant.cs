@@ -12,6 +12,7 @@ namespace Day9Demo.Models
 
         public string StoreName { get; set; } = null!;
 
+        public ICollection<Shipment> shipments { get; set; }
         public string StoreAddress { get; set; } = null!;
 
         public string BusinessType { get; set; } = null!;

@@ -54,7 +54,7 @@ namespace Wasaly.DAL.Configuration
 
 
             builder.HasOne(x => x.Merchant)
-                   .WithMany()
+                   .WithMany(x=>x.shipments)
                    .HasForeignKey(x => x.MerchantId)
                    .OnDelete(DeleteBehavior.Restrict);
 
