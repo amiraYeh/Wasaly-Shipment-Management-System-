@@ -25,6 +25,7 @@ namespace Wasaly.DAL.Models
         public Gender Gender { get; set; }
 
         public int Age { get; set; }
+        public string Region { get; set; }
 
         public string PhoneNumber { get; set; } = null!;
 

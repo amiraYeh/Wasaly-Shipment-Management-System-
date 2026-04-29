@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Day9Demo.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Wasaly.DAL.Data.Context
@@ -9,5 +10,8 @@ namespace Wasaly.DAL.Data.Context
             : base(options)
         {
         }
+        public DbSet<Merchant> Merchants { get; set; }
+        public DbSet<Courier> Couriers { get; set; }
+
     }
 }

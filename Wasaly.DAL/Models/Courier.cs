@@ -14,6 +14,8 @@ namespace Day9Demo.Models
         public string NationalIdImagePath { get; set; } = null!;
         public string DrivingLicenseImagePath { get; set; } = null!;
         public string ProfileImagePath { get; set; } = null!;
+        public bool isVerfied { get; set; }
+        public decimal Balance { get; set; }    
     }
-}
+
 }
