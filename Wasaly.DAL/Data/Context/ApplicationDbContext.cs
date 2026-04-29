@@ -11,6 +11,7 @@ namespace Wasaly.DAL.Data.Context
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -26,6 +27,7 @@ namespace Wasaly.DAL.Data.Context
 
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<CourierAssignment> CourierAssignments { get; set; }
+
 
     }
 }

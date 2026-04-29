@@ -28,7 +28,14 @@ namespace Wasaly.DAL.Configuration
             builder.HasIndex(u => u.PhoneNumber)
                 .IsUnique();
 
-            
+            builder.HasOne(u => u.Location)
+                .WithMany(l => l.Users)
+                .HasForeignKey(u => u.LocationId)
+                .OnDelete(DeleteBehavior.Restrict);
+                
+
+
+
         }
     }
 }
