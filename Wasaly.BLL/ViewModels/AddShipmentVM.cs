@@ -8,7 +8,7 @@ using Wasaly.DAL.Models;
 
 namespace Wasaly.BLL.ViewModels
 {
-    public class ShipmentViewModel
+    public class AddShipmentVM
     {
         [Required]
         public Location PickupLocation { get; set; }
