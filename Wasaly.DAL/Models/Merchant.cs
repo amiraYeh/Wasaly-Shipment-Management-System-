@@ -6,6 +6,8 @@ namespace Day9Demo.Models
 {
     public class Merchant
     {
+        [Key]
+        [ForeignKey("WasalyIdentityUser")]
         public string WasalyIdentityUserId { get; set; } = null!;
 
         public virtual WasalyIdentityUser WasalyIdentityUser { get; set; } = null!;

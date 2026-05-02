@@ -1,5 +1,8 @@
 ﻿@page
+@using Wasaly.DAL.Models
 @model LoginModel
+@inject SignInManager<WasalyIdentityUser> SignInManager
+@inject UserManager<WasalyIdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Log in";
