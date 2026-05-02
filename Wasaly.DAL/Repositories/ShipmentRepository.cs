@@ -82,5 +82,10 @@ namespace Wasaly.DAL.Repositories
             //return courierAssignment.FullName;
             return "";
         }
+
+        Task<string> IShipmentRepository.GetCourierName(int? id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -17,7 +17,7 @@ namespace Wasaly.BLL.Services
             _shipmentRepository = shipmentRepository;
         }
 
-        public async List<ShipmentVM> GetShipments()
+        public async Task<List<ShipmentVM>> GetShipments()
         {
             var shipments = await _shipmentRepository.GetAllAsync();
 
@@ -33,6 +33,7 @@ namespace Wasaly.BLL.Services
                 });
                 return shipmentList;
             }
+            return shipmentList;
         }
     }
 }
