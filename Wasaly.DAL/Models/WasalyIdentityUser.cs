@@ -6,24 +6,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Wasaly.DAL.Enums;
 
 namespace Wasaly.DAL.Models
 {
-    public enum Gender
-    {
-        Male,
-        Female
-    }
 
     public class WasalyIdentityUser: IdentityUser
     {
-        public int Id { get; set; }
 
         public string FullName { get; set; } = null!;
         public int LocationId { get; set; }
         public Location Location { get; set; } = null!;
-
-        public Gender Gender { get; set; }
+        public int? Rating { get; set; }
+        public Gender gender { get; set; }
 
         public int Age { get; set; }
         public string Region { get; set; }

@@ -17,4 +17,8 @@
     <ProjectReference Include="..\Wasaly.BLL\Wasaly.BLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Data\" />
+  </ItemGroup>
+
 </Project>

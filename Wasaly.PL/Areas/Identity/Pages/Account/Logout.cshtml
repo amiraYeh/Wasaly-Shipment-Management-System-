@@ -1,5 +1,8 @@
 ﻿@page
 @model LogoutModel
+@using Wasaly.DAL.Models
+@inject SignInManager<WasalyIdentityUser> SignInManager
+@inject UserManager<WasalyIdentityUser> UserManager
 @{
     ViewData["Title"] = "Log out";
 }

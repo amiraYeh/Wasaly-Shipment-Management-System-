@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Wasaly.DAL.Data.Context;
+using Wasaly.DAL.Models;
 
 namespace Wasaly.PL
 {
@@ -16,12 +17,32 @@ namespace Wasaly.PL
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            builder.Services.AddIdentity<WasalyIdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddEntityFrameworkStores <ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddRazorPages();
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Identity/Account/Login";
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+            });
             var app = builder.Build();
-
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var roles = new[] { "Admin", "Merchant", "Courier" };
+                foreach (var role in roles)
+                {
+                    var exists = roleManager.RoleExistsAsync(role).GetAwaiter().GetResult();
+                    if (!exists)
+                    {
+                        var createResult = roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
+                        // optionally handle/create logging for createResult if needed
+                    }
+                }
+            }
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
