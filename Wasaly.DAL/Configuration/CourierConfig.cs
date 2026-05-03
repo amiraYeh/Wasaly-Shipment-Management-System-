@@ -13,6 +13,7 @@ namespace Wasaly.DAL.Configuration
     // Remove or rename this class if another CourierConfig exists in this namespace.
     // If you need both, use a different class name for one of them.
     public class CourierConfig : IEntityTypeConfiguration<Courier>
+
     {
         public void Configure(EntityTypeBuilder<Courier> builder)
         {

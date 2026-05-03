@@ -31,14 +31,15 @@ namespace Wasaly.DAL.Configuration
 
 
             builder.HasOne(x => x.Courier)
-                   .WithMany()
+                   .WithMany(x=>x.assignments)
                    .HasForeignKey(x => x.CourierId)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .OnDelete(DeleteBehavior.NoAction);
+
 
             builder.HasOne(x => x.Shipment)
-                   .WithMany()
+                   .WithMany(s=>s.CourierAssignments)
                    .HasForeignKey(x => x.ShipmentId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
