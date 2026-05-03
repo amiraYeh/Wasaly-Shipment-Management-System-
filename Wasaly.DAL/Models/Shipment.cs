@@ -27,7 +27,6 @@ namespace Wasaly.DAL.Models
 
         public DateTime? DeliveredAt { get; set; }
 
-        // Relationships
 
         public string MerchantId { get; set; }
         public Merchant Merchant { get; set; }

@@ -1,40 +1,33 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
+
 #nullable disable
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
+
 using System.ComponentModel.DataAnnotations;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading;
-using System.Threading.Tasks;
+using Wasaly.DAL.Enums;
+using Wasaly.DAL.Models;
 
 namespace Wasaly.PL.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IUserStore<IdentityUser> _userStore;
+        private readonly SignInManager<WasalyIdentityUser> _signInManager;
+        private readonly UserManager<WasalyIdentityUser> _userManager;
+        private readonly IUserStore<WasalyIdentityUser> _userStore;
         private readonly RoleManager<IdentityRole> _roleManager;
 
 
         public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            IUserStore<IdentityUser> userStore,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<WasalyIdentityUser> userManager,
+            IUserStore<WasalyIdentityUser> userStore,
+            SignInManager<WasalyIdentityUser> signInManager,
             RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
@@ -68,6 +61,7 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
         /// </summary>
         public SelectList Roles { get; set; }
 
+
         public class InputModel
         {
             /// <summary>
@@ -99,15 +93,18 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
             [Required]
             [StringLength(30, MinimumLength = 3)]
-            public string FullName { get; set; } = null!;
+            public string FullName { get; set; } 
 
             [Required]
-            [StringLength(100)]
-            public string Location { get; set; } = null!;
+            [StringLength(200, MinimumLength = 5)]
+            [RegularExpression(@"^[a-zA-Z0-9\u0600-\u06FF\s,.-]+$",
+            ErrorMessage = "Address contains invalid characters")]
+            public string  Address { get; set; }
 
             [Required]
             [RegularExpression("^(Male|Female)$")]
-            public string Gender { get; set; } = null!;
+            public Gender Gender { get; set; }
+
 
             [Required]
             [Range(10, 60)]
@@ -115,16 +112,20 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
 
             [Required]
             [RegularExpression("^(01)(0|1|2|5)[0-9]{8}$", ErrorMessage = "Phone Number is not in the correct format")]
-            public string PhoneNumber { get; set; } = null!;
+            public string PhoneNumber { get; set; } 
             public string Role { get; set; }
 
         }
 
-
+        private async Task LoadRolesAsync()
+        {
+            var roles = await Task.FromResult(_roleManager.Roles.ToList());
+            Roles = new SelectList(roles, "Name", "Name");
+        }
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-            Roles = new SelectList(_roleManager.Roles.ToList(), "Id", "Name");
+            LoadRolesAsync();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -135,27 +136,27 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
+                user.PhoneNumber = Input.PhoneNumber;
+                user.Location =new Location() { Address= Input.Address  } ;
+                user.gender = Input.Gender;
+                user.FullName = Input.FullName;
+                user.Age = Input.Age;
+
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
 
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
-
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                    // Validate role exists before assigning
+                    if (string.IsNullOrWhiteSpace(Input.Role) || !await _roleManager.RoleExistsAsync(Input.Role))
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        ModelState.AddModelError(string.Empty, $"Selected role '{Input.Role}' does not exist.");
+                        return Page();
                     }
-                    else
+
+                    result = await _userManager.AddToRoleAsync(user, Input.Role);
+                    if (result.Succeeded)
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
@@ -167,31 +168,26 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
                 }
             }
 
+
             // If we got this far, something failed, redisplay form
+            LoadRolesAsync();
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private WasalyIdentityUser CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<WasalyIdentityUser>();
             }
             catch
             {
                 throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                    $"Ensure that '{nameof(WasalyIdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }
 
-        private IUserEmailStore<IdentityUser> GetEmailStore()
-        {
-            if (!_userManager.SupportsUserEmail)
-            {
-                throw new NotSupportedException("The default UI requires a user store with email support.");
-            }
-            return (IUserEmailStore<IdentityUser>)_userStore;
-        }
+       
     }
 }
