@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Wasaly.DAL.Data.Context;
+using Wasaly.PL.Extensions;
 
 namespace Wasaly.PL
 {
@@ -19,7 +20,7 @@ namespace Wasaly.PL
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddCourierServices(builder.Configuration);
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

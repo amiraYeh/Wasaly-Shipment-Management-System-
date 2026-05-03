@@ -27,6 +27,11 @@ namespace Wasaly.DAL.Models
 
         public DateTime? DeliveredAt { get; set; }
 
+        // معلومات العميل
+        public string RecipientName { get; set; }
+        public string RecipientEmail { get; set; }
+        public string RecipientPhone { get; set; }
+
         // Relationships
 
         public string MerchantId { get; set; }
