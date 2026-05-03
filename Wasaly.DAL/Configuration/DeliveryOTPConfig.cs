@@ -14,11 +14,14 @@ namespace Wasaly.DAL.Configuration
         public void Configure(EntityTypeBuilder<DeliveryOTP> builder)
         {
             builder.Property(x => x.OTPCode)
-                   .IsRequired();
+               .IsRequired()
+               .HasMaxLength(6);
+
 
             builder.ToTable(t =>
-                    t.HasCheckConstraint("CK_DeliveryOTP_Code",
-                    "[OTPCode] >= 100000 AND [OTPCode] <= 999999"));
+                t.HasCheckConstraint("CK_DeliveryOTP_Code_Format",
+                "LEN([OTPCode]) = 6 AND [OTPCode] NOT LIKE '%[^0-9]%'")
+            );
 
             builder.Property(x => x.IsUsed)
                    .HasDefaultValue(false);
@@ -32,11 +35,11 @@ namespace Wasaly.DAL.Configuration
             builder.Property(x => x.ExpiryTime)
                      .HasDefaultValueSql("DATEADD(MINUTE, 10, GETDATE())"); builder.Property(x => x.ExpiryTime)
                     .HasDefaultValueSql("DATEADD(MINUTE, 10, GETDATE())");
-          
+
             builder.HasOne(x => x.Shipment)
-                   .WithOne()
-                   .HasForeignKey<DeliveryOTP>(x => x.ShipmentId)
-                   .OnDelete(DeleteBehavior.Cascade);
+               .WithOne(s => s.DeliveryOTP)
+               .HasForeignKey<DeliveryOTP>(x => x.ShipmentId)
+               .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasIndex(x => x.ShipmentId);
         }

@@ -10,13 +10,13 @@ namespace Wasaly.DAL.Models
     {
         public int Id { get; set; }
 
-        public int OTPCode { get; set; }
+        public string OTPCode { get; set; }
 
         public DateTime ExpiryTime { get; set; }
 
         public bool IsUsed { get; set; } = false;
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         //relationships
         public int ShipmentId { get; set; }

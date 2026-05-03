@@ -23,7 +23,7 @@ namespace Wasaly.DAL.Configuration
                    .IsUnique();
 
             builder.Property(x => x.DeliveredAt)
-              .IsRequired();
+              .IsRequired(false);
 
 
             builder.Property(x => x.Description)
@@ -34,9 +34,6 @@ namespace Wasaly.DAL.Configuration
 
             builder.Property(x => x.Price)
                    .HasColumnType("decimal(10,2)");
-
-            builder.Property(x => x.Status)
-                   .IsRequired();
 
             builder.Property(x => x.CreatedAt)
                    .HasDefaultValueSql("GETDATE()");
@@ -53,35 +50,17 @@ namespace Wasaly.DAL.Configuration
             );
 
 
-            builder.HasOne(x => x.Merchant)
-                   .WithMany(x=>x.shipments)
-                   .HasForeignKey(x => x.MerchantId)
+            builder.HasOne(s => s.Merchant)
+                   .WithMany(m=>m.shipments)
+                   .HasForeignKey(s => s.MerchantId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(x => x.CourierAssignment)
-                   .WithMany()
-                   .HasForeignKey(x => x.CourierAssignmentId)
-                   .OnDelete(DeleteBehavior.SetNull);
-
-            builder.HasOne(x => x.DeliveryOTP)
-                  .WithMany()
-                  .HasForeignKey(x => x.DeliveryOTPId)
-                  .OnDelete(DeleteBehavior.Restrict);
-
-            //builder.HasOne(x => x.ShipmentTracking)
-            //      .WithMany()
-            //      .HasForeignKey(x => x.ShipmentTrackingId)
-            //      .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasMany(x => x.ShipmentTrackings)
-              .WithOne(x => x.Shipment)
-              .HasForeignKey(x => x.ShipmentId)
-              .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(s => s.PickupLocation)
                 .WithMany(l => l.PickupShipments)
                 .HasForeignKey(s => s.PickupLocationId)
                 .OnDelete(DeleteBehavior.Restrict);
+
 
             builder.HasOne(s => s.DropLocation)
                 .WithMany(l => l.DropShipments)

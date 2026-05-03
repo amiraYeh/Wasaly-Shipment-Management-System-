@@ -35,9 +35,9 @@ namespace Wasaly.DAL.Configuration
                    .HasForeignKey(x => x.CourierId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(x => x.Shipment)
-                   .WithMany()
-                   .HasForeignKey(x => x.ShipmentId)
+            builder.HasOne(c => c.Shipment)
+                   .WithMany(s=>s.CourierAssignments)
+                   .HasForeignKey(c => c.ShipmentId)
                    .OnDelete(DeleteBehavior.Cascade);
         }
     }

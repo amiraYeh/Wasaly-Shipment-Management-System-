@@ -29,7 +29,7 @@ namespace Wasaly.DAL.Configuration
             );
 
             builder.HasOne(x => x.Shipment)
-                .WithMany(x => x.ShipmentTrackings)
+                .WithMany(x => x.Trackings)
                 .HasForeignKey(x => x.ShipmentId)
                 .OnDelete(DeleteBehavior.Cascade);
 
