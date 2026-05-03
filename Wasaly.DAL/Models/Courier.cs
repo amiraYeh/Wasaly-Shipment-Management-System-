@@ -16,4 +16,4 @@ namespace Day9Demo.Models
         public string ProfileImagePath { get; set; } = null!;
     }
 }
-}
+
