@@ -5,22 +5,44 @@ namespace Wasaly.DAL.Repositories.IRepositories
     public interface IUserRepository
     {
 
-        // 1. لجلب قائمة المناديب الذين ينتظرون التوثيق (لجدول الأدمن)
-        // نستخدم IEnumerable لأننا نعرض قائمة
-        public Task<IEnumerable<Courier>> GetPendingCouriersAsync();
+        /// <summary>
+        /// Retrieves all couriers waiting for verification.
+        /// </summary>
+        Task<IEnumerable<Courier>> GetPendingCouriersAsync();
 
-        // 2. تحديث حالة المندوب (قبول أو رفض التوثيق)
-        // نمرر الـ ID والحالة الجديدة، ونرجع bool للتأكيد
-        public Task<bool> UpdateCourierStatusAsync(string courierId, bool status);
+        /// <summary>
+        /// Updates courier verification status (Approved / Rejected).
+        /// </summary>
+        /// <param name="courierId">Courier unique identifier.</param>
+        /// <param name="status">New verification status.</param>
+        Task<bool> UpdateCourierStatusAsync(string courierId, bool status);
 
-        //// 3. جلب بيانات إحصائية مجمعة للأدمن
-        //// هنا نستخدم الـ DTO اللي بيشيل الأرقام الخام من الداتابيز
-        //public Task<AdminStatsVM> GetDashboardStatsAsync();
+        /// <summary>
+        /// Retrieves courier details by id.
+        /// </summary>
+        /// <param name="id">Courier unique identifier.</param>
+        Task<Courier?> GetCourierByIdAsync(string id);
 
-        // 4. جلب بيانات مندوب محدد للمراجعة
-        // عشان لما الأدمن يدوس "مراجعة" يشوف صور البطاقة والرخصة
-        public Task<Courier> GetCourierByIdAsync(string id);
 
+
+        // ================================
+        // Dashboard Statistics
+        // ================================
+
+        /// <summary>
+        /// Retrieves total number of couriers.
+        /// </summary>
+        Task<int> GetTotalCouriersCountAsync();
+
+        /// <summary>
+        /// Retrieves total number of merchants.
+        /// </summary>
+        Task<int> GetTotalMerchantsCountAsync();
+
+        /// <summary>
+        /// Retrieves total shipments created today.
+        /// </summary>
+        Task<int> GetTodayShipmentsCountAsync();
 
 
     }

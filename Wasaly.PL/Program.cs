@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Wasaly.BLL;
+using Wasaly.BLL.Services;
 using Wasaly.DAL.Data.Context;
 using Wasaly.DAL.Models;
 using Wasaly.DAL.Repositories;
@@ -35,6 +37,7 @@ namespace Wasaly.PL
             });
             //add repositories to the container 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IAdminService, AdminService>();
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())
             {
