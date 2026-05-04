@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Wasaly.DAL.Data.Context;
 using Wasaly.DAL.Models;
+using Wasaly.DAL.Repositories;
+using Wasaly.DAL.Repositories.IRepositories;
 
 namespace Wasaly.PL
 {
@@ -14,7 +16,10 @@ namespace Wasaly.PL
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseSqlServer(connectionString, sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure();
+                }));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 
@@ -28,6 +33,8 @@ namespace Wasaly.PL
                 options.LoginPath = "/Identity/Account/Login";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
             });
+            //add repositories to the container 
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())
             {
