@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Wasaly.DAL.Data.Context;
-using Wasaly.PL.Extensions;
 
 namespace Wasaly.PL
 {
@@ -17,12 +16,26 @@ namespace Wasaly.PL
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddCourierServices(builder.Configuration);
-            var app = builder.Build();
 
+            builder.Services.AddIdentity<WasalyIdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddEntityFrameworkStores <ApplicationDbContext>();
+            builder.Services.AddControllersWithViews();
+
+            var app = builder.Build();
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var roles = new[] { "Admin", "Merchant", "Courier" };
+                foreach (var role in roles)
+                {
+                    var exists = roleManager.RoleExistsAsync(role).GetAwaiter().GetResult();
+                    if (!exists)
+                    {
+                        var createResult = roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
+                        // optionally handle/create logging for createResult if needed
+                    }
+                }
+            }
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

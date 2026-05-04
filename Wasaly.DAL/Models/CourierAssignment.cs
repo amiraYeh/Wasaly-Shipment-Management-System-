@@ -11,7 +11,8 @@ namespace Wasaly.DAL.Models
     public class CourierAssignment
     {
         public int Id { get; set; }
-        public String CourierId { get; set; }
+       
+        public string CourierId { get; set; }
         public Courier Courier { get; set; }
 
         public DateTime AssignedAt { get; set; }= DateTime.Now;
