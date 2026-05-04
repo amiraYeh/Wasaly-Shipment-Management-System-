@@ -4,6 +4,7 @@ using Wasaly.DAL.Data.Context;
 using Wasaly.DAL.Models;
 using Wasaly.DAL.Repositories;
 using Wasaly.DAL.Repositories.IRepositories;
+using Wasaly.PL.Extensions;
 
 namespace Wasaly.PL
 {
@@ -23,14 +24,13 @@ namespace Wasaly.PL
             builder.Services.AddIdentity<WasalyIdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddCourierServices(builder.Configuration);
             builder.Services.AddRazorPages();
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Identity/Account/Login";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
             });
-            //add repositories to the container 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())
