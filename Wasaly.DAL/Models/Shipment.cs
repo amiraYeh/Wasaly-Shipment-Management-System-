@@ -34,6 +34,7 @@ namespace Wasaly.DAL.Models
 
         // Relationships
 
+
         public string MerchantId { get; set; }
         public Merchant Merchant { get; set; }
 

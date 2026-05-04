@@ -7,8 +7,8 @@ using Wasaly.DAL.Models;
 
 namespace Wasaly.DAL.Data.Context
 {
+
     public class ApplicationDbContext : IdentityDbContext<WasalyIdentityUser, IdentityRole, string>
-    public class ApplicationDbContext : IdentityDbContext<WasalyIdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
