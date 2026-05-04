@@ -38,6 +38,18 @@ namespace Wasaly.DAL.Configuration
             builder.Property(x => x.CreatedAt)
                    .HasDefaultValueSql("GETDATE()");
 
+            builder.Property(x => x.RecipientName)
+                   .IsRequired()
+                   .HasMaxLength(100);
+
+            builder.Property(x => x.RecipientEmail)
+                .IsRequired()
+                .HasMaxLength(150);
+
+            builder.Property(x => x.RecipientPhone)
+                .IsRequired()
+                .HasMaxLength(15);
+
 
             builder.Property(x => x.Status)
                    .HasConversion<string>()
