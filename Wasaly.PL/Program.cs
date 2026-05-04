@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Wasaly.DAL.Data.Context;
-using Wasaly.DAL.Models;
 
 namespace Wasaly.PL
 {
@@ -22,12 +21,6 @@ namespace Wasaly.PL
                 .AddEntityFrameworkStores <ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddRazorPages();
-            builder.Services.ConfigureApplicationCookie(options =>
-            {
-                options.LoginPath = "/Identity/Account/Login";
-                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-            });
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())
             {
