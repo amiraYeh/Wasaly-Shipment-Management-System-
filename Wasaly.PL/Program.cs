@@ -22,6 +22,7 @@ namespace Wasaly.PL
             //builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddScoped<IShipmentService, ShipmentService>();
+            builder.Services.AddScoped<IGoogleMapService,GoogleMapService>();
             builder.Services.AddScoped<IShipmentRepository, ShipmentRepository>();
 
 

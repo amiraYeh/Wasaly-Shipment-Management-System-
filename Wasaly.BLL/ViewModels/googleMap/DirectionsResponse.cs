@@ -16,4 +16,4 @@ namespace Wasaly.BLL.ViewModels.googleMap
         public List<Route> Routes { get; set; }
     }
 }
-}
+

@@ -15,10 +15,10 @@ namespace Wasaly.BLL.Services
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
 
-        public GoogleMapService(IConfiguration configuration,HttpClient httpClient)
+        public GoogleMapService(IConfiguration configuration)
         {
            _configuration = configuration;
-            _httpClient = httpClient;
+            _httpClient = new HttpClient();
             _apiKey = _configuration["googleMaps:Key"];
         }
         public string GetApi()

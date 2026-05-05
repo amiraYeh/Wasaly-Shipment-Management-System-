@@ -26,7 +26,7 @@ namespace Wasaly.BLL.Services
             List<ShipmentVM> shipmentList = new List<ShipmentVM>();
             foreach (var ship in shipments)
             {
-                var courdata = await _shipmentRepository.GetCourierName(ship.Id);
+                var courdata = await _shipmentRepository.GetCourierData(ship.Id);
                 if (courdata != null)
                 {
                     shipmentList.Add(new ShipmentVM
