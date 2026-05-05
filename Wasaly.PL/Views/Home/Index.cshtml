@@ -1,7 +1,381 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿
+@{
+    ViewData["Title"] = "الرئيسية - وصلي";
 }
 
+<<nav class="navbar navbar-expand-lg navbar-light bg-white py-2 shadow-sm">
+    <div class="container">
+        <!-- 1. اللوجو -->
+        <a class="navbar-brand logo-text d-flex align-items-center gap-2" href="#">
+            وصلي <span class="logo-icon">📦</span>
+        </a>
+
+       
+
+        <!-- زرار التوجل (Hamburger) -->
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- الجزء اللي بيفتح ويقفل (التوجل) -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <!-- 3. اللينكات اللي هتظهر جوه التوجل (الرئيسية، كيف نعمل، لماذا وصلني) -->
+            <ul class="navbar-nav ms-auto gap-lg-4 gap-2 fw-normal text-start mt-4 mt-lg-0 px-3 px-lg-0">
+                <li class="nav-item"><a class="nav-link active" href="#home">الرئيسية</a></li>
+                <li class="nav-item"><a class="nav-link text-dark" href="#how">كيف نعمل</a></li>
+                <li class="nav-item"><a class="nav-link text-dark" href="#features">لماذا وصلني</a></li>
+
+                <!-- لاحظي هنا شلنا (للتجار، المناديب، تواصل معانا) من القائمة دي عشان متظهرش في التوجل -->
+            </ul>
+            <!-- 2. اللينكات اللي هتظهر في الـ Nav بس (ومش هتظهر في التوجل) -->
+            <!-- d-none بتخفيها في الموبايل و d-lg-flex بتظهرها في الكمبيوتر -->
+            <div class="d-none d-lg-flex gap-3 mx-auto ms-3">
+                <a class="nav-link text-dark" href="#merchants">للتجار</a>
+                <a class="nav-link text-dark" href="#couriers">للمناديب</a>
+                <a class="nav-link text-dark" href="#contact">تواصل معنا</a>
+            </div>
+            <!-- 4. الزراير: بتظهر في الاتنين (Nav و Toggle) -->
+            <div class="d-flex flex-column flex-lg-row gap-3 px-3 px-lg-0 pb-4 pb-lg-0 ms-lg-3">
+                <a href="#" class="btn py-2 text-white order-1 order-lg-2"
+                   style="background-color: #FF6B35; border-radius: 8px; font-weight: 500; border: none;">
+                    سجل كتاجر
+                </a>
+
+                <a href="#" class="btn py-2 order-2 order-lg-1"
+                   style="border: 1.5px solid #1A1A2E; color: #1A1A2E; border-radius: 8px; font-weight: 500;">
+                    انضم كمندوب
+                </a>
+            </div>
+
+        </div>
+    </div>
+</nav>
+
+
+<section id="home" class="hero-section pt-4 pb-5 w-100 overflow-hidden" style="background: linear-gradient(135deg, #1A1A2E, #16213E, #0F3460); min-height: 85vh; display: flex; align-items: center;">
+    <div class="container-fluid px-0">
+
+        <div class="row g-0 flex-row-reverse align-items-center">
+            <div class="col-lg-4 d-none d-lg-block text-center">
+                <div style="font-size: 230px; opacity: 0.15; transform: scaleX(-1);">🚴</div>
+            </div>
+           
+
+            <div class="col-lg-8 col-12 text-start pe-lg-5 pe-4 px-lg-5 px-sm-5 ms-auto">
+                <h1 class="fw-bold text-white mb-4" style="font-size: clamp(2.5rem, 6vw, 5rem); line-height: 1.1;">
+                    وصّل بضاعتك في نفس اليوم
+                </h1>
+                <p class="h3 text-light opacity-75 mb-5" style="max-width: 700px; margin-right: 0; margin-left: auto;">
+                    منصة تربط التجار بمناديب موثقين لتوصيل سريع وآمن
+                </p>
+               
+               
+            </div>
+           
+
+        </div>
+        <div class="d-flex justify-content-start gap-3 mb-5 px-5 ">
+            <a href="#" class="btn btn-primary btn-lg px-5 py-3 rounded-pill">ابدأ الشحن الآن</a>
+            <a href="#" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill">انضم كمندوب</a>
+        </div>
+
+        <div class="row g-0 mt-3 pt-5 text-center">
+            <div class="col-6 col-md-3 mb-4">
+                <div class="h2 fw-bold" style="color: #FF6B35;">+١٠٠٠</div>
+                <div class="text-white-50 text-sm">تاجر نشط</div>
+            </div>
+            <div class="col-6 col-md-3 mb-4">
+                <div class="h2 fw-bold" style="color: #FF6B35;">+٥٠٠</div>
+                <div class="text-white-50 text-sm">مندوب موثق</div>
+            </div>
+            <div class="col-6 col-md-3 mb-4">
+                <div class="h2 fw-bold" style="color: #FF6B35;">+٥٠٠٠</div>
+                <div class="text-white-50 text-sm">شحنة يومياً</div>
+            </div>
+            <div class="col-6 col-md-3 mb-4">
+                <div class="h2 fw-bold" style="color: #FF6B35;">٩٨٪</div>
+                <div class="text-white-50 text-sm">نسبة التسليم</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="how" class="py-5 bg-white">
+    <div class="container py-4">
+        <h2 class="text-center fw-bold mb-5">كيف تعمل وصلني</h2>
+        <div class="row g-4">
+            <!-- للتجار -->
+            <div class="col-md-6">
+                <div class="p-4 border rounded-4 h-100 shadow-sm">
+                    <h3 class="text-orange fw-bold mb-4 text-center">للتجار</h3>
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="flex-shrink-0 bg-orange text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">1</div>
+                        <div>
+                            <h5 class="fw-bold mb-1">سجل حسابك</h5>
+                            <p class="text-muted small">إنشاء حساب مجاني في دقائق وابدأ العمل</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="flex-shrink-0 bg-orange text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">2</div>
+                        <div>
+                            <h5 class="fw-bold mb-1">أضف شحنة</h5>
+                            <p class="text-muted small">حدد العناوين والتفاصيل وتكلفة التوصيل</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div class="flex-shrink-0 bg-orange text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">3</div>
+                        <div>
+                            <h5 class="fw-bold mb-1">تتبع الشحنة</h5>
+                            <p class="text-muted small">راقب شحنتك لحظة بلحظة حتى الاستلام</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- للمناديب -->
+            <div class="col-md-6">
+                <div class="p-4 border rounded-4 h-100 shadow-sm" style="background-color: #f8f9fa;">
+                    <h3 class="fw-bold mb-4 text-center" style="color: #1A1A2E;">للمناديب</h3>
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="flex-shrink-0 bg-dark text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">1</div>
+                        <div>
+                            <h5 class="fw-bold mb-1">سجل وارفع المستندات</h5>
+                            <p class="text-muted small">نوثق هويتك في ٢٤ ساعة لضمان الأمان</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="flex-shrink-0 bg-dark text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">2</div>
+                        <div>
+                            <h5 class="fw-bold mb-1">اقبل الطلبات</h5>
+                            <p class="text-muted small">اختر الطلبات المناسبة لموقعك وخط سيرك</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div class="flex-shrink-0 bg-dark text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">3</div>
+                        <div>
+                            <h5 class="fw-bold mb-1">سلم واربح</h5>
+                            <p class="text-muted small">استلم أرباحك فوراً بعد كل عملية ناجحة</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="features" class="py-5 px-4" style="background-color: #F5F5F5;">
+    <div class="container py-md-5">
+        <h2 class="text-center fw-bold mb-5" style="font-size: 2rem;">مميزاتنا</h2>
+
+        <div class="row g-4">
+            <!-- ميزة 1: مناديب موثوقون -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm p-4 text-center rounded-4 custom-feature-card">
+                    <div class="display-4 mb-3">🔒</div>
+                    <h5 class="fw-bold mb-2">مناديب موثوقون</h5>
+                    <p class="text-muted small mb-0">جميع المناديب موثقون ومفحوصون بعناية</p>
+                </div>
+            </div>
+
+            <!-- ميزة 2: توصيل في نفس اليوم -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm p-4 text-center rounded-4 custom-feature-card">
+                    <div class="display-4 mb-3">⚡</div>
+                    <h5 class="fw-bold mb-2">توصيل في نفس اليوم</h5>
+                    <p class="text-muted small mb-0">شحناتك تصل في أسرع وقت ممكن</p>
+                </div>
+            </div>
+
+            <!-- ميزة 3: أسعار أقل -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm p-4 text-center rounded-4 custom-feature-card">
+                    <div class="display-4 mb-3">💰</div>
+                    <h5 class="fw-bold mb-2">أسعار أقل</h5>
+                    <p class="text-muted small mb-0">وفر حتى ٤٠٪ مقارنة بالخدمات التقليدية</p>
+                </div>
+            </div>
+
+            <!-- ميزة 4: تتبع لحظي -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm p-4 text-center rounded-4 custom-feature-card">
+                    <div class="display-4 mb-3">📍</div>
+                    <h5 class="fw-bold mb-2">تتبع لحظي</h5>
+                    <p class="text-muted small mb-0">تابع شحنتك خطوة بخطوة مباشرة</p>
+                </div>
+            </div>
+
+            <!-- ميزة 5: نظام OTP آمن -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm p-4 text-center rounded-4 custom-feature-card">
+                    <div class="display-4 mb-3">🛡️</div>
+                    <h5 class="fw-bold mb-2">نظام OTP آمن</h5>
+                    <p class="text-muted small mb-0">كود تأكيد لكل عملية تسليم</p>
+                </div>
+            </div>
+
+            <!-- ميزة 6: محفظة إلكترونية -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm p-4 text-center rounded-4 custom-feature-card">
+                    <div class="display-4 mb-3">💳</div>
+                    <h5 class="fw-bold mb-2">محفظة إلكترونية</h5>
+                    <p class="text-muted small mb-0">إدارة سهلة للمدفوعات والأرباح</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-white" id="merchants">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 order-md-2 mb-4 mb-md-0">
+                <div class="rounded-4 overflow-hidden shadow-lg bg-secondary d-flex align-items-center justify-content-center" style="height: 350px;">
+                    <!-- حطي هنا صورة الداشبورد بتاعة التاجر -->
+                    <i class="bi bi-layout-text-sidebar-reverse text-white display-1"></i>
+                </div>
+            </div>
+            <div class="col-md-6 order-md-1">
+                <h2 class="fw-bold mb-4">منصة كاملة للتجار</h2>
+                <ul class="list-unstyled">
+                    <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> لوحة تحكم شاملة</li>
+                    <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> تتبع جميع الشحنات</li>
+                    <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> محفظة إلكترونية آمنة</li>
+                    <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> تقارير تفصيلية</li>
+                    <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> دعم فني 24/7</li>
+                </ul>
+                <a href="/Account/Register" class="btn btn-orange btn-lg px-5 mt-3 rounded-pill text-white">ابدأ الآن مجاناً</a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- قسم كيف تعمل للمناديب -->
+<!-- قسم انضمام المناديب -->
+<section id="couriers" class="py-5 px-4" style="background-color: #F5F5F5;">
+    <div class="container py-md-5">
+        <div class="row align-items-center g-5">
+            <!-- النص والمميزات -->
+            <div class="col-md-6 order-md-2">
+                <h2 class="fw-bold mb-4" style="font-size: 2.5rem;">اربح المال كمندوب</h2>
+
+                <div class="mb-4">
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <span class="fw-bold" style="color: #2ECC71;">✓</span>
+                        <span>دخل إضافي مضمون</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <span class="fw-bold" style="color: #2ECC71;">✓</span>
+                        <span>جدول عمل مرن</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <span class="fw-bold" style="color: #2ECC71;">✓</span>
+                        <span>سحب فوري للأرباح</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <span class="fw-bold" style="color: #2ECC71;">✓</span>
+                        <span>تأمين على الشحنات</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <span class="fw-bold" style="color: #2ECC71;">✓</span>
+                        <span>مكافآت وحوافز</span>
+                    </div>
+                </div>
+
+                <a href="/Account/Register?role=Courier"
+                   class="btn btn-lg px-5 py-3 text-white rounded-3 shadow-sm hover-bright"
+                   style="background-color: #1A1A2E;">
+                    انضم الآن
+                </a>
+            </div>
+
+            <!-- الصورة التوضيحية (الموبايل) -->
+            <div class="col-md-6 order-md-1">
+                <div class="rounded-4 d-flex align-items-center justify-content-center shadow-sm"
+                     style="background-color: #E5E7EB; height: 350px;">
+                    <span style="font-size: 5rem;">📱</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="py-5" style="background-color: #1A1A2E;">
+    <div class="container text-white">
+        <h2 class="text-center fw-bold mb-5">الأمان أولويتنا</h2>
+        <div class="row text-center g-4">
+            <div class="col-md-3">
+                <div class="mb-3 fs-1 text-warning">🔓</div>
+                <h6 class="fw-bold">تشفير البيانات</h6>
+                <p class="small opacity-75">حماية معلوماتك</p>
+            </div>
+            <div class="col-md-3">
+                <div class="mb-3 fs-1 text-warning">🔑</div>
+                <h6 class="fw-bold">OTP التسليم</h6>
+                <p class="small opacity-75">تأمين كل عملية</p>
+            </div>
+            <div class="col-md-3">
+                <div class="mb-3 fs-1 text-warning">🔍</div>
+                <h6 class="fw-bold">فحص السجل</h6>
+                <p class="small opacity-75">التأكد من النزاهة</p>
+            </div>
+            <div class="col-md-3">
+                <div class="mb-3 fs-1 text-warning">🆔</div>
+                <h6 class="fw-bold">توثيق الهوية</h6>
+                <p class="small opacity-75">فحص شامل للمستندات</p>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">آراء عملائنا</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-4 rounded-4">
+                    <div class="text-warning mb-2">★★★★★</div>
+                    <p class="small text-muted mb-4">"دخل إضافي ممتاز ومرونة في العمل، أنصح الجميع."</p>
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-orange text-white d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">م</div>
+                        <div>
+                            <h6 class="mb-0 fw-bold">محمد سعيد</h6>
+                            <small class="text-muted">مندوب</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- كرري نفس الكارت للعملاء التانيين -->
+        </div>
+    </div>
+</section>
+
+<footer id="contact" class="py-5 text-white" style="background-color: #1A1A2E;">
+    <div class="container">
+        <div class="row g-4 border-bottom border-secondary pb-4">
+            <div class="col-md-4">
+                <h3 class="fw-bold text-orange mb-3">وصلني 📦</h3>
+                <p class="text-light opacity-75">المنصة الأولى لربط التجار بمناديب التوصيل الحر بشكل ذكي وآمن.</p>
+            </div>
+            <div class="col-md-4">
+                <h5 class="fw-bold mb-3">روابط سريعة</h5>
+                <ul class="list-unstyled text-light opacity-75">
+                    <li><a href="#" class="text-white text-decoration-none">الرئيسية</a></li>
+                    <li><a href="#how" class="text-white text-decoration-none">كيف نعمل</a></li>
+                    <li><a href="#features" class="text-white text-decoration-none">المميزات</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5 class="fw-bold mb-3">تواصل معنا</h5>
+                <div class="text-light opacity-75">
+                    <p>📧 support@wasly.com</p>
+                    <p>📞 +20 123 456 789</p>
+                </div>
+            </div>
+        </div>
+        <div class="text-center pt-4 opacity-50 small">
+            <p>© ٢٠٢٦ وصلني. جميع الحقوق محفوظة</p>
+        </div>
+    </div>
+</footer>
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>

@@ -1,0 +1,136 @@
+﻿@model Wasaly.BLL.ViewModels.AdminStatsVM
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "لوحة التحكم";
+}
+
+<!-- Row 1: الاحصائيات الأساسية -->
+<div class="row g-4 mb-4">
+    <!-- إجمالي المناديب -->
+    <div class="col-md-3">
+        <div class="stat-card shadow-sm h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="fs-1">🚴</span>
+                <div class="text-start">
+                    <div class="fs-2 fw-bold text-orange">١٢٤</div>
+                    <div class="small text-muted">إجمالي المناديب</div>
+                </div>
+            </div>
+            <div class="d-flex gap-3 small">
+                <span class="text-success">✅ ٩٨ موثق</span>
+                <span class="text-warning">⏳ ١٢ انتظار</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- إجمالي التجار -->
+    <div class="col-md-3">
+        <div class="stat-card shadow-sm h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="fs-1">🏪</span>
+                <div class="text-start">
+                    <div class="fs-2 fw-bold text-orange">٢٨٦</div>
+                    <div class="small text-muted">إجمالي التجار</div>
+                </div>
+            </div>
+            <div class="d-flex gap-3 small">
+                <span class="text-success">✅ ٢٧٠ نشط</span>
+                <span class="text-danger">🔴 ١٦ موقوف</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- شحنات اليوم -->
+    <div class="col-md-3">
+        <div class="stat-card shadow-sm h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="fs-1">📦</span>
+                <div class="text-start">
+                    <div class="fs-2 fw-bold text-orange">٥٤٣</div>
+                    <div class="small text-muted">شحنات اليوم</div>
+                </div>
+            </div>
+            <div class="small text-success">+٨٪ من أمس ↑</div>
+        </div>
+    </div>
+
+    <!-- الإيرادات (Gradient Card) -->
+    <div class="col-md-3">
+        <div class="gradient-card shadow-sm h-100 text-white">
+            <div class="small mb-1">إيرادات هذا الشهر</div>
+            <div class="display-6 fw-bold">٢٤,٥٠٠ ج</div>
+            <div class="small mt-2 opacity-75">+١٢٪ من الشهر الماضي</div>
+        </div>
+    </div>
+</div>
+
+<!-- Row 2: تنبيهات العمليات -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card border-end border-orange border-4 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fs-2">📋</span>
+                <span class="fs-3 fw-bold text-orange">١٢</span>
+            </div>
+            <div class="text-muted small mb-3">طلبات توثيق معلقة</div>
+            <a asp-action="VerificationRequests" class="text-orange text-decoration-none small fw-bold">مراجعة الطلبات ←</a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card border-end border-primary border-4 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fs-2">🔵</span>
+                <span class="fs-3 fw-bold text-primary">٨٧</span>
+            </div>
+            <div class="text-muted small">شحنات جارية الآن</div>
+            <div class="mt-2"><span class="badge bg-primary rounded-circle p-1 animate-pulse" style="width:10px; height:10px; display:inline-block;"></span></div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card border-end border-danger border-4 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fs-2">⚠️</span>
+                <span class="fs-3 fw-bold text-danger">٣</span>
+            </div>
+            <div class="text-muted small mb-3">نزاعات مفتوحة</div>
+            <a href="#" class="text-danger text-decoration-none small fw-bold">عرض النزاعات ←</a>
+        </div>
+    </div>
+</div>
+
+<!-- الجداول (طلبات التوثيق) -->
+<div class="stat-card shadow-sm mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="fw-bold mb-0">آخر طلبات توثيق المناديب</h5>
+        <a asp-action="Couriers" class="text-orange text-decoration-none small">عرض الكل ←</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table custom-table shadow-none">
+            <thead>
+                <tr>
+                    <th>الاسم</th>
+                    <th>رقم الهاتف</th>
+                    <th>المنطقة</th>
+                    <th>التاريخ</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @* هنا هيتم عمل foreach على البيانات اللي جاية من الـ Repository *@
+                <tr>
+                    <td>محمد أحمد</td>
+                    <td class="text-muted">01234567890</td>
+                    <td class="text-muted">القاهرة</td>
+                    <td class="text-muted">٢٠٢٦-٠٤-٢٥</td>
+                    <td><span class="badge badge-pending">في الانتظار</span></td>
+                    <td>
+                        <button class="btn btn-primary btn-sm px-3">مراجعة</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -5,6 +5,8 @@ using Wasaly.DAL.Data.Context;
 using Wasaly.DAL.Models;
 using Wasaly.DAL.Repositories;
 using Wasaly.DAL.Repositories.IRepositories;
+using Wasaly.PL.Extensions;
+
 //using Wasaly.BLL.Services;
 namespace Wasaly.PL
 {
@@ -14,7 +16,6 @@ namespace Wasaly.PL
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
@@ -23,9 +24,11 @@ namespace Wasaly.PL
             builder.Services.AddScoped<IShipmentService, ShipmentService>();
             builder.Services.AddScoped<IShipmentRepository, ShipmentRepository>();
 
+
             builder.Services.AddIdentity<WasalyIdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddEntityFrameworkStores <ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+            builder.Services.AddCourierServices(builder.Configuration);
 
 
             builder.Services.AddRazorPages();
@@ -34,6 +37,7 @@ namespace Wasaly.PL
                 options.LoginPath = "/Identity/Account/Login";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
             });
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
            
 
             var app = builder.Build();
