@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wasaly.DAL.Data.Context;
 
@@ -11,9 +12,11 @@ using Wasaly.DAL.Data.Context;
 namespace Wasaly.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260503150310_AddRegion")]
+    partial class AddRegion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,54 @@ namespace Wasaly.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Day9Demo.Models.Courier", b =>
+                {
+                    b.Property<string>("WasalyIdentityUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("DrivingLicenseImagePath")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("NationalIdImagePath")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ProfileImagePath")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("isVerfied")
+                        .HasColumnType("bit");
+
+                    b.HasKey("WasalyIdentityUserId");
+
+                    b.ToTable("Couriers");
+                });
+
+            modelBuilder.Entity("Day9Demo.Models.Merchant", b =>
+                {
+                    b.Property<string>("WasalyIdentityUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BusinessType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("StoreName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("WasalyIdentityUserId");
+
+                    b.ToTable("Merchants");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -155,34 +206,6 @@ namespace Wasaly.DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Wasaly.DAL.Models.Courier", b =>
-                {
-                    b.Property<string>("WasalyIdentityUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("DrivingLicenseImagePath")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("NationalIdImagePath")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("ProfileImagePath")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<bool>("isVerfied")
-                        .HasColumnType("bit");
-
-                    b.HasKey("WasalyIdentityUserId");
-
-                    b.ToTable("Couriers");
-                });
-
             modelBuilder.Entity("Wasaly.DAL.Models.CourierAssignment", b =>
                 {
                     b.Property<int>("Id")
@@ -282,26 +305,6 @@ namespace Wasaly.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Locations");
-                });
-
-            modelBuilder.Entity("Wasaly.DAL.Models.Merchant", b =>
-                {
-                    b.Property<string>("WasalyIdentityUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("BusinessType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("StoreName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("WasalyIdentityUserId");
-
-                    b.ToTable("Merchants");
                 });
 
             modelBuilder.Entity("Wasaly.DAL.Models.Notification", b =>
@@ -546,6 +549,28 @@ namespace Wasaly.DAL.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Day9Demo.Models.Courier", b =>
+                {
+                    b.HasOne("Wasaly.DAL.Models.WasalyIdentityUser", "WasalyIdentityUser")
+                        .WithOne()
+                        .HasForeignKey("Day9Demo.Models.Courier", "WasalyIdentityUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WasalyIdentityUser");
+                });
+
+            modelBuilder.Entity("Day9Demo.Models.Merchant", b =>
+                {
+                    b.HasOne("Wasaly.DAL.Models.WasalyIdentityUser", "WasalyIdentityUser")
+                        .WithOne()
+                        .HasForeignKey("Day9Demo.Models.Merchant", "WasalyIdentityUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WasalyIdentityUser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -597,20 +622,9 @@ namespace Wasaly.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Wasaly.DAL.Models.Courier", b =>
-                {
-                    b.HasOne("Wasaly.DAL.Models.WasalyIdentityUser", "WasalyIdentityUser")
-                        .WithOne()
-                        .HasForeignKey("Wasaly.DAL.Models.Courier", "WasalyIdentityUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("WasalyIdentityUser");
-                });
-
             modelBuilder.Entity("Wasaly.DAL.Models.CourierAssignment", b =>
                 {
-                    b.HasOne("Wasaly.DAL.Models.Courier", "Courier")
+                    b.HasOne("Day9Demo.Models.Courier", "Courier")
                         .WithMany("assignments")
                         .HasForeignKey("CourierId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -636,17 +650,6 @@ namespace Wasaly.DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Shipment");
-                });
-
-            modelBuilder.Entity("Wasaly.DAL.Models.Merchant", b =>
-                {
-                    b.HasOne("Wasaly.DAL.Models.WasalyIdentityUser", "WasalyIdentityUser")
-                        .WithOne()
-                        .HasForeignKey("Wasaly.DAL.Models.Merchant", "WasalyIdentityUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("WasalyIdentityUser");
                 });
 
             modelBuilder.Entity("Wasaly.DAL.Models.Notification", b =>
@@ -678,7 +681,7 @@ namespace Wasaly.DAL.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Wasaly.DAL.Models.Merchant", "Merchant")
+                    b.HasOne("Day9Demo.Models.Merchant", "Merchant")
                         .WithMany("shipments")
                         .HasForeignKey("MerchantId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -722,9 +725,14 @@ namespace Wasaly.DAL.Migrations
                     b.Navigation("Location");
                 });
 
-            modelBuilder.Entity("Wasaly.DAL.Models.Courier", b =>
+            modelBuilder.Entity("Day9Demo.Models.Courier", b =>
                 {
                     b.Navigation("assignments");
+                });
+
+            modelBuilder.Entity("Day9Demo.Models.Merchant", b =>
+                {
+                    b.Navigation("shipments");
                 });
 
             modelBuilder.Entity("Wasaly.DAL.Models.Location", b =>
@@ -734,11 +742,6 @@ namespace Wasaly.DAL.Migrations
                     b.Navigation("PickupShipments");
 
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("Wasaly.DAL.Models.Merchant", b =>
-                {
-                    b.Navigation("shipments");
                 });
 
             modelBuilder.Entity("Wasaly.DAL.Models.Shipment", b =>

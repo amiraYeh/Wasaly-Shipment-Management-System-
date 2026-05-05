@@ -1,18 +1,14 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-#nullable disable
-
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-
 using System.ComponentModel.DataAnnotations;
+using Wasaly.DAL.Data.Context;
 using Wasaly.DAL.Enums;
 using Wasaly.DAL.Models;
+using Wasaly.BLL.ViewModels;
 
 namespace Wasaly.PL.Areas.Identity.Pages.Account
 {
@@ -22,7 +18,6 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
         private readonly UserManager<WasalyIdentityUser> _userManager;
         private readonly IUserStore<WasalyIdentityUser> _userStore;
         private readonly RoleManager<IdentityRole> _roleManager;
-
 
         public RegisterModel(
             UserManager<WasalyIdentityUser> userManager,
@@ -36,75 +31,51 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
             _roleManager = roleManager;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public string ReturnUrl { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public SelectList Roles { get; set; }
+        public SelectList Regions { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public string RoleFromHome { get; set; }
 
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
             [Required]
             [StringLength(30, MinimumLength = 3)]
-            public string FullName { get; set; } 
+            public string FullName { get; set; }
 
             [Required]
             [StringLength(200, MinimumLength = 5)]
             [RegularExpression(@"^[a-zA-Z0-9\u0600-\u06FF\s,.-]+$",
-            ErrorMessage = "Address contains invalid characters")]
-            public string  Address { get; set; }
+                ErrorMessage = "Address contains invalid characters")]
+            public string Address { get; set; }
 
             [Required]
-            [RegularExpression("^(Male|Female)$")]
             public Gender Gender { get; set; }
 
+            [Required]
+            public region Region { get; set; }
 
             [Required]
             [Range(10, 60)]
@@ -112,65 +83,107 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
 
             [Required]
             [RegularExpression("^(01)(0|1|2|5)[0-9]{8}$", ErrorMessage = "Phone Number is not in the correct format")]
-            public string PhoneNumber { get; set; } 
-            public string Role { get; set; }
-
+            public string PhoneNumber { get; set; }
         }
 
-        private async Task LoadRolesAsync()
+        private async Task LoadRegionsAsync()
         {
-            var roles = await Task.FromResult(_roleManager.Roles.ToList());
-            Roles = new SelectList(roles, "Name", "Name");
+            var regions = Enum.GetValues(typeof(region))
+                .Cast<region>()
+                .Select(e => new
+                {
+                    Id = e.ToString(),
+                    Name = e.ToString()
+                })
+                .ToList();
+
+            Regions = new SelectList(regions, "Id", "Name");
         }
-        public async Task OnGetAsync(string returnUrl = null)
+
+        public async Task OnGetAsync(string returnUrl = null, string roleFromHome = null)
         {
             ReturnUrl = returnUrl;
-            LoadRolesAsync();
+
+            if (!string.IsNullOrEmpty(roleFromHome))
+            {
+                RoleFromHome = roleFromHome;
+            }
+
+            await LoadRegionsAsync();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
 
                 user.PhoneNumber = Input.PhoneNumber;
-                user.Location =new Location() { Address= Input.Address  } ;
+                user.Location = new Location { Address = Input.Address };
                 user.gender = Input.Gender;
                 user.FullName = Input.FullName;
                 user.Age = Input.Age;
+                user.Region = Input.Region;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
+                    var allowedRoles = new[] { "Merchant", "Courier" };
 
-                    // Validate role exists before assigning
-                    if (string.IsNullOrWhiteSpace(Input.Role) || !await _roleManager.RoleExistsAsync(Input.Role))
+                    if (string.IsNullOrEmpty(RoleFromHome))
                     {
-                        ModelState.AddModelError(string.Empty, $"Selected role '{Input.Role}' does not exist.");
+                        ModelState.AddModelError("", "الرجاء تحديد نوع الحساب (تاجر أو موصل)");
+                        await LoadRegionsAsync();
                         return Page();
                     }
 
-                    result = await _userManager.AddToRoleAsync(user, Input.Role);
-                    if (result.Succeeded)
+                    if (!allowedRoles.Contains(RoleFromHome))
                     {
+                        ModelState.AddModelError("", $"نوع الحساب غير صحيح. القيم المسموحة: {string.Join(", ", allowedRoles)}");
+                        await LoadRegionsAsync();
+                        return Page();
+                    }
+
+                    var roleResult = await _userManager.AddToRoleAsync(user, RoleFromHome);
+
+                    if (roleResult.Succeeded)
+                    {
+                        if (RoleFromHome == "Courier")
+                        {
+                            return RedirectToPage($"/Account/CorierRoleRegisteration", new { id = user.Id, returnUrl = "/" });
+                        }
+                        else if (RoleFromHome == "Merchant")
+                        {
+                            return RedirectToPage("/Account/MerchantRoleRegisteration", new { id = user.Id, returnUrl = "/" });
+                        }
+
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        return LocalRedirect(returnUrl ?? "/");
+                    }
+                    else
+                    {
+                        foreach (var error in roleResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
                     }
                 }
-                foreach (var error in result.Errors)
+                else
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    // عرض أخطاء إنشاء المستخدم
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
             }
 
-
-            // If we got this far, something failed, redisplay form
-            LoadRolesAsync();
+            await LoadRegionsAsync();
             return Page();
         }
 
@@ -187,7 +200,5 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }
-
-       
     }
 }

@@ -7,7 +7,7 @@ namespace Wasaly.PL
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -29,17 +29,17 @@ namespace Wasaly.PL
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
             });
             var app = builder.Build();
+
             using (var scope = app.Services.CreateScope())
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 var roles = new[] { "Admin", "Merchant", "Courier" };
+
                 foreach (var role in roles)
                 {
-                    var exists = roleManager.RoleExistsAsync(role).GetAwaiter().GetResult();
-                    if (!exists)
+                    if (!await roleManager.RoleExistsAsync(role))
                     {
-                        var createResult = roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
-                        // optionally handle/create logging for createResult if needed
+                        await roleManager.CreateAsync(new IdentityRole(role));
                     }
                 }
             }
@@ -61,11 +61,11 @@ namespace Wasaly.PL
             app.UseRouting();
 
             app.UseAuthorization();
+            app.MapRazorPages();
 
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-            app.MapRazorPages();
 
             app.Run();
         }

@@ -1,5 +1,4 @@
-﻿using Day9Demo.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -25,7 +24,6 @@ namespace Wasaly.DAL.Data.Context
         public virtual DbSet<ShipmentTracking> ShipmentTrackings { get; set; }
         public virtual DbSet<DeliveryOTP> DeliveryOTP { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
-
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<CourierAssignment> CourierAssignments { get; set; }
 
