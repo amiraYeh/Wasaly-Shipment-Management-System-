@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Wasaly.DAL.Models;
 
-namespace Day9Demo.Models
+namespace Wasaly.DAL.Models
 {
     public class Courier
     {

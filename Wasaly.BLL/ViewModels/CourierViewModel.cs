@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Wasaly.BLL.ViewModels
 {
-    internal class CourierViewModel
+    public class CourierViewModel
     {
         [Required]
         [FileExtensions(Extensions = "jpg,jpeg,png", ErrorMessage = "Only JPG, JPEG, PNG files are allowed")]
