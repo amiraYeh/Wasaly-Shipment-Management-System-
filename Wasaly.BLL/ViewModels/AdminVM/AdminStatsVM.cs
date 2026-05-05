@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Wasaly.BLL.ViewModels
+namespace Wasaly.BLL.ViewModels.AdminVM
 {
     public class AdminStatsVM
     {

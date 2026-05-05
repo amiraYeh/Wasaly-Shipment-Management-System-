@@ -1,4 +1,4 @@
-﻿using Day9Demo.Models;
+﻿using Wasaly.DAL.Models;
 
 namespace Wasaly.DAL.Repositories.IRepositories
 {

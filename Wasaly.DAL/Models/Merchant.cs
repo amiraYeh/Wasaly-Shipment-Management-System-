@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Wasaly.DAL.Models;
 
-namespace Day9Demo.Models
+namespace Wasaly.DAL.Models
 {
     public class Merchant
     {
@@ -15,7 +15,6 @@ namespace Day9Demo.Models
         public string StoreName { get; set; } = null!;
 
         public ICollection<Shipment> shipments { get; set; }
-        public string StoreAddress { get; set; } = null!;
 
         public string BusinessType { get; set; } = null!;
     }

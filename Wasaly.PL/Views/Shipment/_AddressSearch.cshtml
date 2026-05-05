@@ -1,0 +1,42 @@
+﻿@* @using Wasaly.DAL.Models
+@model Location 
+
+<!-- ======= PICKUP LOCATION ======= -->
+<div class="mb-3">
+    <label>نقطة الاستلام</label>
+    <div class="input-group">
+        <span class="input-group-text">📍</span>
+        <input type="text"
+               id="pickup-input"
+               class="form-control"
+               autocomplete="off" />
+    </div>
+
+    <!-- Hidden fields filled automatically by Google Maps -->
+    <input type="hidden" asp-for="Address" id="fulladdress" />
+    <input type="hidden" asp-for="Latitude" id="lat" />
+    <input type="hidden" asp-for="Longitude" id="lng" />
+    <input type="hidden" asp-for="City" id="city" />
+    <input type="hidden" asp-for="Street" id="street" />
+    <input type="hidden" asp-for="District" id="district" />
+</div>
+
+<!-- ======= DELIVERY LOCATION ======= -->
+ <div class="mb-3">
+    <label>نقطة التسليم</label>
+    <div class="input-group">
+        <span class="input-group-text">🏁</span>
+        <input type="text"
+               id="delivery-input"
+               class="form-control"
+               autocomplete="off" />
+    </div>
+
+    <!-- Hidden fields filled automatically by Google Maps -->
+    <input type="hidden" asp-for=" Address" id="delivery-fulladdress" />
+    <input type="hidden" asp-for=" Latitude" id="delivery-lat" />
+    <input type="hidden" asp-for=" Longitude" id="delivery-lng" />
+    <input type="hidden" asp-for=" City" id="delivery-city" />
+    <input type="hidden" asp-for=" Street" id="delivery-street" />
+    <input type="hidden" asp-for=" District" id="delivery-district"/>
+</div>  *@

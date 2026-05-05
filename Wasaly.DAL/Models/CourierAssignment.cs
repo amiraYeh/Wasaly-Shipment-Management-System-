@@ -1,5 +1,4 @@
-﻿using Day9Demo.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,15 +11,14 @@ namespace Wasaly.DAL.Models
     {
         public int Id { get; set; }
        
-        public string CourierId { get; set; }
-        public Courier Courier { get; set; }
-
         public DateTime AssignedAt { get; set; }= DateTime.Now;
 
-        public CourierStatus Status { get; set; }
+        public CourierStatus Status { get; set; } = CourierStatus.Assigned;
 
         //relationships
-        public int ShipmentId { get; set; }
-        public Shipment Shipment { get; set; }
+        public int? ShipmentId { get; set; }
+        public Shipment? Shipment { get; set; }
+        public string? CourierId { get; set; }
+        public Courier? Courier { get; set; }
     }
 }

@@ -1,11 +1,11 @@
-﻿using Day9Demo.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Wasaly.DAL.Data.Context;
+using Wasaly.DAL.Models;
 using Wasaly.DAL.Repositories.IRepositories;
 
 namespace Wasaly.DAL.Repositories

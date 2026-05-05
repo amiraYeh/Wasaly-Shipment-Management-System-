@@ -19,7 +19,7 @@ namespace Wasaly.DAL.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         //relationships
-        public int ShipmentId { get; set; }
-        public Shipment Shipment { get; set; }
+        public int? ShipmentId { get; set; }
+        public Shipment? Shipment { get; set; }
     }
 }

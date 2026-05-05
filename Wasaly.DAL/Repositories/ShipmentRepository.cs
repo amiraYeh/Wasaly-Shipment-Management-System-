@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 using System;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Wasaly.DAL.Data.Context;
+using Wasaly.DAL.Enums;
 using Wasaly.DAL.Models;
 using Wasaly.DAL.Repositories.IRepositories;
 
@@ -35,30 +37,41 @@ namespace Wasaly.DAL.Repositories
             return shipment;
         }
 
-        public async Task AddAsync(Shipment shipment)
+        public async Task<int> AddAsync(Shipment shipment)
         {
             try
             {
                 if (shipment == null)
-                    return;
-                await _context.Shipments.AddAsync(shipment);
+                    return 0;
+                _context.Shipments.Add(shipment);
+                _context.SaveChanges();
+                return 1;
             }
             catch (Exception ex)
             {
                  new ModelError(ex.Message);
+                return 0;
             }
         }
          public async Task UpdateAsync(Shipment shipment)
          {
-            if (shipment.Id == null || shipment == null)
-                return;
+            try
+            {
+                if (shipment.Id == null || shipment == null)
+                    return;
 
-            var shipmentDB = await _context.Shipments.FindAsync(shipment.Id);
+                var shipmentDB = await _context.Shipments.FindAsync(shipment.Id);
 
-            if (shipmentDB == null) return;
+                if (shipmentDB == null) return;
 
-            _context.Shipments.Update(shipment);
-           await _context.SaveChangesAsync();
+                _context.Shipments.Update(shipment);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                new ModelError(ex.Message);
+                //return 0;
+            }
          }
         public async Task DeleteAsync(int? id)
         {
@@ -72,21 +85,19 @@ namespace Wasaly.DAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public string GetCourierName(int? id)
+        public async Task<Tuple<string,int?>> GetCourierData(int? shipmentId)
         {
-            //var courierAssignment =  _context.Shipments.FirstOrDefault(s=>s.CourierAssignment.Id == id);
-            //var courierAssignment =  _context.Couriers.FirstOrDefault(c=>c. == id);
-
-
-            //if (courierAssignment == null)
-                //return null;
-            //return courierAssignment.FullName;
-            return "";
-        }
-
-        Task<string> IShipmentRepository.GetCourierName(int? id)
-        {
-            throw new NotImplementedException();
+            if(shipmentId == null)
+                return null;
+            var courAssigiment = await _context.CourierAssignments.Where(CA => CA.ShipmentId == shipmentId).FirstOrDefaultAsync(c => c.Status == CourierStatus.Accepted);
+            if (courAssigiment != null)
+            { 
+                var name = courAssigiment.Courier.WasalyIdentityUser.FullName;
+                var rate = courAssigiment.Courier.WasalyIdentityUser.Rating;
+                Tuple<string, int?> res = new Tuple<string, int?>(name, rate);
+                return res;
+            }
+            return null;
         }
     }
 }
