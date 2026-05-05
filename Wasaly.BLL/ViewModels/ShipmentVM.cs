@@ -4,12 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Wasaly.DAL.Enums;
 using Wasaly.DAL.Models;
 
 namespace Wasaly.BLL.ViewModels
 {
     public class ShipmentVM
     {
+        public int Id { get; set; }
         [Display(Name ="رقم الشحنة")]
         public string TrackingNumber { get; set; }
 
@@ -19,8 +21,13 @@ namespace Wasaly.BLL.ViewModels
         [Display(Name = "المندوب")]
         public string CourierAssignmentName { get; set; }
 
+        [Display(Name = "الحالة")]
+        public ShipmentStatus Status { get; set; }
+
         [Display(Name = "التقيم")]
         public int CourierAssignmentRate { get; set; }
 
+        [Display(Name = "السعر")]
+        public decimal Price { get; set; }
     }
 }

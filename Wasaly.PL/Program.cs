@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Wasaly.BLL.Services;
 using Wasaly.DAL.Data.Context;
 using Wasaly.DAL.Models;
 using Wasaly.DAL.Repositories;
 using Wasaly.DAL.Repositories.IRepositories;
 using Wasaly.PL.Extensions;
 
+//using Wasaly.BLL.Services;
 namespace Wasaly.PL
 {
     public class Program
@@ -17,14 +19,18 @@ namespace Wasaly.PL
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
-            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+            //builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+            builder.Services.AddScoped<IShipmentService, ShipmentService>();
+            builder.Services.AddScoped<IShipmentRepository, ShipmentRepository>();
 
 
             builder.Services.AddIdentity<WasalyIdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddCourierServices(builder.Configuration);
+
+
             builder.Services.AddRazorPages();
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -32,6 +38,8 @@ namespace Wasaly.PL
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
             });
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+           
+
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())
             {

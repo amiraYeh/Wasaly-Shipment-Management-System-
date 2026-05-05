@@ -11,10 +11,10 @@ namespace Wasaly.DAL.Repositories.IRepositories
     {
         public Task<List<Shipment>> GetAllAsync();
         public Task<Shipment> GetAsync(int? id);
-        public Task AddAsync(Shipment shipment);
+        public Task<int> AddAsync(Shipment shipment);
         public Task UpdateAsync(Shipment shipment);
         public Task DeleteAsync(int? id);
 
-        public Task<string> GetCourierName(int? id);
+        public Task<Tuple<string,int?>> GetCourierData(int? shipmentId);
     }
 }

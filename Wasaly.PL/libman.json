@@ -1,0 +1,10 @@
+{
+  "version": "3.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "places.js@1.19.0",
+      "destination": "wwwroot/places.js/"
+    }
+  ]
+}

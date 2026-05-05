@@ -13,7 +13,7 @@ namespace Wasaly.DAL.Models
     {
         public int Id { get; set; }
 
-        public string? TrackingNumber { get; set; }
+        public string? TrackingNumber { get; set; }= Guid.NewGuid().ToString("N").Substring(0, 7);
 
         public string Description { get; set; }
 
@@ -21,7 +21,7 @@ namespace Wasaly.DAL.Models
 
         public decimal Price { get; set; }
 
-        public ShipmentStatus Status { get; set; }
+        public ShipmentStatus Status { get; set; }= ShipmentStatus.Created;
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
@@ -35,14 +35,14 @@ namespace Wasaly.DAL.Models
         // Relationships
 
 
-        public string MerchantId { get; set; }
-        public Merchant Merchant { get; set; }
+        public string? MerchantId { get; set; }
+        public Merchant? Merchant { get; set; }
 
-        public int PickupLocationId { get; set; }
-        public Location PickupLocation { get; set; }
+        public int? PickupLocationId { get; set; }
+        public Location? PickupLocation { get; set; }
 
-        public int DropLocationId { get; set; }
-        public Location DropLocation { get; set; }
+        public int? DropLocationId { get; set; }
+        public Location? DropLocation { get; set; }
 
         public ICollection<ShipmentTracking>? Trackings { get; set; }
 
