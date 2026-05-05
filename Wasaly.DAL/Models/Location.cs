@@ -15,11 +15,14 @@ namespace Wasaly.DAL.Models
         public double Latitude { get; set; }
 
         public double Longitude { get; set; }
+        //public string Street {  get; set; }
+        //public string City { get; set; }
+        //public string District { get; set; }
 
         //relationships
-        public ICollection<Shipment> PickupShipments { get; set; }
-        public ICollection<Shipment> DropShipments { get; set; }
-        public ICollection<WasalyIdentityUser> Users { get; set; }
+        public ICollection<Shipment>? PickupShipments { get; set; }
+        public ICollection<Shipment>? DropShipments { get; set; }
+        public ICollection<WasalyIdentityUser>? Users { get; set; }
 
     }
 }

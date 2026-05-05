@@ -10,17 +10,24 @@ namespace Wasaly.BLL.ViewModels
 {
     public class AddShipmentVM
     {
-        [Required]
+        //public string? TrackingNumber { get; set; } 
+        //[Required]
+        [Display(Name ="مكان الاستلام")]
         public Location PickupLocation { get; set; }
-        [Required]
+        //[Required]
+        [Display(Name ="مكان التسليم")]
         public Location DropLocation { get; set; }
         [Required]
+        [Display(Name ="وصف الشحنه")]
         public string Description { get; set; }
         [Required]
+        [Display(Name ="الوزن")]
         public double Weight { get; set; }
         [Required]
+        [Display(Name ="معاد التسليم")]
         public DateTime? DeliveredAt { get; set; }
-        [Required]
-        public decimal Price { get; set; }
+        //[Required]
+        //[Display(Name = "السعر")]
+        //public decimal Price { get; set; }
     }
 }

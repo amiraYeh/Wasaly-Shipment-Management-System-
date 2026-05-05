@@ -1,0 +1,64 @@
+﻿@using Wasaly.BLL.ViewModels
+@model IEnumerable<ShipmentVM>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TrackingNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DropLocation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourierAssignmentName) 
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+             <th>
+                @Html.DisplayNameFor(model => model.CourierAssignmentRate)
+            </th> 
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TrackingNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DropLocation)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourierAssignmentName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourierAssignmentRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -11,14 +11,14 @@ namespace Wasaly.DAL.Models
     {
         public int Id { get; set; }
 
-        public ShipmentStatus Status { get; set; }
+        public ShipmentStatus Status { get; set; } 
 
         public DateTime TimeStamp { get; set; } = DateTime.Now;
 
         public string Note { get; set; }
 
         //relationships
-        public int ShipmentId { get; set; }
-        public Shipment Shipment { get; set; }
+        public int? ShipmentId { get; set; }
+        public Shipment? Shipment { get; set; }
     }
 }
