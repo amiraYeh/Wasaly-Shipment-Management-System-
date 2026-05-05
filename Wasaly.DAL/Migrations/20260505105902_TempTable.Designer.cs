@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wasaly.DAL.Data.Context;
 
@@ -11,9 +12,11 @@ using Wasaly.DAL.Data.Context;
 namespace Wasaly.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260505105902_TempTable")]
+    partial class TempTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,7 +183,7 @@ namespace Wasaly.DAL.Migrations
 
                     b.HasKey("WasalyIdentityUserId");
 
-                    b.ToTable("Couriers", (string)null);
+                    b.ToTable("Couriers");
                 });
 
             modelBuilder.Entity("Wasaly.DAL.Models.CourierAssignment", b =>
@@ -215,7 +218,7 @@ namespace Wasaly.DAL.Migrations
 
                     b.HasIndex("ShipmentId");
 
-                    b.ToTable("CourierAssignments", null, t =>
+                    b.ToTable("CourierAssignments", t =>
                         {
                             t.HasCheckConstraint("CK_Courier_Status", "[Status] IN ( 'Assigned', 'Accepted','Rejected')");
                         });
@@ -255,7 +258,7 @@ namespace Wasaly.DAL.Migrations
                     b.HasIndex("ShipmentId")
                         .IsUnique();
 
-                    b.ToTable("DeliveryOTP", null, t =>
+                    b.ToTable("DeliveryOTP", t =>
                         {
                             t.HasCheckConstraint("CK_DeliveryOTP_Code", "[OTPCode] >= 100000 AND [OTPCode] <= 999999");
                         });
@@ -281,7 +284,7 @@ namespace Wasaly.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations", (string)null);
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("Wasaly.DAL.Models.Merchant", b =>
@@ -301,7 +304,7 @@ namespace Wasaly.DAL.Migrations
 
                     b.HasKey("WasalyIdentityUserId");
 
-                    b.ToTable("Merchants", (string)null);
+                    b.ToTable("Merchants");
                 });
 
             modelBuilder.Entity("Wasaly.DAL.Models.Notification", b =>
@@ -342,7 +345,7 @@ namespace Wasaly.DAL.Migrations
 
                     b.HasIndex("WasalyIdentityUserId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Wasaly.DAL.Models.Shipment", b =>
@@ -414,7 +417,7 @@ namespace Wasaly.DAL.Migrations
                     b.HasIndex("TrackingNumber")
                         .IsUnique();
 
-                    b.ToTable("Shipments", null, t =>
+                    b.ToTable("Shipments", t =>
                         {
                             t.HasCheckConstraint("CK_Shipment_Status", "[Status] IN ('Created','Accepted','PickedUp','Delivered')");
                         });
@@ -448,11 +451,54 @@ namespace Wasaly.DAL.Migrations
 
                     b.HasIndex("ShipmentId");
 
-                    b.ToTable("ShipmentTrackings", null, t =>
+                    b.ToTable("ShipmentTrackings", t =>
                         {
                             t.HasCheckConstraint("CK_Shipment_Status", "[Status] IN ('Created','Accepted','PickedUp','Delivered')")
                                 .HasName("CK_Shipment_Status1");
                         });
+                });
+
+            modelBuilder.Entity("Wasaly.DAL.Models.TempUserRegistrationData", b =>
+                {
+                    b.Property<string>("WasalyIdentityUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Region")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("WasalyIdentityUserId");
+
+                    b.ToTable("TempUsers");
                 });
 
             modelBuilder.Entity("Wasaly.DAL.Models.WasalyIdentityUser", b =>

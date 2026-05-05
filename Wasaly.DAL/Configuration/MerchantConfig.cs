@@ -1,5 +1,4 @@
-﻿using Day9Demo.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -19,9 +18,6 @@ namespace Wasaly.DAL.Configuration
            .IsRequired()
            .HasMaxLength(100);
 
-            builder.Property(c => c.StoreAddress)
-                    .IsRequired()
-                    .HasMaxLength(200);
 
             builder.Property(c => c.BusinessType)
                 .IsRequired()
