@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wasaly.BLL;
 
-namespace Wasaly.PL.Areas.AdminAreas.Controllers
+namespace Wasaly.PL.Controllers
 {
-    [Area("AdminAreas")]
-    public class DashboardController : Controller
+    //[Area("Admin")]
+    public class AdminController : Controller
     {
         private readonly IAdminService _adminService;
 
   
-        public DashboardController(IAdminService adminService)
+        public AdminController(IAdminService adminService)
 
         {
 
@@ -18,7 +18,7 @@ namespace Wasaly.PL.Areas.AdminAreas.Controllers
         }
 
 
-        public async Task<IActionResult> AdminDashBord()
+        public async Task<IActionResult> Index()
 
         {
 

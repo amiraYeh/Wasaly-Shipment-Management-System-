@@ -18,17 +18,15 @@ namespace Wasaly.BLL.Services
 
         public async Task<AdminStatsVM> GetDashboardStatsAsync()
         {
-            var todayTask = _userRepository.GetTodayShipmentsCountAsync();
-            var couriersTask = _userRepository.GetTotalCouriersCountAsync();
-            var merchantsTask = _userRepository.GetTotalMerchantsCountAsync();
-
-            await Task.WhenAll(todayTask, couriersTask, merchantsTask);
+            var todayCount = await _userRepository.GetTodayShipmentsCountAsync();
+            var couriersCount = await _userRepository.GetTotalCouriersCountAsync();
+            var merchantsCount = await _userRepository.GetTotalMerchantsCountAsync();
 
             return new AdminStatsVM
             {
-                TodayShipmentsCount = await todayTask,
-                TotalCouriersCount = await couriersTask,
-                TotalMerchantsCount = await merchantsTask
+                TodayShipmentsCount = todayCount,
+                TotalCouriersCount = couriersCount,
+                TotalMerchantsCount = merchantsCount
             };
         }
     }
