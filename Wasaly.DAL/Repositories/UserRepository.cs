@@ -46,7 +46,7 @@ namespace Wasaly.DAL.Repositories
         public async Task<IEnumerable<Courier>> GetPendingCouriersAsync()
         {
             return await _context.Couriers
-                                 .Include(c => c.WasalyIdentityUser) 
+                                 .Include(c => c.WasalyIdentityUser)
                                  .Where(c => c.isVerfied == false)
                                  .ToListAsync();
         }
@@ -121,6 +121,73 @@ namespace Wasaly.DAL.Repositories
                 query = query.Where(c => c.isVerfied == false);
 
             return await query.ToListAsync();
+        }
+
+
+
+        public async Task<IEnumerable<Merchant>> GetAllMerchantsAsync(
+        string? search, string? status)
+        {
+            var query = _context.Merchants
+                                .Include(m => m.WasalyIdentityUser)
+                                .Include(m => m.shipments)
+                                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+                query = query.Where(m =>
+                    m.WasalyIdentityUser.FullName.Contains(search) ||
+                    m.StoreName.Contains(search) ||
+                    m.WasalyIdentityUser.PhoneNumber.Contains(search));
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<Merchant?> GetMerchantByIdAsync(string id)
+        {
+            return await _context.Merchants
+                                 .Include(m => m.WasalyIdentityUser)
+                                 .Include(m => m.shipments)
+                                     .ThenInclude(s => s.CourierAssignments)
+                                         .ThenInclude(ca => ca.Courier)
+                                             .ThenInclude(c => c.WasalyIdentityUser)
+                                 .FirstOrDefaultAsync(m => m.WasalyIdentityUserId == id);
+        }
+
+        // UserRepository.cs
+        public async Task<bool> DeleteCourierAsync(string id)
+        {
+            var courier = await _context.Couriers
+                                        .Include(c => c.assignments)
+                                        .FirstOrDefaultAsync(c => c.WasalyIdentityUserId == id);
+
+            if (courier == null) return false;
+
+            // احذف الـ Assignments الأول
+            if (courier.assignments != null && courier.assignments.Any())
+                _context.CourierAssignments.RemoveRange(courier.assignments);
+
+            // بعدين احذف الـ Courier
+            _context.Couriers.Remove(courier);
+
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> DeleteMerchantAsync(string id)
+        {
+            var merchant = await _context.Merchants
+                                         .Include(m => m.shipments)
+                                         .FirstOrDefaultAsync(m => m.WasalyIdentityUserId == id);
+
+            if (merchant == null) return false;
+
+            // احذف الـ Shipments الأول
+            if (merchant.shipments != null && merchant.shipments.Any())
+                _context.Shipments.RemoveRange(merchant.shipments);
+
+            // بعدين احذف الـ Merchant
+            _context.Merchants.Remove(merchant);
+
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }

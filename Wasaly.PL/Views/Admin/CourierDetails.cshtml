@@ -104,6 +104,15 @@
 
 <!-- Decision -->
 <div class="stat-card shadow-sm">
+    <div class="text-end mb-3">
+        <form asp-action="DeleteCourier" method="post"
+              onsubmit="return confirm('هل أنت متأكد من حذف المندوب؟')">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button type="submit" class="btn btn-danger px-4">
+                🗑️ حذف المندوب
+            </button>
+        </form>
+    </div>
     @if (!Model.IsVerified)
     {
         <div class="row g-3">

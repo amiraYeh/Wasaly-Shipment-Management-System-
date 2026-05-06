@@ -49,5 +49,32 @@ namespace Wasaly.PL.Controllers
             await _adminService.UpdateCourierVerificationAsync(id, status);
             return RedirectToAction("CourierDetails", new { id });
         }
+
+        public async Task<IActionResult> GetMerchants(string? search, string? status)
+        {
+            var vm = await _adminService.GetMerchantsAsync(search, status);
+            return View(vm);
+        }
+
+        public async Task<IActionResult> MerchantDetails(string id)
+        {
+            var vm = await _adminService.GetMerchantDetailsAsync(id);
+            if (vm == null) return NotFound();
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteCourier(string id)
+        {
+            await _adminService.DeleteCourierAsync(id);
+            return RedirectToAction("GetCouriers");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteMerchant(string id)
+        {
+            await _adminService.DeleteMerchantAsync(id);
+            return RedirectToAction("GetMerchants");
+        }
     }
 }

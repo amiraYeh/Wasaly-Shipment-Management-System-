@@ -14,6 +14,10 @@ namespace Wasaly.BLL
         Task<CouriersManagementVM> GetCouriersAsync(string? search, string? status, string? region);
         Task<CourierRowVM?> GetCourierDetailsAsync(string id);
         Task<bool> UpdateCourierVerificationAsync(string id, bool status);
+        Task<MerchantsManagementVM> GetMerchantsAsync(string? search, string? status);
+        Task<MerchantRowVM?> GetMerchantDetailsAsync(string id);
+        Task<bool> DeleteCourierAsync(string id);
+        Task<bool> DeleteMerchantAsync(string id);
 
     }
 }

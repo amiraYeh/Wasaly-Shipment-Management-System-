@@ -51,7 +51,10 @@ namespace Wasaly.DAL.Repositories.IRepositories
         /// <param name="region"></param>
         /// <returns></returns>
         Task<IEnumerable<Courier>> GetAllCouriersAsync(string? search, string? status, string? region);
-
+        Task<IEnumerable<Merchant>> GetAllMerchantsAsync(string? search, string? status);
+        Task<Merchant?> GetMerchantByIdAsync(string id);
+        Task<bool> DeleteCourierAsync(string id);
+        Task<bool> DeleteMerchantAsync(string id);
 
 
     }

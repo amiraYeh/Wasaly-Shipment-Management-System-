@@ -13,7 +13,9 @@ namespace Wasaly.BLL.ViewModels.AdminVM
         public int TodayShipmentsCount { get; set; }
         public int TotalMerchantsCount { get; set; }
         public int TotalCouriersCount { get; set; }
-        //  public int OpenDisputesCount { get; set; }
+        public int PendingCouriersCount { get; set; } // ← ضيفي دي
+                                                      //  public int OpenDisputesCount { get; set; }
+        public int VerifiedCount { get; set; }
         public IEnumerable<Courier> PendingCouriers { get; set; } = new List<Courier>();
     }
 }

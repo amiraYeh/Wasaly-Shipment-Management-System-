@@ -1,4 +1,5 @@
 ﻿@model Wasaly.BLL.ViewModels.AdminVM.AdminStatsVM
+
 @{
     Layout = "_DashBordLayout";
     ViewData["Title"] = "لوحة التحكم";
@@ -18,7 +19,7 @@
             </div>
             <div class="d-flex gap-3 small">
                 <span class="text-success">✅ ٩٨ موثق</span>
-                <span class="text-warning">⏳ ١٢ انتظار</span>
+                <span class="text-warning">⏳ @Model.PendingCouriersCount انتظار</span>
             </div>
         </div>
     </div>
@@ -33,10 +34,10 @@
                     <div class="small text-muted">إجمالي التجار</div>
                 </div>
             </div>
-            <div class="d-flex gap-3 small">
+            @* <div class="d-flex gap-3 small">
                 <span class="text-success">✅ ٢٧٠ نشط</span>
                 <span class="text-danger">🔴 ١٦ موقوف</span>
-            </div>
+            </div> *@
         </div>
     </div>
 
@@ -70,7 +71,7 @@
         <div class="stat-card border-end border-orange border-4 shadow-sm">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="fs-2">📋</span>
-                <span class="fs-3 fw-bold text-orange">١٢</span>
+                <span class="fs-3 fw-bold text-orange">@Model.PendingCouriersCount</span>
             </div>
             <div class="text-muted small mb-3">طلبات توثيق معلقة</div>
             <a asp-action="VerificationRequests" class="text-orange text-decoration-none small fw-bold">مراجعة الطلبات ←</a>
@@ -81,7 +82,7 @@
         <div class="stat-card border-end border-primary border-4 shadow-sm">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="fs-2">🔵</span>
-                <span class="fs-3 fw-bold text-primary">٨٧</span>
+                <span class="fs-3 fw-bold text-primary">30</span>
             </div>
             <div class="text-muted small">شحنات جارية الآن</div>
             <div class="mt-2"><span class="badge bg-primary rounded-circle p-1 animate-pulse" style="width:10px; height:10px; display:inline-block;"></span></div>
