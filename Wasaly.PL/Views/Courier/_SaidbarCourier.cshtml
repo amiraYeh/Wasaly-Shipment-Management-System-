@@ -1,0 +1,20 @@
+﻿@{
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<a asp-controller="Courier" asp-action="Index"
+   class="sidebar-item @(action == "Index" ? "active" : "")">
+    <i class="bi bi-house-fill fs-5"></i> الرئيسية
+</a>
+<a asp-controller="Courier" asp-action="AvailableShipments"
+   class="sidebar-item @(action == "AvailableShipments" ? "active" : "")">
+    <i class="bi bi-box-seam-fill fs-5"></i> الطلبات المتاحة
+</a>
+<a asp-controller="Courier" asp-action="MyShipments"
+   class="sidebar-item @(action == "MyShipments" ? "active" : "")">
+    <i class="bi bi-truck fs-5"></i> شحناتي الحالية
+</a>
+<a asp-controller="Courier" asp-action="Earnings"
+   class="sidebar-item @(action == "Earnings" ? "active" : "")">
+    <i class="bi bi-wallet2-fill fs-5"></i> أرباحي
+</a>

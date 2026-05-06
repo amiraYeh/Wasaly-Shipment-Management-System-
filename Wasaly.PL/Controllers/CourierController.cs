@@ -11,11 +11,11 @@ namespace Wasaly.PL.Controllers
     public class CourierController : Controller
     {
         private readonly ICourierService _courierService;
-        private readonly UserManager<WasalyIdentityUser> _userManager;
+       // private readonly UserManager<WasalyIdentityUser> _userManager;
         public CourierController(ICourierService courierService, UserManager<WasalyIdentityUser> userManager)
         {
             _courierService= courierService;
-            _userManager=userManager;
+           // _userManager=userManager;
 
         }
         public async Task<IActionResult> AvailableShipments()
@@ -28,7 +28,8 @@ namespace Wasaly.PL.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AcceptShipment(int shipmentId)
         {
-            var courierId = _userManager.GetUserId(User);
+            //var courierId = _userManager.GetUserId(User);
+            var courierId = "remonda_courier";
 
             var result = await _courierService.AcceptShipmentAsync(shipmentId, courierId);
 
@@ -41,7 +42,8 @@ namespace Wasaly.PL.Controllers
         }
         public async Task<IActionResult> MyShipments()
         {
-            var courierId = _userManager.GetUserId(User);
+            //var courierId = _userManager.GetUserId(User);
+            var courierId = "remonda_courier";
             var shipments = await _courierService.GetCourierShipmentsAsync(courierId);
             return View(shipments);
         }
@@ -51,7 +53,8 @@ namespace Wasaly.PL.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PickupShipment(int shipmentId)
         {
-            var courierId = _userManager.GetUserId(User);
+            //var courierId = _userManager.GetUserId(User);
+            var courierId = "remonda_courier";
 
             var result = await _courierService.PickupShipmentAsync(shipmentId, courierId);
 
@@ -95,7 +98,8 @@ namespace Wasaly.PL.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var courierId = _userManager.GetUserId(User);
+            //var courierId = _userManager.GetUserId(User);
+            var courierId = "remonda_courier";
             var (success, message) = await _courierService.VerifyOtpAndDeliverAsync(model, courierId);
 
             if (success)
@@ -106,6 +110,23 @@ namespace Wasaly.PL.Controllers
 
             TempData["Error"] = message;
             return View(model);
+        }
+        public async Task<IActionResult> Index()
+        {
+            //var courierId = _userManager.GetUserId(User);
+            var courierId = "remonda_courier";
+            var dashboard = await _courierService.GetDashboardAsync(courierId);
+            ViewData["Balance"] = dashboard.Balance.ToString("F0");
+            return View(dashboard);
+        }
+
+        public async Task<IActionResult> Earnings()
+        {
+            // var courierId = _userManager.GetUserId(User);
+            var courierId = "remonda_courier";
+            var dashboard = await _courierService.GetDashboardAsync(courierId);
+            ViewData["Balance"] = dashboard.Balance.ToString("F0");
+            return View(dashboard);
         }
     }
 }

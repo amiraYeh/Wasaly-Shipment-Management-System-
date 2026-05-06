@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Wasaly.BLL;
+using Wasaly.BLL.@interface;
 
 namespace Wasaly.PL.Controllers
 {

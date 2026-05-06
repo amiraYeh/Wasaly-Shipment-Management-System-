@@ -1,0 +1,36 @@
+﻿@model Wasaly.BLL.ViewModels.CourierDashboardVM
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="bg-white rounded-3 p-4 shadow-sm text-center">
+            <div class="text-muted small mb-2">توصيلات اليوم</div>
+            <div class="fw-black text-orange" style="font-size:1.8rem;">
+                @Model.TodayDeliveries
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="bg-white rounded-3 p-4 shadow-sm text-center">
+            <div class="text-muted small mb-2">أرباح هذا الأسبوع</div>
+            <div class="fw-black text-orange" style="font-size:1.8rem;">
+                @Model.WeekEarnings.ToString("F0") ج
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="bg-white rounded-3 p-4 shadow-sm text-center">
+            <div class="text-muted small mb-2">تقييمي العام</div>
+            <div class="fw-black text-orange" style="font-size:1.8rem;">
+                ⭐ 4.8
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="bg-white rounded-3 p-4 shadow-sm text-center">
+            <div class="text-muted small mb-2">نسبة القبول</div>
+            <div class="fw-black text-orange" style="font-size:1.8rem;">
+                @Model.AcceptanceRate٪
+            </div>
+        </div>
+    </div>
+</div>
