@@ -1,0 +1,43 @@
+﻿<div class="row g-3 mb-4">
+    <div class="col-12 col-md-6">
+        <a asp-action="AvailableShipments" class="text-decoration-none">
+            <div class="bg-white rounded-3 p-4 shadow-sm quick-action-card h-100">
+                <div style="font-size:3rem;" class="mb-3">📋</div>
+                <div class="fw-bold fs-5 mb-2">الطلبات المتاحة</div>
+                <div class="text-muted small mb-3">تصفح الطلبات في منطقتك</div>
+                <span class="badge rounded-pill px-3 py-2"
+                      style="background:#fff3ee; color:#FF6B35;">
+                    طلبات جديدة
+                </span>
+            </div>
+        </a>
+    </div>
+    <div class="col-12 col-md-6">
+        <a asp-action="MyShipments" class="text-decoration-none">
+            <div class="bg-white rounded-3 p-4 shadow-sm quick-action-card h-100">
+                <div style="font-size:3rem;" class="mb-3">🚴</div>
+                <div class="fw-bold fs-5 mb-2">شحنتي الحالية</div>
+                <div class="text-muted small">متابعة التوصيلة الجارية</div>
+            </div>
+        </a>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .quick-action-card {
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+            .quick-action-card:hover {
+                border-color: #FF6B35;
+                box-shadow: 0 8px 25px rgba(255,107,53,0.15) !important;
+            }
+
+                .quick-action-card:hover .fw-bold {
+                    color: #FF6B35;
+                }
+    </style>
+}

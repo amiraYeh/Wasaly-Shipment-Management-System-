@@ -1,0 +1,42 @@
+@model List<Wasaly.BLL.ViewModels.AvailableShipmentVM>
+@{
+    ViewData["Title"] = "الطلبات المتاحة";
+    Layout = "~/Views/Shared/_DashBordLayout.cshtml";
+}
+
+<div class="mb-4">
+    <h5 class="fw-bold mb-1">الطلبات المتاحة في منطقتك</h5>
+    <p class="text-muted small mb-0">اختر الطلب المناسب لك وابدأ التوصيل</p>
+</div>
+
+@section Styles {
+    <style>
+        .order-card-hover {
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+            .order-card-hover:hover {
+                border-color: #FF6B35;
+                box-shadow: 0 8px 25px rgba(255,107,53,0.15) !important;
+            }
+    </style>
+}
+
+@if (!Model.Any())
+{
+    <div class="bg-white rounded-3 p-5 text-center shadow-sm">
+        <div style="font-size:4rem;">📭</div>
+        <h5 class="fw-bold mt-3 mb-2">لا توجد طلبات متاحة حالياً</h5>
+        <p class="text-muted">تحقق مرة أخرى لاحقاً</p>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var order in Model)
+        {
+            @await Html.PartialAsync("_ShipmentCard", order)
+        }
+    </div>
+}
