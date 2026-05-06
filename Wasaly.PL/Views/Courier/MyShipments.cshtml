@@ -1,0 +1,26 @@
+﻿@model List<Wasaly.BLL.ViewModels.CourierShipmentVM>
+@using Wasaly.DAL.Enums
+@{
+    ViewData["Title"] = "شحناتي الحالية";
+    Layout = "~/Views/Shared/_DashBordLayout.cshtml";
+}
+
+@if (!Model.Any())
+{
+    <div class="bg-white rounded-3 p-5 text-center shadow-sm">
+        <div style="font-size:4rem;">📭</div>
+        <h5 class="fw-bold mt-3 mb-2">لا توجد شحنات حالية</h5>
+        <a asp-action="AvailableShipments" class="btn btn-orange text-white mt-2">
+            ابحث عن شحنات
+        </a>
+    </div>
+}
+else
+{
+    <div class="d-flex flex-column gap-4">
+        @foreach (var item in Model)
+        {
+            @await Html.PartialAsync("_CurrentShipmentCard", item)
+        }
+    </div>
+}

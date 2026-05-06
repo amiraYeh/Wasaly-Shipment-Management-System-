@@ -16,6 +16,9 @@ namespace Wasaly.DAL.Repositories.IRepositories
         Task DeleteOtpAsync(DeliveryOTP otp);
         Task<DeliveryOTP?> GetOtpByShipmentAsync(int shipmentId);
         Task UpdateCourierBalanceAsync(string courierId, decimal amount);
+
+        Task<Courier> GetCourierWithDetailsAsync(string courierId);
+        Task<List<CourierAssignment>> GetAllCourierAssignmentsAsync(string courierId);
         Task SaveAsync();
     }
 }

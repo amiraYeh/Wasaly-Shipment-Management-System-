@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="~/css/waslni-style.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
 
@@ -35,8 +36,8 @@
             </div>
             <div>
                 <div class="fw-bold text-white small">@User.Identity?.Name</div>
-               @*  <div class="text-secondary" style="font-size:.8rem;">
-                    @if (User.IsInRole("Admin"))
+                <div class="text-secondary" style="font-size:.8rem;">
+                  @*   @if (User.IsInRole("Admin"))
                     {
                         <span>أدمن</span>
                     }
@@ -51,14 +52,14 @@
                     @if (User.IsInRole("Admin"))
                     {
                         <span>أدمن</span>
-                    }
-                   
-                </div> *@
-                    <span>أدمن</span>
+                    } *@
+                        <span>مندوب</span>
+                </div>
+                    
             </div>
         </div>
         <!-- Sidebar باستخدام الـ Classes بتاعتك -->
-       @*  @if (User.IsInRole("Admin"))
+    @*     @if (User.IsInRole("Admin"))
         {
             @await Html.PartialAsync("_SaidbarAdmin")
         }
@@ -72,8 +73,8 @@
         } *@
        
 
-        @await Html.PartialAsync("_SaidbarAdmin")
-       @*  @await Html.PartialAsync("_SaidbarCourier") *@
+       @*  @await Html.PartialAsync("_SaidbarAdmin") *@
+         @await Html.PartialAsync("_SaidbarCourier") 
        </aside>
 
         <!-- overlay (required for mobile toggle) -->
@@ -82,8 +83,8 @@
         <!-- Main Content -->
         <main class="main-content">
             <!-- Top Navbar باستخدام الـ Classes بتاعتك -->
-            @await Html.PartialAsync("_AdminNV")
-            @* @await Html.PartialAsync("_CourierNV") *@
+            @* @await Html.PartialAsync("_AdminNV") *@
+             @await Html.PartialAsync("_CourierNV") 
 
 
             <!-- Content Area -->

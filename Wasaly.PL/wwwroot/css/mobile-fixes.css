@@ -1,0 +1,46 @@
+/* ضيفي السطور دي في آخر waslni-style.css */
+
+/* Mobile Sidebar */
+@media (max-width: 991.98px) {
+    .sidebar {
+        transform: translateX(110%);
+        transition: transform 0.3s ease;
+        z-index: 1045;
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-right: 0 !important;
+    }
+
+    /* Overlay */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 1044;
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+    }
+}
+
+/* Desktop - إخفاء الـ toggle button */
+@media (min-width: 992px) {
+    #menuToggle { display: none !important; }
+    .sidebar-overlay { display: none !important; }
+}
+
+/* Sidebar item color on hover */
+.sidebar-item:hover {
+    color: white !important;
+}
+
+.sidebar-item.active {
+    color: var(--primary-orange) !important;
+}

@@ -1,0 +1,66 @@
+@model Wasaly.BLL.ViewModels.AvailableShipmentVM
+
+<div class="col-12 col-md-6">
+    <div class="bg-white rounded-3 p-4 shadow-sm h-100 order-card-hover">
+
+        <!-- العناوين -->
+        <div class="mb-4">
+            <div class="d-flex align-items-start gap-3 mb-3">
+                <span style="font-size:1.5rem;">🟢</span>
+                <div>
+                    <div class="text-muted" style="font-size:.75rem;">عنوان الاستلام</div>
+                    <div class="fw-semibold">@Model.PickupAddress</div>
+                </div>
+            </div>
+            <div class="d-flex align-items-start gap-3">
+                <span style="font-size:1.5rem;">🔴</span>
+                <div>
+                    <div class="text-muted" style="font-size:.75rem;">عنوان التسليم</div>
+                    <div class="fw-semibold">@Model.DropAddress</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- الوزن والوقت -->
+        <div class="d-flex justify-content-between text-muted small pb-3 mb-3 border-bottom">
+            <span>الوزن: @Model.Weight كجم</span>
+            <span>منذ @((DateTime.Now - Model.CreatedAt).Minutes) دقائق</span>
+        </div>
+
+        <!-- السعر -->
+        <div class="text-center mb-3">
+            <div class="fw-black text-orange" style="font-size:2.2rem;">
+                @Model.Price.ToString("F0") جنيه
+            </div>
+        </div>
+
+        <!-- الأزرار -->
+        <div class="d-flex gap-2">
+            <form asp-action="AcceptShipment" method="post" class="flex-grow-1">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="shipmentId" value="@Model.Id" />
+                <button type="submit"
+                        class="btn w-100 fw-bold py-2 text-white"
+                        style="background:#2ECC71;">
+                    ✓ قبول الطلب
+                </button>
+            </form>
+            <button class="btn btn-secondary fw-bold px-4 py-2">تخطي</button>
+        </div>
+
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .order-card-hover {
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+            .order-card-hover:hover {
+                border-color: #FF6B35;
+                box-shadow: 0 8px 25px rgba(255,107,53,0.15) !important;
+            }
+    </style>
+}
