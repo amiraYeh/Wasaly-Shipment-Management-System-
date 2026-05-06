@@ -34,6 +34,7 @@ namespace Wasaly.DAL.Repositories
         public async Task<Courier?> GetCourierByIdAsync(string id)
         {
             return await _context.Couriers
+                          .Include(c => c.WasalyIdentityUser)
                          .FirstOrDefaultAsync(c => c.WasalyIdentityUserId == id);
         }
 
@@ -41,14 +42,14 @@ namespace Wasaly.DAL.Repositories
         /// Retrieves all couriers that are pending verification.
         /// </summary>
         /// <returns>A collection of unverified <see cref="Courier"/> instances. Returns an empty collection when none exist.</returns>
+        // UserRepository.cs - ظبطي GetPendingCouriersAsync
         public async Task<IEnumerable<Courier>> GetPendingCouriersAsync()
         {
-            // المندوب اللي لسه مخلصش مرحلة التوثيق
             return await _context.Couriers
+                                 .Include(c => c.WasalyIdentityUser) 
                                  .Where(c => c.isVerfied == false)
                                  .ToListAsync();
         }
-      
         /// <summary>
         /// Updates the courier verification status.
         /// </summary>
@@ -102,6 +103,24 @@ namespace Wasaly.DAL.Repositories
             return await _context.Shipments
                                  .Where(s => s.CreatedAt >= today && s.CreatedAt < tomorrow)
                                  .CountAsync();
+        }
+        public async Task<IEnumerable<Courier>> GetAllCouriersAsync(string? search, string? status, string? region)
+        {
+            var query = _context.Couriers
+                                .Include(c => c.WasalyIdentityUser)
+                                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+                query = query.Where(c =>
+                    c.WasalyIdentityUser.FullName.Contains(search) ||
+                    c.WasalyIdentityUser.PhoneNumber.Contains(search));
+
+            if (status == "موثق")
+                query = query.Where(c => c.isVerfied == true);
+            else if (status == "انتظار")
+                query = query.Where(c => c.isVerfied == false);
+
+            return await query.ToListAsync();
         }
     }
 }

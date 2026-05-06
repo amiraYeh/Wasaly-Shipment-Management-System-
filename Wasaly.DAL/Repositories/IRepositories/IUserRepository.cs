@@ -43,6 +43,15 @@ namespace Wasaly.DAL.Repositories.IRepositories
         /// Retrieves total shipments created today.
         /// </summary>
         Task<int> GetTodayShipmentsCountAsync();
+        /// <summary>
+        ///      gets all couriers with optional filtering by search term, status, and region.
+        /// </summary>
+        /// <param name="search"></param>
+        /// <param name="status"></param>
+        /// <param name="region"></param>
+        /// <returns></returns>
+        Task<IEnumerable<Courier>> GetAllCouriersAsync(string? search, string? status, string? region);
+
 
 
     }
