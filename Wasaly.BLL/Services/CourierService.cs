@@ -245,6 +245,54 @@ namespace Wasaly.BLL.Services
 
             return (true, "تم تسليم الشحنة بنجاح ");
         }
+        public async Task<CourierDashboardVM> GetDashboardAsync(string courierId)
+        {
+            var courier = await _courierRepository.GetCourierWithDetailsAsync(courierId);
+            if (courier == null) return new CourierDashboardVM();
+
+            var allAssignments = await _courierRepository.GetAllCourierAssignmentsAsync(courierId);
+
+            var today = DateTime.Today;
+            var weekAgo = DateTime.Today.AddDays(-7);
+
+            return new CourierDashboardVM
+            {
+                CourierName = courier.WasalyIdentityUser.FullName,
+                Balance = courier.Balance,
+
+                // توصيلات اليوم
+                TodayDeliveries = allAssignments
+                    .Count(a => a.Shipment.Status == ShipmentStatus.Delivered
+                             && a.Shipment.DeliveredAt?.Date == today),
+
+                // أرباح الأسبوع
+                WeekEarnings = allAssignments
+                    .Where(a => a.Shipment.Status == ShipmentStatus.Delivered
+                             && a.Shipment.DeliveredAt >= weekAgo)
+                    .Sum(a => a.Shipment.Price),
+
+                // نسبة القبول
+                AcceptanceRate = allAssignments.Any()
+                    ? (int)(allAssignments.Count(a => a.Status == CourierStatus.Accepted)
+                      * 100.0 / allAssignments.Count)
+                    : 0,
+
+                // آخر الشحنات
+                RecentShipments = allAssignments
+                    .Where(a => a.Shipment.Status == ShipmentStatus.Delivered)
+                    .OrderByDescending(a => a.Shipment.DeliveredAt)
+                    .Take(3)
+                    .Select(a => new CourierShipmentVM
+                    {
+                        ShipmentId = a.Shipment.Id,
+                        TrackingNumber = a.Shipment.TrackingNumber,
+                        Description = a.Shipment.Description,
+                        Price = a.Shipment.Price,
+                        ShipmentStatus = a.Shipment.Status,
+                        DropAddress = a.Shipment.DropLocation.Address
+                    }).ToList()
+            };
+        }
 
     }
 }

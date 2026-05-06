@@ -1,0 +1,29 @@
+﻿<div class="bg-white rounded-3 p-4 mb-4 shadow-sm d-flex justify-content-between align-items-center">
+    <div>
+        <div class="fw-bold mb-1">حالتك الآن</div>
+        <div class="text-muted small" id="statusText">أنت متاح لاستلام الطلبات</div>
+    </div>
+    <button id="statusToggle"
+            class="btn btn-success rounded-pill px-4 py-2 fw-semibold">
+        🟢 نشط
+    </button>
+</div>
+
+@section Scripts {
+    <script>
+        let isActive = true;
+        const btn = document.getElementById('statusToggle');
+        const txt = document.getElementById('statusText');
+
+        btn.addEventListener('click', () => {
+            isActive = !isActive;
+            btn.className = isActive
+                ? 'btn btn-success rounded-pill px-4 py-2 fw-semibold'
+                : 'btn btn-secondary rounded-pill px-4 py-2 fw-semibold';
+            btn.textContent = isActive ? '🟢 نشط' : '🔴 غير متاح';
+            txt.textContent = isActive
+                ? 'أنت متاح لاستلام الطلبات'
+                : 'أنت غير متاح حالياً';
+        });
+    </script>
+}

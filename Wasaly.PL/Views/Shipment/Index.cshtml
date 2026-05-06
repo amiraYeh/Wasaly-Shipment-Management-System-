@@ -1,8 +1,9 @@
 ﻿@using Wasaly.BLL.ViewModels
-@model IEnumerable<ShipmentVM>
+@using Wasaly.DAL.Enums
+@model List<ShipmentVM>
 
 @{
-    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    Layout = "_DashBordLayout";
     ViewData["Title"] = "Shipments";
 }
 <head>
@@ -13,31 +14,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .star {
+            font-size: 22px;
+            color: #fbbf24;
+            line-height: 1;
+            filter: drop-shadow(0 1px 2px rgba(251,191,36,0.4));
+        }
+
+    </style>
 </head>
 
 
-<div class="Container">
+@* <div class="Container"> *@
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TrackingNumber)
+                @Html.DisplayNameFor(model => model[0].TrackingNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DropLocation)
+                @Html.DisplayNameFor(model => model[0].CourierAssignmentName) 
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CourierAssignmentName) 
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.DisplayNameFor(model => model[0].Status)
             </th>
              <th>
-                @Html.DisplayNameFor(model => model.CourierAssignmentRate)
+                @Html.DisplayNameFor(model => model[0].CourierAssignmentRate)
             </th> 
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                @Html.DisplayNameFor(model => model[0].Price)
             </th>
         </tr>
     </thead>
@@ -45,34 +52,38 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.TrackingNumber)
+                    @item.TrackingNumber
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DropLocation)
+                    @item.CourierAssignmentName
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CourierAssignmentName)
+                    @item.Status
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
+                    @for (int i = 0; i < item.CourierAssignmentRate;i++)
+                    {
+                        <span class="star">★</span>
+                    }
+                </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CourierAssignmentRate)
+                @item.Price ج.م
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
+		    <td>
+                <button class="btn" style="background-color: #FF6B35;">
+                    <a asp-action="Track" asp-controller="Shipment" asp-route-id="@item.Id" style="color:white; text-decoration-line:none"> تتبع </a>
+                </button> 
+             </td>
         </tr>
 }
     </tbody>
 </table>
-</div>
+@* </div> *@
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+    </script>
 
 }

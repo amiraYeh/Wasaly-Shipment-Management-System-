@@ -25,11 +25,14 @@ namespace Wasaly.DAL.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime? DeliveredAt { get; set; }
+        public double? CurrentLatitude { get; set; }
+        public double? CurrentLongitude { get; set; }
+        public double? DistanceKm {  get; set; }
 
         // معلومات العميل
         public string RecipientName { get; set; }
         public string RecipientEmail { get; set; }
-        public string RecipientPhone { get; set; }
+        public string RecipientPhone { get; set; } = "1234455";
 
         // Relationships
 
