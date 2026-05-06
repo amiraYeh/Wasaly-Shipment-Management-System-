@@ -1,0 +1,44 @@
+@model List<Wasaly.BLL.ViewModels.TrackingHistoryVM>
+
+@{
+    var steps = new[]
+    {
+        new { Label = "استلمت الشحنة", Icon = "bi-box-seam" },
+        new { Label = "في الطريق",     Icon = "bi-truck" },
+        new { Label = "طلب OTP",       Icon = "bi-shield-lock" },
+        new { Label = "تم التسليم",    Icon = "bi-patch-check-fill" }
+    };
+}
+
+<div class="d-flex align-items-start justify-content-between">
+    @for (int i = 0; i < steps.Length; i++)
+    {
+        bool isDone = i < Model.Count;
+        bool isLast = i == steps.Length - 1;
+
+        <div class="text-center flex-fill">
+            <!-- Circle -->
+            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-1
+                        @(isDone ? "bg-orange text-white" : "bg-light text-muted")"
+                 style="width:44px;height:44px;transition:all 0.3s;">
+                <i class="bi @steps[i].Icon"></i>
+            </div>
+            <!-- Label -->
+            <div class="small @(isDone ? "text-orange fw-semibold" : "text-muted")"
+                 style="font-size:.7rem;">
+                @steps[i].Label
+            </div>
+        </div>
+
+        @if (!isLast)
+        {
+            <!-- Line -->
+            <div class="flex-fill align-self-start"
+                 style="height:2px;
+                        margin-top:22px;
+                        background:@(isDone ? "#FF6B35" : "#dee2e6");
+                        transition:background 0.3s;">
+            </div>
+        }
+    }
+</div>

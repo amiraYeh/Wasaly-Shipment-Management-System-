@@ -1,0 +1,93 @@
+﻿@model Wasaly.BLL.ViewModels.CourierDashboardVM
+@{
+    ViewData["Title"] = "أرباحي";
+    Layout = "~/Views/Shared/_DashBordLayout.cshtml";
+}
+
+<!-- Balance Card -->
+<div class="gradient-card mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <div class="small opacity-75 mb-1">إجمالي أرباحك</div>
+            <div class="fw-black" style="font-size:2.5rem;">
+                @Model.Balance.ToString("F0") جنيه
+            </div>
+        </div>
+        <button class="btn btn-light text-orange fw-bold px-4">
+            سحب الأرباح
+        </button>
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-4">
+    <div class="col-12 col-md-4">
+        <div class="stat-card text-center">
+            <div class="text-muted small mb-2">هذا الأسبوع</div>
+            <div class="fw-black text-orange" style="font-size:1.5rem;">
+                @Model.WeekEarnings.ToString("F0") ج
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="stat-card text-center">
+            <div class="text-muted small mb-2">هذا الشهر</div>
+            <div class="fw-black text-orange" style="font-size:1.5rem;">
+                @Model.Balance.ToString("F0") ج
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="stat-card text-center">
+            <div class="text-muted small mb-2">إجمالي</div>
+            <div class="fw-black text-orange" style="font-size:1.5rem;">
+                @Model.Balance.ToString("F0") ج
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- سجل الأرباح -->
+<div class="stat-card">
+    <h6 class="fw-bold mb-3">
+        <i class="bi bi-receipt text-orange me-2"></i> سجل الأرباح
+    </h6>
+
+    @if (!Model.RecentShipments.Any())
+    {
+        <div class="text-center py-4">
+            <i class="bi bi-inbox text-muted" style="font-size:3rem;"></i>
+            <p class="text-muted mt-2">لا توجد توصيلات مكتملة بعد</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table custom-table mb-0">
+                <thead>
+                    <tr>
+                        <th>التاريخ</th>
+                        <th>رقم الشحنة</th>
+                        <th>المسافة</th>
+                        <th>المبلغ</th>
+                        <th>الحالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.RecentShipments)
+                    {
+                        <tr>
+                            <td class="text-muted small">@DateTime.Now.ToString("dd/MM/yyyy")</td>
+                            <td class="fw-semibold">#@item.TrackingNumber</td>
+                            <td class="text-muted small">—</td>
+                            <td class="fw-bold text-orange">+@item.Price.ToString("F0") ج</td>
+                            <td>
+                                <span class="badge badge-verified">مكتملة</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

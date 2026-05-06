@@ -346,6 +346,7 @@ body, html {
     transition: all 0.2s;
     cursor: pointer;
     font-size: 1rem;
+    text-decoration: none;
 }
 
 
@@ -738,21 +739,18 @@ body, html {
         transition: transform 0.3s;
     }
 
-
-        .sidebar.mobile-open {
+        /* use the same 'active' class JS toggles */
+        .sidebar.active {
             transform: translateX(0);
         }
-
 
     .main-content {
         margin-right: 0;
     }
 
-
     .auth-card {
         padding: 1.5rem;
     }
-
 
     .hero-illustration {
         font-size: 120px;
@@ -876,5 +874,40 @@ html {
 section {
     scroll-margin-top: 70px;
 }
-/* لو بتستخدمي أيقونات Bootstrap */
+/* تأكدي أن المارجن في اليمين لأن الصفحة RTL */
+.sidebar-item, .sidebar-item:hover {
+    text-decoration: none !important;
+}
+
+/* تنسيقات الموبايل */
+@media (max-width: 991.98px) {
+    .sidebar {
+        right: -260px; /* إخفاء خارج الشاشة يميناً */
+        transition: all 0.3s ease;
+        z-index: 1050;
+    }
+
+        .sidebar.active {
+            right: 0; /* إظهار عند التفعيل */
+        }
+
+    .main-content {
+        margin-right: 0 !important; /* إلغاء الهامش في الموبايل */
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 1040;
+    }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+}/* لو بتستخدمي أيقونات Bootstrap */
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css");

@@ -108,6 +108,22 @@ namespace Wasaly.DAL.Repositories
             courier.Balance += amount;
         }
 
+        public async Task<Courier?> GetCourierWithDetailsAsync(string courierId)
+        {
+            return await _context.Couriers
+                .Include(c => c.WasalyIdentityUser)
+                .FirstOrDefaultAsync(c => c.WasalyIdentityUserId == courierId);
+        }
+
+        public async Task<List<CourierAssignment>> GetAllCourierAssignmentsAsync(string courierId)
+        {
+            return await _context.CourierAssignments
+                .Where(a => a.CourierId == courierId)
+                .Include(a => a.Shipment)
+                    .ThenInclude(s => s.DropLocation)
+                .ToListAsync();
+        }
+
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();

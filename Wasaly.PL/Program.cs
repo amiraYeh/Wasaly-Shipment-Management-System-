@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Wasaly.BLL.@interface;
 using Wasaly.BLL.Services;
 using Wasaly.DAL.Data.Context;
 using Wasaly.DAL.Models;
@@ -39,8 +40,7 @@ namespace Wasaly.PL
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
             });
             builder.Services.AddScoped<IUserRepository, UserRepository>();
-           
-
+            builder.Services.AddScoped<IAdminService, AdminService>();
             var app = builder.Build();
 
             using (var scope = app.Services.CreateScope())
@@ -75,7 +75,6 @@ namespace Wasaly.PL
 
             app.UseAuthorization();
             app.MapRazorPages();
-
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

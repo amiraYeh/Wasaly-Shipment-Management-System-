@@ -1,66 +1,77 @@
-﻿
-@using Microsoft.AspNetCore.Identity
+﻿@using Microsoft.AspNetCore.Identity
 @using Wasaly.DAL.Models
+
 @inject SignInManager<WasalyIdentityUser> SignInManager
 @inject UserManager<WasalyIdentityUser> UserManager
-@{
-    ViewData["Title"] = "الرئيسية - وصلي";
-    var user = await UserManager.GetUserAsync(User);
-
-}
 
 @{
     ViewData["Title"] = "الرئيسية - وصلي";
     Layout = "_Layout";
+    var currentUser = SignInManager.IsSignedIn(User)
+        ? await UserManager.GetUserAsync(User)
+        : null;
 }
 
 <nav class="navbar navbar-expand-lg navbar-light bg-white py-2 shadow-sm">
     <div class="container">
-        <!-- 1. اللوجو -->
+
+        <!-- اللوجو -->
         <a class="navbar-brand logo-text d-flex align-items-center gap-2" href="#">
             وصلي <span class="logo-icon">📦</span>
         </a>
 
-       
-
-        <!-- زرار التوجل (Hamburger) -->
-        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <!-- Hamburger -->
+        <button class="navbar-toggler border-0 shadow-none"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- الجزء اللي بيفتح ويقفل (التوجل) -->
         <div class="collapse navbar-collapse" id="navbarNav">
 
-            <!-- 3. اللينكات اللي هتظهر جوه التوجل (الرئيسية، كيف نعمل، لماذا وصلني) -->
+            <!-- لينكات النافبار -->
             <ul class="navbar-nav ms-auto gap-lg-4 gap-2 fw-normal text-start mt-4 mt-lg-0 px-3 px-lg-0">
-                <li class="nav-item"><a class="nav-link active" href="#home">الرئيسية</a></li>
-                <li class="nav-item"><a class="nav-link text-dark" href="#how">كيف نعمل</a></li>
-                <li class="nav-item"><a class="nav-link text-dark" href="#features">لماذا وصلني</a></li>
 
-                <!-- لاحظي هنا شلنا (للتجار، المناديب، تواصل معانا) من القائمة دي عشان متظهرش في التوجل -->
+                <li class="nav-item">
+                    <a class="nav-link active" href="#home">الرئيسية</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="#how">كيف نعمل</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="#features">مميزاتنا</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="#contact">تواصل معنا</a>
+                </li>
+
             </ul>
-            <!-- 2. اللينكات اللي هتظهر في الـ Nav بس (ومش هتظهر في التوجل) -->
-            <!-- d-none بتخفيها في الموبايل و d-lg-flex بتظهرها في الكمبيوتر -->
-            <div class="d-none d-lg-flex gap-3 mx-auto ms-3">
-                <a class="nav-link text-dark" href="#merchants">للتجار</a>
-                <a class="nav-link text-dark" href="#couriers">للمناديب</a>
-                <a class="nav-link text-dark" href="#contact">تواصل معنا</a>
-            </div>
-            <!-- 4. الزراير: بتظهر في الاتنين (Nav و Toggle) -->
-            <div class="d-flex flex-column flex-lg-row gap-3 px-3 px-lg-0 pb-4 pb-lg-0 ms-lg-3">
 
-                @if (SignInManager.IsSignedIn(User))
+            <!-- الزراير -->
+            <div class="d-flex flex-column flex-lg-row gap-3 px-3 px-lg-0 pb-4 pb-lg-0 ms-lg-4">
+
+                @if (SignInManager.IsSignedIn(User) && currentUser != null)
                 {
-                    <!-- مسجل دخول: اسم المستخدم + تسجيل خروج -->
-                    <span class="py-2 px-3 text-dark fw-500 align-self-center">
+                    <span class="py-2 px-3 text-dark align-self-center fw-medium">
                         <i class="fa fa-user-circle me-1" style="color:#FF6B35;"></i>
-                       @user.FullName
+                        @currentUser.FullName
                     </span>
 
-                    <form asp-area="Identity" asp-page="/Account/Logout"
-                          asp-route-returnUrl="@Url.Action("Index", "Home")" method="post">
-                        <button type="submit" class="btn py-2 text-white order-1 order-lg-2"
-                                style="background-color:#1a2e4a; border-radius:8px; font-weight:500; border:none;">
+                    <form asp-area="Identity"
+                          asp-page="/Account/Logout"
+                          asp-route-returnUrl="@Url.Action("Index", "Home")"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit"
+                                class="btn text-white px-4 py-2"
+                                style="background-color:#1a2e4a; border:none; border-radius:10px;">
+
                             <i class="fa fa-right-from-bracket me-1"></i>
                             تسجيل خروج
                         </button>
@@ -68,23 +79,34 @@
                 }
                 else
                 {
+                    <a asp-area="Identity"
+                       asp-page="/Account/Login"
+                       class="btn px-4 py-2"
+                       style="background-color:white;
+                                  color:#FF6B35;
+                                  border:1.5px solid #FF6B35;
+                                  border-radius:10px;
+                                  font-weight:500;">
 
-                    <a asp-area="Identity" asp-page="/Account/Login"
-                       class="btn py-2 order-1 order-lg-2"
-                       style="background-color:white; color:#FF6B35; border:1.5px solid #FF6B35; border-radius:8px; font-weight:500;">
                         تسجيل دخول
                     </a>
 
-                   
+                    <a asp-area="Identity"
+                       asp-page="/Account/Register"
+                       class="btn text-white px-4 py-2"
+                       style="background-color:#FF6B35;
+                                  border:none;
+                                  border-radius:10px;
+                                  font-weight:500;">
+
+                        إنشاء حساب
+                    </a>
                 }
 
             </div>
-
         </div>
     </div>
-</nav> 
-
-
+</nav>
 <section id="home" class="hero-section pt-4 pb-5 w-100 overflow-hidden" style="background: linear-gradient(135deg, #1A1A2E, #16213E, #0F3460); min-height: 85vh; display: flex; align-items: center;">
     <div class="container-fluid px-0">
 
@@ -430,7 +452,7 @@
 @* <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+</div> *@
 
 @* @section Scripts{
 <script id="tailwind-config">
@@ -530,3 +552,4 @@
     }
 </script> *@
 }
+

@@ -1,54 +1,4 @@
-﻿@* <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Wasaly.PL</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Wasaly.PL.styles.css" asp-append-version="true" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Wasaly.PL</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Wasaly.PL - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
-</html>
- *@
+﻿
 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -68,6 +18,54 @@
     <link rel="stylesheet" href="~/css/waslni-style.css" asp-append-version="true" />
 </head>
 <body class="p-0 m-0" style="overflow-x: hidden;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-2 shadow-sm">
+        <div class="container">
+            <!-- 1. اللوجو -->
+            <a class="navbar-brand logo-text d-flex align-items-center gap-2" href="#">
+                وصلي <span class="logo-icon">📦</span>
+            </a>
+
+
+
+            <!-- زرار التوجل (Hamburger) -->
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- الجزء اللي بيفتح ويقفل (التوجل) -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <!-- 3. اللينكات اللي هتظهر جوه التوجل (الرئيسية، كيف نعمل، لماذا وصلني) -->
+                <ul class="navbar-nav ms-auto gap-lg-4 gap-2 fw-normal text-start mt-4 mt-lg-0 px-3 px-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="#home">الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="#how">كيف نعمل</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="#features">لماذا وصلني</a></li>
+
+                    <!-- لاحظي هنا شلنا (للتجار، المناديب، تواصل معانا) من القائمة دي عشان متظهرش في التوجل -->
+                </ul>
+                <!-- 2. اللينكات اللي هتظهر في الـ Nav بس (ومش هتظهر في التوجل) -->
+                <!-- d-none بتخفيها في الموبايل و d-lg-flex بتظهرها في الكمبيوتر -->
+                <div class="d-none d-lg-flex gap-3 mx-auto ms-3">
+                    <a class="nav-link text-dark" href="#merchants">للتجار</a>
+                    <a class="nav-link text-dark" href="#couriers">للمناديب</a>
+                    <a class="nav-link text-dark" href="#contact">تواصل معنا</a>
+                </div>
+                <!-- 4. الزراير: بتظهر في الاتنين (Nav و Toggle) -->
+                <div class="d-flex flex-column flex-lg-row gap-3 px-3 px-lg-0 pb-4 pb-lg-0 ms-lg-3">
+                    <a href="#" class="btn py-2 text-white order-1 order-lg-2"
+                       style="background-color: #FF6B35; border-radius: 8px; font-weight: 500; border: none;">
+                        سجل كتاجر
+                    </a>
+
+                    <a href="#" class="btn py-2 order-2 order-lg-1"
+                       style="border: 1.5px solid #1A1A2E; color: #1A1A2E; border-radius: 8px; font-weight: 500;">
+                        انضم كمندوب
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </nav>
 
     @RenderBody()
 
@@ -75,5 +73,102 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#f9f9f9",
+                        "secondary": "#5d5c74",
+                        "on-secondary-fixed": "#1a1a2e",
+                        "on-tertiary-fixed-variant": "#005228",
+                        "primary-fixed-dim": "#ffb59d",
+                        "on-primary-container": "#5f1900",
+                        "inverse-primary": "#ffb59d",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-tertiary-container": "#003b1a",
+                        "secondary-container": "#e2e0fc",
+                        "surface-tint": "#ab3500",
+                        "secondary-fixed": "#e2e0fc",
+                        "on-primary-fixed-variant": "#832600",
+                        "on-secondary-container": "#63627a",
+                        "primary": "#ab3500",
+                        "on-surface": "#1a1c1c",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f9f9f9",
+                        "on-tertiary-fixed": "#00210c",
+                        "on-error": "#ffffff",
+                        "surface-container": "#eeeeee",
+                        "surface-container-high": "#e8e8e8",
+                        "primary-fixed": "#ffdbd0",
+                        "on-primary-fixed": "#390c00",
+                        "surface-dim": "#dadada",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#c6c4df",
+                        "outline-variant": "#e1bfb5",
+                        "tertiary": "#006d37",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#6bfe9c",
+                        "primary-container": "#ff6b35",
+                        "tertiary-container": "#00b15c",
+                        "on-secondary-fixed-variant": "#45455b",
+                        "surface": "#f9f9f9",
+                        "surface-container-low": "#f3f3f3",
+                        "on-background": "#1a1c1c",
+                        "on-surface-variant": "#594139",
+                        "tertiary-fixed-dim": "#4ae183",
+                        "outline": "#8d7168",
+                        "inverse-surface": "#2f3131",
+                        "inverse-on-surface": "#f1f1f1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "12px",
+                        "xl": "16px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "gutter": "20px",
+                        "lg": "24px",
+                        "base": "8px",
+                        "margin": "24px",
+                        "sm": "12px",
+                        "xs": "4px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "number-display": ["Cairo"],
+                        "h2": ["Cairo"],
+                        "h1": ["Cairo"],
+                        "h3": ["Cairo"],
+                        "display": ["Cairo"],
+                        "body-md": ["Cairo"],
+                        "body-sm": ["Cairo"],
+                        "body-lg": ["Cairo"],
+                        "label-bold": ["Cairo"]
+                    },
+                    "fontSize": {
+                        "number-display": ["24px", {"lineHeight": "1", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "1.4", "fontWeight": "700"}],
+                        "h1": ["32px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "fontWeight": "700"}],
+                        "display": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-bold": ["14px", {"lineHeight": "1.2", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
 </body>
 </html>
