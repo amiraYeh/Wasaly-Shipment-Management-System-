@@ -1,125 +1,72 @@
-﻿
-
-@page
+﻿@page
 @model Wasaly.PL.Areas.Identity.Pages.Account.MerchantRoleRegisterationModel
 @{
     Layout = null;
-    ViewData["Title"] = "Complete Your Courier Profile";
+    ViewData["Title"] = "Complete Your Merchant Profile";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"] - Wasaly</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .register-card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 40px;
-            width: 100%;
-            max-width: 600px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: block;
-            color: #333;
-        }
-        .form-control {
-            border-radius: 10px;
-            border: 2px solid #e0e0e0;
-            padding: 10px 15px;
-            transition: all 0.3s;
-        }
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102,126,234,0.25);
-        }
-        .btn-submit {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 10px;
-            padding: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            color: white;
-            width: 100%;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .btn-submit:hover {
-            transform: translateY(-2px);
-        }
-        .validation-summary {
-            margin-bottom: 20px;
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #333;
-        }
-        .file-info {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-    </style>
-</head>
-<body>
-    <div class="register-card">
-        <h2>Complete Your Courier Profile</h2>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        <form method="post" enctype="multipart/form-data">
-            <!-- Hidden field for User ID -->
-           
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<link rel="stylesheet" href="/css/merchant-register.css" />
+
+<div class="page">
+
+    <div class="card">
+
+        <!-- HEADER -->
+        <div class="header">
+            <h2>إكمال بيانات التاجر</h2>
+            <p>أدخل بيانات المتجر لإكمال التسجيل</p>
+        </div>
+
+        <!-- STEPPER -->
+        <div class="stepper">
+            <div class="step active">
+                <span>1</span>
+                البيانات
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step">
+                <span>2</span>
+                المتجر
+            </div>
+        </div>
+
+        <form method="post">
+
             <input type="hidden" asp-for="ReturnUrl" />
-            <input type="hidden" asp-for="id"/>
+            <input type="hidden" asp-for="id" />
 
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger validation-summary"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <!-- Merchant / Store Info Section -->
-            <hr class="my-4" />
-
-            <h5 class="mb-3" style="color:#333; font-weight:600;">
-                Store Information
-            </h5>
-
-            <div class="form-group">
-                <label asp-for="Merchant.StoreName">Store Name</label>
-                <input asp-for="Merchant.StoreName" class="form-control" placeholder="Enter your store name" />
-                <span asp-validation-for="Merchant.StoreName" class="text-danger"></span>
+            <!-- STORE NAME -->
+            <label>اسم المتجر</label>
+            <div class="input-group">
+                <input asp-for="Merchant.StoreName" placeholder="أدخل اسم المتجر" />
+                <i class="fa fa-store"></i>
             </div>
+            <span asp-validation-for="Merchant.StoreName" class="text-danger"></span>
 
-            <div class="form-group">
-                <label asp-for="Merchant.BusinessType">Business Type</label>
-                <input asp-for="Merchant.BusinessType" class="form-control" placeholder="e.g. Restaurant, Grocery, Pharmacy" />
-                <span asp-validation-for="Merchant.BusinessType" class="text-danger"></span>
+            <!-- BUSINESS TYPE -->
+            <label>نوع النشاط</label>
+            <div class="input-group">
+                <input asp-for="Merchant.BusinessType" placeholder="مثال: مطعم - سوبر ماركت - صيدلية" />
+                <i class="fa fa-briefcase"></i>
             </div>
+            <span asp-validation-for="Merchant.BusinessType" class="text-danger"></span>
 
-            <button type="submit" class="btn-submit">Complete Registration</button>
+            <!-- SUBMIT -->
+            <button type="submit">إكمال التسجيل ←</button>
+
         </form>
+
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</div>
 
-    @section Scripts {
-        <partial name="_ValidationScriptsPartial" />
-    }
-</body>
-</html>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

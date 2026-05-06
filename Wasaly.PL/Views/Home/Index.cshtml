@@ -1,9 +1,20 @@
 ﻿
+@using Microsoft.AspNetCore.Identity
+@using Wasaly.DAL.Models
+@inject SignInManager<WasalyIdentityUser> SignInManager
+@inject UserManager<WasalyIdentityUser> UserManager
 @{
     ViewData["Title"] = "الرئيسية - وصلي";
+    var user = await UserManager.GetUserAsync(User);
+
 }
 
-<<nav class="navbar navbar-expand-lg navbar-light bg-white py-2 shadow-sm">
+@{
+    ViewData["Title"] = "الرئيسية - وصلي";
+    Layout = "_Layout";
+}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white py-2 shadow-sm">
     <div class="container">
         <!-- 1. اللوجو -->
         <a class="navbar-brand logo-text d-flex align-items-center gap-2" href="#">
@@ -37,20 +48,41 @@
             </div>
             <!-- 4. الزراير: بتظهر في الاتنين (Nav و Toggle) -->
             <div class="d-flex flex-column flex-lg-row gap-3 px-3 px-lg-0 pb-4 pb-lg-0 ms-lg-3">
-                <a href="#" class="btn py-2 text-white order-1 order-lg-2"
-                   style="background-color: #FF6B35; border-radius: 8px; font-weight: 500; border: none;">
-                    سجل كتاجر
-                </a>
 
-                <a href="#" class="btn py-2 order-2 order-lg-1"
-                   style="border: 1.5px solid #1A1A2E; color: #1A1A2E; border-radius: 8px; font-weight: 500;">
-                    انضم كمندوب
-                </a>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <!-- مسجل دخول: اسم المستخدم + تسجيل خروج -->
+                    <span class="py-2 px-3 text-dark fw-500 align-self-center">
+                        <i class="fa fa-user-circle me-1" style="color:#FF6B35;"></i>
+                       @user.FullName
+                    </span>
+
+                    <form asp-area="Identity" asp-page="/Account/Logout"
+                          asp-route-returnUrl="@Url.Action("Index", "Home")" method="post">
+                        <button type="submit" class="btn py-2 text-white order-1 order-lg-2"
+                                style="background-color:#1a2e4a; border-radius:8px; font-weight:500; border:none;">
+                            <i class="fa fa-right-from-bracket me-1"></i>
+                            تسجيل خروج
+                        </button>
+                    </form>
+                }
+                else
+                {
+
+                    <a asp-area="Identity" asp-page="/Account/Login"
+                       class="btn py-2 order-1 order-lg-2"
+                       style="background-color:white; color:#FF6B35; border:1.5px solid #FF6B35; border-radius:8px; font-weight:500;">
+                        تسجيل دخول
+                    </a>
+
+                   
+                }
+
             </div>
 
         </div>
     </div>
-</nav>
+</nav> 
 
 
 <section id="home" class="hero-section pt-4 pb-5 w-100 overflow-hidden" style="background: linear-gradient(135deg, #1A1A2E, #16213E, #0F3460); min-height: 85vh; display: flex; align-items: center;">
@@ -60,7 +92,7 @@
             <div class="col-lg-4 d-none d-lg-block text-center">
                 <div style="font-size: 230px; opacity: 0.15; transform: scaleX(-1);">🚴</div>
             </div>
-           
+
 
             <div class="col-lg-8 col-12 text-start pe-lg-5 pe-4 px-lg-5 px-sm-5 ms-auto">
                 <h1 class="fw-bold text-white mb-4" style="font-size: clamp(2.5rem, 6vw, 5rem); line-height: 1.1;">
@@ -69,15 +101,26 @@
                 <p class="h3 text-light opacity-75 mb-5" style="max-width: 700px; margin-right: 0; margin-left: auto;">
                     منصة تربط التجار بمناديب موثقين لتوصيل سريع وآمن
                 </p>
-               
-               
+
+
             </div>
-           
+
 
         </div>
         <div class="d-flex justify-content-start gap-3 mb-5 px-5 ">
-            <a href="#" class="btn btn-primary btn-lg px-5 py-3 rounded-pill">ابدأ الشحن الآن</a>
-            <a href="#" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill">انضم كمندوب</a>
+            <a asp-page="/Account/Register"
+               asp-area="Identity"
+               asp-route-RoleFromHome="Merchant"
+               class="btn btn-primary btn-lg px-5 py-3 rounded-pill">
+                ابدا الشحن الان
+            </a>
+            <a asp-page="/Account/Register"
+               asp-area="Identity"
+               asp-route-RoleFromHome="Courier"
+               class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill"
+               style="background-color: #1A1A2E;">
+                انضم كمندوب
+            </a>
         </div>
 
         <div class="row g-0 mt-3 pt-5 text-center">
@@ -243,7 +286,13 @@
                     <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> تقارير تفصيلية</li>
                     <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> دعم فني 24/7</li>
                 </ul>
-                <a href="/Account/Register" class="btn btn-orange btn-lg px-5 mt-3 rounded-pill text-white">ابدأ الآن مجاناً</a>
+
+                <a asp-page="/Account/Register"
+                   asp-area="Identity"
+                   asp-route-RoleFromHome="Merchant"
+                   class="btn btn-orange btn-lg px-5 mt-3 rounded-pill text-white">
+                    ابدا الشحن الان
+                </a>
             </div>
         </div>
     </div>
@@ -279,12 +328,14 @@
                         <span>مكافآت وحوافز</span>
                     </div>
                 </div>
-
-                <a href="/Account/Register?role=Courier"
+                <a asp-page="/Account/Register"
+                   asp-area="Identity"
+                   asp-route-RoleFromHome="Courier"
                    class="btn btn-lg px-5 py-3 text-white rounded-3 shadow-sm hover-bright"
                    style="background-color: #1A1A2E;">
                     انضم الآن
                 </a>
+               
             </div>
 
             <!-- الصورة التوضيحية (الموبايل) -->
@@ -376,12 +427,12 @@
         </div>
     </div>
 </footer>
-<div class="text-center">
+@* <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-@section Scripts{
+@* @section Scripts{
 <script id="tailwind-config">
     tailwind.config = {
         darkMode: "class",
@@ -477,5 +528,5 @@
             },
         },
     }
-</script>
+</script> *@
 }

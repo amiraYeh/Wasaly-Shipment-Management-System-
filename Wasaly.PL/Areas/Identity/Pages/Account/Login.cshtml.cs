@@ -129,7 +129,7 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "تسجيل الدخول غير صالح");
                     return Page();
                 }
             }

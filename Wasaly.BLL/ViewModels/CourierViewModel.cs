@@ -10,18 +10,15 @@ namespace Wasaly.BLL.ViewModels
 {
     public class CourierViewModel
     {
-        [Required]
-        [FileExtensions(Extensions = "jpg,jpeg,png", ErrorMessage = "Only JPG, JPEG, PNG files are allowed")]
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
 
         public IFormFile NationalIdImage { get; set; } = null!;
 
-        [Required]
-        [FileExtensions(Extensions = "jpg,jpeg,png", ErrorMessage = "Only JPG, JPEG, PNG files are allowed")]
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
 
         public IFormFile DrivingLicenseImage { get; set; } = null!;
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
 
-        [Required]
-        [FileExtensions(Extensions = "jpg,jpeg,png", ErrorMessage = "Only JPG, JPEG, PNG files are allowed")]
         public IFormFile ProfileImage { get; set; } = null!;
     }
 }
