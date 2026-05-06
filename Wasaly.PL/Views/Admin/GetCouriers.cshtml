@@ -1,0 +1,93 @@
+﻿@using Wasaly.BLL.ViewModels.AdminVM
+@model CouriersManagementVM
+@{
+    Layout = "_DashBordLayout";
+    ViewData["Title"] = "إدارة المناديب";
+}
+
+@await Html.PartialAsync("_FilterCard", new FilterCardVM
+{
+    Action = "GetCouriers",  // ← ده اسم الـ Method في الـ Controller
+    SearchTerm = Model.SearchTerm,
+    StatusFilter = Model.StatusFilter,
+    SearchPlaceholder = "ابحث بالاسم أو رقم الهاتف...",
+    StatusOptions = new() { "موثق", "انتظار", "موقوف" }
+});
+@await Html.PartialAsync("_MiniStatVM", new List<MiniStatVM>
+{
+    new() { Icon = "🔵", Label = "الكل", Value = Model.TotalCount, Color = "primary" },
+    new() { Icon = "🟢", Label = "موثقون", Value = Model.VerifiedCount, Color = "success" },
+    new() { Icon = "🟠", Label = "انتظار", Value = Model.PendingCount, Color = "warning" },
+    // new() { Icon = "🔴", Label = "موقوفون", Value = Model.SuspendedCount, Color = "danger" }
+})
+<!-- Table -->
+<div class="stat-card shadow-sm">
+    <div class="table-responsive">
+        <table class="table custom-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>الاسم</th>
+                    <th>الهاتف</th>
+                    <th>المنطقة</th>
+                    <th>الحالة</th>
+                    <th>التقييم</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Couriers.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">لا يوجد مناديب</td>
+                    </tr>
+                }
+                @foreach (var (courier, i) in Model.Couriers.Select((c, i) => (c, i + 1)))
+                {
+                    <tr>
+                        <td>@i</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="rounded-circle bg-orange text-white d-flex align-items-center
+                                                justify-content-center fw-bold flex-shrink-0"
+                                     style="width:34px;height:34px;">
+                                    @courier.FullName.FirstOrDefault()
+                                </div>
+                                @courier.FullName
+                            </div>
+                        </td>
+                        <td class="text-muted">@courier.PhoneNumber</td>
+                        <td class="text-muted">@courier.Region</td>
+                        <td>
+                            <span class="badge @courier.StatusClass">@courier.StatusText</span>
+                        </td>
+                        <td>
+                            @if (courier.Rating > 0)
+                            {
+                                <span>⭐ @courier.Rating</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a asp-action="CourierDetails"
+                                   asp-route-id="@courier.Id"
+                                   class="btn btn-primary btn-sm px-2 py-0 rounded-0"
+                                   style="font-size:0.75rem;">
+                                    👁️ عرض
+                                </a>
+                               @*  <button class="btn btn-warning btn-sm px-2 py-0 rounded-0"
+                                        style="font-size:0.75rem;">
+                                    ⏸️ تعليق
+                                </button> *@
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

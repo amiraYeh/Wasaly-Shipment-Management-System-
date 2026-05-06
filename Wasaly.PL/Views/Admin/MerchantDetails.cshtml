@@ -1,0 +1,95 @@
+﻿@using Wasaly.BLL.ViewModels.AdminVM
+@model MerchantRowVM
+@{
+    Layout = "_DashBordLayout";
+    ViewData["Title"] = "تفاصيل التاجر";
+}
+
+<!-- Back -->
+<a asp-action="GetMerchants" class="text-orange text-decoration-none mb-4 d-inline-block">
+    → العودة لقائمة التجار
+</a>
+
+<h4 class="fw-bold mb-4">تفاصيل التاجر</h4>
+
+<!-- Profile Card -->
+<div class="stat-card shadow-sm mb-4">
+    <div class="d-flex gap-4">
+        <div class="rounded-circle bg-orange text-white d-flex align-items-center
+                    justify-content-center flex-shrink-0"
+             style="width:80px;height:80px;font-size:2rem;">
+            🏪
+        </div>
+        <div class="row g-3 w-100">
+            <div class="col-md-4">
+                <div class="text-muted small">الاسم</div>
+                <div class="fw-semibold">@Model.FullName</div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-muted small">المتجر</div>
+                <div class="fw-semibold">@Model.StoreName</div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-muted small">الهاتف</div>
+                <div class="fw-semibold">@Model.PhoneNumber</div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-muted small">البريد</div>
+                <div class="fw-semibold">@Model.Email</div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-muted small">المنطقة</div>
+                <div class="fw-semibold">@Model.Region</div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-muted small">الشحنات</div>
+                <div class="fw-semibold">@Model.ShipmentsCount</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Actions -->
+<form asp-action="DeleteMerchant" method="post"
+      onsubmit="return confirm('هل أنت متأكد من حذف التاجر؟')">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button type="submit" class="btn btn-danger w-100 py-2 mb-4">
+        🗑️ حذف الحساب
+    </button>
+</form>
+
+<!-- Recent Shipments -->
+<div class="stat-card shadow-sm">
+    <h5 class="fw-bold mb-4">آخر الشحنات</h5>
+    <div class="table-responsive">
+        <table class="table custom-table">
+            <thead>
+                <tr>
+                    <th>رقم الشحنة</th>
+                    <th>المندوب</th>
+                    <th>الحالة</th>
+                    <th>التاريخ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.RecentShipments.Any())
+                {
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">لا توجد شحنات</td>
+                    </tr>
+                }
+                @foreach (var shipment in Model.RecentShipments)
+                {
+                    <tr>
+                        <td>#WAS-@shipment.Id</td>
+                        <td>@shipment.CourierName</td>
+                        <td>
+                            <span class="badge bg-success">@shipment.Status</span>
+                        </td>
+                        <td class="text-muted">@shipment.CreatedAt</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
