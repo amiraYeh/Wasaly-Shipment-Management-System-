@@ -52,6 +52,10 @@
                     @if (User.IsInRole("Admin"))
                     {
                         <span>أدمن</span>
+                    }
+                   
+                </div> *@
+                    @* <span>أدمن</span> *@
                     } *@
                         <span>مندوب</span>
                 </div>
@@ -72,9 +76,9 @@
             @await Html.PartialAsync("_MerchantNav")
         } *@
        
-
-       @*  @await Html.PartialAsync("_SaidbarAdmin") *@
-         @await Html.PartialAsync("_SaidbarCourier") 
+        @await RenderSectionAsync("SidebarData",false)
+        @* @await Html.PartialAsync("_SaidbarAdmin") *@
+       @*  @await Html.PartialAsync("_SaidbarCourier") *@
        </aside>
 
         <!-- overlay (required for mobile toggle) -->
@@ -83,8 +87,10 @@
         <!-- Main Content -->
         <main class="main-content">
             <!-- Top Navbar باستخدام الـ Classes بتاعتك -->
+            @await RenderSectionAsync("NavbarData", false)
+
             @* @await Html.PartialAsync("_AdminNV") *@
-             @await Html.PartialAsync("_CourierNV") 
+            @* @await Html.PartialAsync("_CourierNV") *@
 
 
             <!-- Content Area -->

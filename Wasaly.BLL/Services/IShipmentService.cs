@@ -13,6 +13,9 @@ namespace Wasaly.BLL.Services
         public Task<List<ShipmentVM>> GetShipmentsAsync();
         public Task<ShipmentDetailsVM> GetDetailAsync(int? id);
         public Task<int> AddAsync(AddShipmentVM shipmentVM);
+        public Task<Shipment>GetByIDAsync(int id);
+        public Task<int> Update(Shipment shipment);
+        public Task<object> GetCurrentLocAsync(int id);
         //public double calDistance(Location start, Location end);
     }
 }

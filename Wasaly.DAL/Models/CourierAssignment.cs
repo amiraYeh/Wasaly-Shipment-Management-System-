@@ -20,5 +20,6 @@ namespace Wasaly.DAL.Models
         public Shipment? Shipment { get; set; }
         public string? CourierId { get; set; }
         public Courier? Courier { get; set; }
+
     }
 }

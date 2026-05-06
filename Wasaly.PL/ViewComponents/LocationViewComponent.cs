@@ -18,7 +18,7 @@ namespace Wasaly.PL.ViewComponents
             var shipment = await _shipmentService.GetDetailAsync(id);
             if(shipment == null)
                 return View("Error");
-            return View("~/Views/Shipment/_AddressSearch.cshtml",shipment.Location);
+            return View("~/Views/Shipment/_AddressSearch.cshtml");
         }
     }
 }

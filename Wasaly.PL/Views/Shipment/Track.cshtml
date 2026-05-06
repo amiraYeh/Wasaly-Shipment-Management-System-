@@ -1,0 +1,192 @@
+﻿@using Wasaly.BLL.ViewModels
+@using Wasaly.DAL.Enums
+@model ShipmentDetailsVM
+
+@{
+    ViewData["Title"] = "تتبع شحنتى";
+    Layout = "_DashBordLayout";
+}
+
+<h1>تتبع شحنتى</h1>
+
+
+<!-- ✅ Shipment Info -->
+<div class="card mt-3 p-3">
+    <p>
+        @Html.DisplayNameFor(model => model.TrackingNumber):
+        <strong>@Model.TrackingNumber</strong>
+    </p>
+    <p>
+        @Html.DisplayNameFor(model => model.Description):
+        <strong>@Model.Description</strong>
+    </p>
+    <p>📦
+        @Html.DisplayNameFor(model => model.Status):
+        <strong>@Model.Status</strong>
+	</p>
+    <p>
+		📏
+        @Html.DisplayNameFor(model => model.DistanceKm):
+        <strong>@Model.DistanceKm</strong>
+    </p>
+
+    <p> من : <strong>@Model.PickLocation.Address</strong></p>
+    <p> الى : <strong>@Model.DropLocation.Address</strong></p>
+</div>
+<br/>
+<br />
+<br />
+
+<div id="map" style="height:500px; width:100%;"></div>
+
+
+<!-- ✅ Tracking Timeline — data comes from Model directly -->
+<div class="card mt-3 p-3">
+    <h5>سجل الشحنة</h5>
+    <ul class="list-group">
+        @foreach (var record in Model.History.OrderBy(t => t.TimeStamp))
+        {
+            <li class="list-group-item">
+                <strong>
+                    @switch (record.Status)
+                    {
+                        case ShipmentStatus.Created:
+                            <text>🕐 في الانتظار</text>
+                            break;
+                        case ShipmentStatus.PickedUp:
+
+                            <text>📦 تم الاستلام</text>
+                            break;
+                        case ShipmentStatus.Accepted:
+
+                            <text>🚚 في الطريق</text>
+                            break;
+                        case ShipmentStatus.Delivered:
+
+                            <text>✅ تم التوصيل</text>
+                            break;
+                        @* case ShipmentStatus.Cancelled:
+
+                            <text>❌ ملغي</text> *@
+                            break;
+                    }
+                </strong>
+                <small class="text-muted ms-2">
+                    @record.TimeStamp.ToString("yyyy-MM-dd HH:mm")
+                </small>
+                <p class="mb-0">@record.Note</p>
+            </li>
+        }
+    </ul>
+</div>
+
+<!-- ✅ Refresh Button — MVC way to update -->
+<a onclick="trackDriver()" asp-action="Track" asp-route-id="@Model.Id"
+   class="btn btn-primary mt-3">
+    🔄 تحديث
+</a>
+
+<!-- ✅ Map JS — coordinates come from Model -->
+<script>
+        let driverMarker;
+    function initMap() {
+        const pickup = {
+            lat: @Model.PickLocation.Latitude,
+            lng: @Model.PickLocation.Longitude
+        };
+        const delivery = {
+            lat: @Model.DropLocation.Latitude,
+            lng: @Model.DropLocation.Longitude
+        };
+        const driver = {
+            lat: pickup.lat,
+            lng: pickup.lng
+        };
+
+        const map = new google.maps.Map(
+            document.getElementById("map"), {
+            center: driver,
+            zoom  : 12
+        });
+
+        // Draw route
+        const directionsService  = new google.maps.DirectionsService();
+        const directionsRenderer = new google.maps.DirectionsRenderer({
+            suppressMarkers: true
+        });
+        directionsRenderer.setMap(map);
+
+        directionsService.route({
+            origin     : pickup,
+            destination: delivery,
+            travelMode : google.maps.TravelMode.DRIVING
+        },
+        (result, status) => {
+            if (status === "OK") {
+                directionsRenderer.setDirections(result);
+            }
+        });
+
+        // Pickup marker
+        new google.maps.Marker({
+            position: pickup,
+            map     : map,
+            title   : "نقطة الاستلام",
+            icon    : "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+        });
+
+        // Delivery marker
+        new google.maps.Marker({
+            position: delivery,
+            map     : map,
+            title   : "نقطة التسليم",
+            icon    : "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+        });
+
+        //// Driver marker
+        // new google.maps.Marker({
+        //     position: driver,
+        //     map     : map,
+        //     title   : "المندوب",
+        //     icon    : "http:maps.google.com/mapfiles/ms/icons/blue-dot.png"
+        // });
+
+         driverMarker = new google.maps.Marker({
+            position: pickup,   // starts at pickup
+            map     : map,
+            title   : "المندوب",
+            icon    : "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+        });
+        
+            // 6 — Start tracking
+        // trackDriver();
+    }
+
+    // ✅ Fetch driver location every 5 seconds
+    function trackDriver() {
+        setInterval(async () => {
+
+            const response = await fetch(
+                '/Shipment/GetDriverLocation?shipmentId=@Model.Id'
+            );
+            const data = await response.json();
+
+            // Update driver marker
+            driverMarker.setPosition({ lat: data.lat, lng: data.lng });
+
+            // Update status text
+            document.getElementById("status-text").innerText = data.status;
+
+            // If delivered — stop tracking
+            if (data.status === "Delivered") {
+                clearInterval();
+                alert("✅ تم توصيل الشحنة!");
+            }
+
+        }); // every 5 seconds
+    }
+</script>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=@ViewBag.ApiKey&callback=initMap">
+</script>
