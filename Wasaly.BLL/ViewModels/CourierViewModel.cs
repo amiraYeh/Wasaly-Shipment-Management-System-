@@ -11,17 +11,17 @@ namespace Wasaly.BLL.ViewModels
     public class CourierViewModel
     {
         [Required]
-        [FileExtensions(Extensions = "jpg,jpeg,png", ErrorMessage = "Only JPG, JPEG, PNG files are allowed")]
+        //[FileExtensions(Extensions = "jpg,jpeg,png", ErrorMessage = "Only JPG, JPEG, PNG files are allowed")]
 
         public IFormFile NationalIdImage { get; set; } = null!;
 
         [Required]
-        [FileExtensions(Extensions = "jpg,jpeg,png", ErrorMessage = "Only JPG, JPEG, PNG files are allowed")]
+        //[FileExtensions(Extensions = "jpg,jpeg,png", ErrorMessage = "Only JPG, JPEG, PNG files are allowed")]
 
         public IFormFile DrivingLicenseImage { get; set; } = null!;
 
         [Required]
-        [FileExtensions(Extensions = "jpg,jpeg,png", ErrorMessage = "Only JPG, JPEG, PNG files are allowed")]
+        //[FileExtensions(Extensions = "jpg,jpeg,png", ErrorMessage = "Only JPG, JPEG, PNG files are allowed")]
         public IFormFile ProfileImage { get; set; } = null!;
     }
 }

@@ -26,18 +26,24 @@ namespace Wasaly.BLL.Services
             List<ShipmentVM> shipmentList = new List<ShipmentVM>();
             foreach (var ship in shipments)
             {
-                var courdata = await _shipmentRepository.GetCourierData(ship.Id);
-                if (courdata != null)
+                var courdata = ship.CourierAssignments.FirstOrDefault(c => c.ShipmentId == ship.Id);
+                //if (courdata != null)
                 {
-                    shipmentList.Add(new ShipmentVM
+                    shipmentList.Add(new ShipmentVM()
                     {
+                        Id = ship.Id,
                         TrackingNumber = ship.TrackingNumber,
-                        CourierAssignmentName = courdata.Item1,
-                        CourierAssignmentRate = (int)courdata.Item2,
-                        DropLocation = ship.DropLocation.Address
+                        CourierAssignmentName = courdata.Courier.WasalyIdentityUser.FullName,
+                        CourierAssignmentRate = courdata.Courier.WasalyIdentityUser.Rating,
+                        DropLocation = ship.DropLocation.Address,
+                        CurrentLatitude = ship.CurrentLatitude,
+                        CurrentLongitude = ship.CurrentLongitude,
+                        Status = ship.Status,
+                        Price = ship.Price
+
                     });
                 }
-                return shipmentList;
+                //return shipmentList;
             }
             return shipmentList;
         }
@@ -55,8 +61,11 @@ namespace Wasaly.BLL.Services
                 DropLocation = shipmentVM.DropLocation,
                 Weight = shipmentVM.Weight,
                 Description = shipmentVM.Description,
-                DeliveredAt = shipmentVM.DeliveredAt
-
+                DeliveredAt = shipmentVM.DeliveredAt,
+                RecipientEmail = shipmentVM.RecipientEmail,
+                RecipientName = shipmentVM.RecipientName,
+                DistanceKm = distance
+                
             };
           var res = await _shipmentRepository.AddAsync(shipment);
             if (res != 0)  return 1;
@@ -66,15 +75,23 @@ namespace Wasaly.BLL.Services
         {
             if (id == null)
                 return null;
-            var ship = await _shipmentRepository.GetAsync(id);
-            if (ship == null)
+            var shipment = await _shipmentRepository.GetAsync(id);
+            if (shipment == null)
                 return null;
+
+            List<ShipmentTracking>? history = new List<ShipmentTracking>();
+            history = shipment.Trackings.ToList();
 
             ShipmentDetailsVM shipmentDetails = new ShipmentDetailsVM()
             {
-                Id = ship.Id,
-                TrackingNumber = ship.TrackingNumber,
-                Location = ship.DropLocation
+                Id = shipment.Id,
+                TrackingNumber = shipment.TrackingNumber,
+               PickLocation = shipment.PickupLocation,
+               DropLocation = shipment.DropLocation,
+               Description = shipment.Description,
+               Status = shipment.Status,
+               DistanceKm = shipment.DistanceKm,
+               History = history
             };
             return shipmentDetails;
         }
@@ -88,9 +105,27 @@ namespace Wasaly.BLL.Services
             return (decimal)( price);
         }
 
-    
+        public async Task<Shipment> GetByIDAsync(int id)
+        {
+           return await _shipmentRepository.GetAsync(id);
+        }
 
+        public async Task<int> Update(Shipment shipment)
+        {
+            return await _shipmentRepository.UpdateAsync(shipment);
+        }
 
-      
+        public async Task<object> GetCurrentLocAsync(int id)
+        {
+            var shipment = await _shipmentRepository.GetAsync(id);
+            if (shipment == null)
+                return null;
+            return new
+            {
+                lat = shipment.CurrentLatitude,
+                lng = shipment.CurrentLongitude,
+                status =shipment.Status,
+            };
+        }
     }
 }
