@@ -1,0 +1,80 @@
+﻿@using Wasaly.BLL.ViewModels.AdminVM
+@model MerchantsManagementVM
+@{
+    Layout = "_DashBordLayout";
+    ViewData["Title"] = "إدارة التجار";
+}
+
+@await Html.PartialAsync("_FilterCard", new FilterCardVM
+{
+    Action = "GetMerchants",
+    SearchTerm = Model.SearchTerm,
+    StatusFilter = Model.StatusFilter,
+    SearchPlaceholder = "ابحث باسم التاجر أو المتجر...",
+    StatusOptions = new() { "نشط", "موقوف" }
+})
+
+@await Html.PartialAsync("_MiniStatVM", new List<MiniStatVM>
+{
+    new() { Icon = "🔵", Label = "إجمالي", Value = Model.TotalCount, Color = "primary" },
+    new() { Icon = "🟢", Label = "نشطون", Value = Model.ActiveCount, Color = "success" },
+    new() { Icon = "🔴", Label = "موقوفون", Value = Model.SuspendedCount, Color = "danger" }
+})
+
+<div class="stat-card shadow-sm">
+    <div class="table-responsive">
+        <table class="table custom-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>الاسم</th>
+                    <th>المتجر</th>
+                    <th>الهاتف</th>
+                    <th>المنطقة</th>
+                    <th>الشحنات</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Merchants.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">لا يوجد تجار</td>
+                    </tr>
+                }
+                @foreach (var (merchant, i) in Model.Merchants.Select((m, i) => (m, i + 1)))
+                {
+                    <tr>
+                        <td>@i</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="rounded-circle bg-orange text-white d-flex
+                                                align-items-center justify-content-center fw-bold"
+                                     style="width:34px;height:34px;">
+                                    🏪
+                                </div>
+                                @merchant.FullName
+                            </div>
+                        </td>
+                        <td>@merchant.StoreName</td>
+                        <td class="text-muted">@merchant.PhoneNumber</td>
+                        <td class="text-muted">@merchant.Region</td>
+                        <td>@merchant.ShipmentsCount</td>
+                        <td>
+                            <span class="badge @merchant.StatusClass">@merchant.StatusText</span>
+                        </td>
+                        <td>
+                            <a asp-action="MerchantDetails"
+                               asp-route-id="@merchant.Id"
+                               class="btn btn-primary btn-sm px-2 py-0 rounded-0"
+                               style="font-size:0.75rem;">
+                                👁️ عرض
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
