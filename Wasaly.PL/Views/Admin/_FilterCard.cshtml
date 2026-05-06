@@ -1,0 +1,27 @@
+﻿<!-- _FilterCard.cshtml -->
+<div class="stat-card shadow-sm mb-4">
+    <form method="get" asp-action="@Model.Action">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <input type="text" name="search" value="@Model.SearchTerm"
+                       placeholder="@Model.SearchPlaceholder"
+                       class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <select name="status" class="form-select">
+                    <option value="">الحالة: الكل</option>
+                    @foreach (var option in Model.StatusOptions)
+                    {
+                        <option value="@option"
+                                selected="@(Model.StatusFilter == option)">
+                            @option
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-orange w-100 btn-lg">بحث</button>
+            </div>
+        </div>
+    </form>
+</div>

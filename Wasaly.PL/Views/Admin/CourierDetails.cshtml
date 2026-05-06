@@ -1,0 +1,154 @@
+﻿@using Wasaly.BLL.ViewModels.AdminVM
+@model CourierRowVM
+@{
+    Layout = "_DashBordLayout";
+    ViewData["Title"] = "تفاصيل المندوب";
+}
+
+<!-- Back Button -->
+<a asp-action="GetCouriers" class="text-orange text-decoration-none mb-4 d-inline-block">
+    → العودة لقائمة المناديب
+</a>
+
+<h4 class="fw-bold mb-4">مراجعة طلب التوثيق</h4>
+
+<!-- Profile Card -->
+<div class="stat-card shadow-sm mb-4">
+    <div class="d-flex flex-column flex-md-row gap-4">
+
+        <!-- Avatar + Status -->
+        <div class="text-center flex-shrink-0">
+            <div class="rounded-circle bg-orange text-white d-flex align-items-center
+                        justify-content-center fw-bold mx-auto"
+                 style="width:100px;height:100px;font-size:2.5rem;">
+                @Model.FullName.FirstOrDefault()
+            </div>
+            <div class="mt-2">
+                <span class="badge @Model.StatusClass">@Model.StatusText</span>
+            </div>
+        </div>
+
+        <!-- Info Grid -->
+        <div class="row flex-1 g-3 w-100">
+            <div class="col-6">
+                <div class="text-muted small">الاسم</div>
+                <div class="fw-semibold">@Model.FullName</div>
+            </div>
+            <div class="col-6">
+                <div class="text-muted small">رقم الهاتف</div>
+                <div class="fw-semibold">@Model.PhoneNumber</div>
+            </div>
+            <div class="col-6">
+                <div class="text-muted small">البريد الإلكتروني</div>
+                <div class="fw-semibold">@Model.Email</div>
+            </div>
+            <div class="col-6">
+                <div class="text-muted small">المنطقة</div>
+                <div class="fw-semibold">@Model.Region</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Documents -->
+<div class="stat-card shadow-sm mb-4">
+    <h5 class="fw-bold mb-4">المستندات المرفوعة</h5>
+    <div class="row g-4">
+
+        <!-- بطاقة وطنية -->
+        <div class="col-md-4">
+            <div class="border border-2 border-dashed rounded-3 p-3 text-center">
+                <div class="fs-1 mb-2">🪪</div>
+                <div class="fw-semibold mb-2">صورة البطاقة الوطنية</div>
+                <img src="/@Model.NationalIdImagePath"
+                     class="img-fluid rounded mb-2" style="height:180px;object-fit:cover;"
+                     onerror="this.src='/images/placeholder.png'" />
+                <div>
+                    <a href="/@Model.NationalIdImagePath" target="_blank"
+                       class="text-primary small">عرض الحجم الكامل</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- رخصة القيادة -->
+        <div class="col-md-4">
+            <div class="border border-2 border-dashed rounded-3 p-3 text-center">
+                <div class="fs-1 mb-2">🚗</div>
+                <div class="fw-semibold mb-2">صورة رخصة القيادة</div>
+                <img src="/@Model.DrivingLicenseImagePath"
+                     class="img-fluid rounded mb-2" style="height:180px;object-fit:cover;"
+                     onerror="this.src='/images/placeholder.png'" />
+                <div>
+                    <a href="/@Model.DrivingLicenseImagePath" target="_blank"
+                       class="text-primary small">عرض الحجم الكامل</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- صورة شخصية -->
+        <div class="col-md-4">
+            <div class="border border-2 border-dashed rounded-3 p-3 text-center">
+                <div class="fs-1 mb-2">📸</div>
+                <div class="fw-semibold mb-2">صورة شخصية</div>
+                <img src="/@Model.ProfileImagePath"
+                     class="img-fluid rounded mb-2" style="height:180px;object-fit:cover;"
+                     onerror="this.src='/images/placeholder.png'" />
+                <div>
+                    <a href="/@Model.ProfileImagePath" target="_blank"
+                       class="text-primary small">عرض الحجم الكامل</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Decision -->
+<div class="stat-card shadow-sm">
+    <div class="text-end mb-3">
+        <form asp-action="DeleteCourier" method="post"
+              onsubmit="return confirm('هل أنت متأكد من حذف المندوب؟')">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button type="submit" class="btn btn-danger px-4">
+                🗑️ حذف المندوب
+            </button>
+        </form>
+    </div>
+    @if (!Model.IsVerified)
+    {
+        <div class="row g-3">
+            <div class="col-md-6">
+                <form asp-action="UpdateCourierVerification" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <input type="hidden" name="status" value="true" />
+                    <button type="submit" class="btn btn-success w-100 py-3 fs-6">
+                        ✅ قبول وتوثيق المندوب
+                    </button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <form asp-action="UpdateCourierVerification" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <input type="hidden" name="status" value="false" />
+                    <button type="submit" class="btn btn-danger w-100 py-3 fs-6">
+                        ❌ رفض الطلب
+                    </button>
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center bg-success bg-opacity-10 border border-success rounded-3 p-4 mb-3">
+            <div class="fs-1">✅</div>
+            <p class="fw-semibold text-success">تم قبول وتوثيق المندوب بنجاح</p>
+        </div>
+        <form asp-action="UpdateCourierVerification" method="post" class="text-center">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <input type="hidden" name="status" value="false" />
+            <button type="submit"
+                    class="btn btn-outline-orange px-4">
+                إلغاء التوثيق
+            </button>
+        </form>
+    }
+</div>
