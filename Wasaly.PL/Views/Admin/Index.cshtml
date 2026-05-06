@@ -1,6 +1,6 @@
 ﻿@model Wasaly.BLL.ViewModels.AdminVM.AdminStatsVM
 @{
-    Layout = "_AdminLayout";
+    Layout = "_DashBordLayout";
     ViewData["Title"] = "لوحة التحكم";
 }
 
@@ -134,3 +134,11 @@
         </table>
     </div>
 </div>
+@section SidebarData {
+    @await Html.PartialAsync("_SaidbarAdmin") 
+
+}
+@section NavbarData {
+     @await Html.PartialAsync("_AdminNV") 
+
+}

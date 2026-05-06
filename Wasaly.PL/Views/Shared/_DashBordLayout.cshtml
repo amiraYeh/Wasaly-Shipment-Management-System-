@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - وصلني</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="~/css/waslni-style.css" asp-append-version="true" />
+</head>
+<body>
+
+    <div class="dashboard-wrapper">
+        <aside class="sidebar " id="sidebar">
+
+            <div class="sidebar-header">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="logo-icon">📦</span>
+                    <span class="logo-text">وصلي</span>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3 p-3 border-bottom border-secondary">
+            <div class="rounded-circle bg-orange d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0"
+                 style="width:44px;height:44px;">
+                @User.Identity?.Name?.FirstOrDefault()
+                <span class="fs-4">👤</span>
+            </div>
+            <div>
+                <div class="fw-bold text-white small">@User.Identity?.Name</div>
+               @*  <div class="text-secondary" style="font-size:.8rem;">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <span>أدمن</span>
+                    }
+                    @if (User.IsInRole("Courier"))
+                    {
+                        <span>مندوب</span>
+                    }
+                    @if  (User.IsInRole("Merchant"))
+                    {
+                        <span>تاجر</span>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <span>أدمن</span>
+                    }
+                   
+                </div> *@
+                    @* <span>أدمن</span> *@
+            </div>
+        </div>
+        <!-- Sidebar باستخدام الـ Classes بتاعتك -->
+       @*  @if (User.IsInRole("Admin"))
+        {
+            @await Html.PartialAsync("_SaidbarAdmin")
+        }
+        else if (User.IsInRole("Courier"))
+        {
+            @await Html.PartialAsync("_CourierNav")
+        }
+        else if (User.IsInRole("Merchant"))
+        {
+            @await Html.PartialAsync("_MerchantNav")
+        } *@
+       
+        @await RenderSectionAsync("SidebarData",false)
+        @* @await Html.PartialAsync("_SaidbarAdmin") *@
+       @*  @await Html.PartialAsync("_SaidbarCourier") *@
+       </aside>
+
+        <!-- overlay (required for mobile toggle) -->
+        <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navbar باستخدام الـ Classes بتاعتك -->
+            @await RenderSectionAsync("NavbarData", false)
+
+            @* @await Html.PartialAsync("_AdminNV") *@
+            @* @await Html.PartialAsync("_CourierNV") *@
+
+
+            <!-- Content Area -->
+            <div class="content-area">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/js/admin-dashboard.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+   
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
