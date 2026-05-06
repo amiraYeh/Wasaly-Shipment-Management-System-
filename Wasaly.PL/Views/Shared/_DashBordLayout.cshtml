@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿@* <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="utf-8" />
@@ -36,8 +36,8 @@
             </div>
             <div>
                 <div class="fw-bold text-white small">@User.Identity?.Name</div>
-                <div class="text-secondary" style="font-size:.8rem;">
-                  @*   @if (User.IsInRole("Admin"))
+                <div class="text-secondary" style="font-size:.8rem;"> *@
+                    @* @if (User.IsInRole("Admin"))
                     {
                         <span>أدمن</span>
                     }
@@ -52,16 +52,16 @@
                     @if (User.IsInRole("Admin"))
                     {
                         <span>أدمن</span>
-                    }
-                   
-                </div> *@
-                    @* <span>أدمن</span> *@
                     } *@
-                        <span>مندوب</span>
-                </div>
+                   
+                @* </div>  *@
+                    @* <span>أدمن</span> 
+                    } *@
+                        @* <span>مندوب</span> *@
+                @* </div> *@
                     
-            </div>
-        </div>
+            @* </div> *@
+        @* </div> *@
         <!-- Sidebar باستخدام الـ Classes بتاعتك -->
     @*     @if (User.IsInRole("Admin"))
         {
@@ -76,25 +76,25 @@
             @await Html.PartialAsync("_MerchantNav")
         } *@
        
-        @await RenderSectionAsync("SidebarData",false)
+        @* @await RenderSectionAsync("SidebarData",false) *@
         @* @await Html.PartialAsync("_SaidbarAdmin") *@
        @*  @await Html.PartialAsync("_SaidbarCourier") *@
        </aside>
 
         <!-- overlay (required for mobile toggle) -->
-        <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div>
+        @* <div id="sidebarOverlay" class="sidebar-overlay" aria-hidden="true"></div> *@
 
         <!-- Main Content -->
-        <main class="main-content">
+        @* <main class="main-content"> *@
             <!-- Top Navbar باستخدام الـ Classes بتاعتك -->
-            @await RenderSectionAsync("NavbarData", false)
+            @* @await RenderSectionAsync("NavbarData", false) *@
 
             @* @await Html.PartialAsync("_AdminNV") *@
             @* @await Html.PartialAsync("_CourierNV") *@
 
 
             <!-- Content Area -->
-            <div class="content-area">
+@*             <div class="content-area">
                 @RenderBody()
             </div>
         </main>
@@ -106,4 +106,4 @@
    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-</html>
+</html> *@

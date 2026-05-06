@@ -1,5 +1,14 @@
-﻿
+﻿@using Microsoft.AspNetCore.Identity
+@using Wasaly.DAL.Models
 
+@inject SignInManager<WasalyIdentityUser> SignInManager
+@inject UserManager<WasalyIdentityUser> UserManager
+
+@{
+    var currentUser = SignInManager.IsSignedIn(User)
+        ? await UserManager.GetUserAsync(User)
+        : null;
+}
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -51,16 +60,48 @@
                     <a class="nav-link text-dark" href="#contact">تواصل معنا</a>
                 </div>
                 <!-- 4. الزراير: بتظهر في الاتنين (Nav و Toggle) -->
-                <div class="d-flex flex-column flex-lg-row gap-3 px-3 px-lg-0 pb-4 pb-lg-0 ms-lg-3">
-                    <a href="#" class="btn py-2 text-white order-1 order-lg-2"
-                       style="background-color: #FF6B35; border-radius: 8px; font-weight: 500; border: none;">
-                        سجل كتاجر
-                    </a>
+                <div class="d-flex flex-column flex-lg-row gap-3 px-3 px-lg-0 pb-4 pb-lg-0 ms-lg-4">
 
-                    <a href="#" class="btn py-2 order-2 order-lg-1"
-                       style="border: 1.5px solid #1A1A2E; color: #1A1A2E; border-radius: 8px; font-weight: 500;">
-                        انضم كمندوب
-                    </a>
+                    @if (SignInManager.IsSignedIn(User) && currentUser != null)
+                    {
+                        <span class="py-2 px-3 text-dark align-self-center fw-medium">
+                            <i class="fa fa-user-circle me-1" style="color:#FF6B35;"></i>
+                            @currentUser.FullName
+                        </span>
+
+                        <form asp-area="Identity"
+                              asp-page="/Account/Logout"
+                              asp-route-returnUrl="@Url.Action("Index", "Home")"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="btn text-white px-4 py-2"
+                                    style="background-color:#1a2e4a; border:none; border-radius:10px;">
+
+                                <i class="fa fa-right-from-bracket me-1"></i>
+                                تسجيل خروج
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-area="Identity"
+                           asp-page="/Account/Login"
+                           class="btn px-4 py-2"
+                           style="background-color:white;
+                                              color:#FF6B35;
+                                              border:1.5px solid #FF6B35;
+                                              border-radius:10px;
+                                              font-weight:500;">
+
+                            تسجيل دخول
+                        </a>
+
+
+                    }
+
                 </div>
 
             </div>

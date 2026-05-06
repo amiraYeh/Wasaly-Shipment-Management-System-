@@ -1,18 +1,9 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using Wasaly.DAL.Models
-
-@inject SignInManager<WasalyIdentityUser> SignInManager
-@inject UserManager<WasalyIdentityUser> UserManager
-
-@{
+﻿@{
     ViewData["Title"] = "الرئيسية - وصلي";
     Layout = "_Layout";
-    var currentUser = SignInManager.IsSignedIn(User)
-        ? await UserManager.GetUserAsync(User)
-        : null;
 }
 
-<nav class="navbar navbar-expand-lg navbar-light bg-white py-2 shadow-sm">
+@* <nav class="navbar navbar-expand-lg navbar-light bg-white py-2 shadow-sm">
     <div class="container">
 
         <!-- اللوجو -->
@@ -83,10 +74,10 @@
                        asp-page="/Account/Login"
                        class="btn px-4 py-2"
                        style="background-color:white;
-                                  color:#FF6B35;
-                                  border:1.5px solid #FF6B35;
-                                  border-radius:10px;
-                                  font-weight:500;">
+                                      color:#FF6B35;
+                                      border:1.5px solid #FF6B35;
+                                      border-radius:10px;
+                                      font-weight:500;">
 
                         تسجيل دخول
                     </a>
@@ -95,9 +86,9 @@
                        asp-page="/Account/Register"
                        class="btn text-white px-4 py-2"
                        style="background-color:#FF6B35;
-                                  border:none;
-                                  border-radius:10px;
-                                  font-weight:500;">
+                                      border:none;
+                                      border-radius:10px;
+                                      font-weight:500;">
 
                         إنشاء حساب
                     </a>
@@ -106,7 +97,8 @@
             </div>
         </div>
     </div>
-</nav>
+</nav> *@
+
 <section id="home" class="hero-section pt-4 pb-5 w-100 overflow-hidden" style="background: linear-gradient(135deg, #1A1A2E, #16213E, #0F3460); min-height: 85vh; display: flex; align-items: center;">
     <div class="container-fluid px-0">
 
@@ -357,7 +349,7 @@
                    style="background-color: #1A1A2E;">
                     انضم الآن
                 </a>
-               
+
             </div>
 
             <!-- الصورة التوضيحية (الموبايل) -->
