@@ -2,27 +2,27 @@
 
     <div class="sidebar-menu">
         <!-- استخدام الـ sidebar-item من الـ CSS بتاعك -->
-        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index"
+        <a  asp-controller="Admin" asp-action="Index"
            class="sidebar-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Dashboard" ? "active" : "")">
             <span>🏠</span> لوحة التحكم
         </a>
 
-        <a asp-controller="Admin" asp-action="Couriers" class="sidebar-item">
+    <a asp-controller="Admin" asp-action="GetCouriers" class="sidebar-item">
             <span>🚴</span> إدارة المناديب
         </a>
 
-        <a asp-controller="Admin" asp-action="VerificationRequests" class="sidebar-item d-flex justify-content-between align-items-center w-100">
+       @*  <a asp-controller="Admin" asp-action="VerificationRequests" class="sidebar-item d-flex justify-content-between align-items-center w-100">
             <div><span>📋</span> طلبات التوثيق</div>
             <span class="badge badge-pending">5</span>
-        </a>
+        </a> *@
 
         <a asp-controller="Admin" asp-action="Merchants" class="sidebar-item">
             <span>🏪</span> إدارة التجار
         </a>
 
-        <a asp-controller="Admin" asp-action="Shipments" class="sidebar-item">
+       @*  <a asp-controller="Admin" asp-action="Shipments" class="sidebar-item">
             <span>📦</span> إدارة الشحنات
-        </a>
+        </a> *@
     </div>
 
     <div class="p-3 border-top border-white-10">

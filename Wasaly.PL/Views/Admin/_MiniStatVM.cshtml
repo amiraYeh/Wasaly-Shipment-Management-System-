@@ -1,0 +1,14 @@
+﻿@using Wasaly.BLL.ViewModels.AdminVM
+@model List<MiniStatVM>
+
+<div class="row g-4 mb-4">
+    @foreach (var stat in Model)
+    {
+        <div class="col">
+            <div class="stat-card text-center border border-@stat.Color">
+                <div class="fs-3 fw-bold text-@stat.Color">@stat.Value</div>
+                <div class="small text-@stat.Color">@stat.Icon @stat.Label</div>
+            </div>
+        </div>
+    }
+</div>
