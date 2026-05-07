@@ -34,8 +34,6 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnGetAsync()
         {
-
-
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
@@ -47,7 +45,6 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
-
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -87,7 +84,8 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
 
             await _signInManager.SignInAsync(user, isPersistent: false);
 
-            return LocalRedirect(ReturnUrl ?? "/");
+            // redirect courier to courier dashboard if no ReturnUrl provided
+            return LocalRedirect(ReturnUrl ?? "/Courier/Index");
         }
 
         private async Task<string> SaveFileAsync(IFormFile file)

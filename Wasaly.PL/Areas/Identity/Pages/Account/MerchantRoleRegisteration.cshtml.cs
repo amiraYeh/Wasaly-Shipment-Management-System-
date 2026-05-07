@@ -83,7 +83,7 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
 
             await _signInManager.SignInAsync(user, isPersistent: false);
 
-            return LocalRedirect(ReturnUrl ?? "/");
+            return LocalRedirect(ReturnUrl ?? "/Shipment/Index");
         }
 
        
