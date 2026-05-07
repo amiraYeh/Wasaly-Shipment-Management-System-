@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Wasaly.BLL;
+using Wasaly.BLL.@interface;
 using Wasaly.BLL.ViewModels;
 using Wasaly.BLL.ViewModels.AdminVM;
 using Wasaly.DAL.Repositories.IRepositories;

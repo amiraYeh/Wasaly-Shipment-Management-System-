@@ -25,9 +25,11 @@ namespace Wasaly.BLL.ViewModels
         public ShipmentStatus Status { get; set; }
 
         [Display(Name = "التقيم")]
-        public int CourierAssignmentRate { get; set; }
+        public int? CourierAssignmentRate { get; set; }
 
         [Display(Name = "السعر")]
         public decimal Price { get; set; }
+        public double? CurrentLatitude { get; set; }
+        public double? CurrentLongitude { get; set; }
     }
 }

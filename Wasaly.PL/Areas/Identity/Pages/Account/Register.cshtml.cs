@@ -45,47 +45,57 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
+            [Required(ErrorMessage = "هذا الحقل مطلوب")]
+            [EmailAddress(ErrorMessage = "يرجى إدخال بريد إلكتروني صحيح")]
+            [Display(Name = "البريد الإلكتروني")]
             public string Email { get; set; }
 
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "هذا الحقل مطلوب")]
+            [StringLength(100, MinimumLength = 6,
+                ErrorMessage = "يجب أن تكون كلمة المرور بين 6 و 100 حرف")]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "كلمة المرور")]
             public string Password { get; set; }
 
+            [Required(ErrorMessage = "هذا الحقل مطلوب")]
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "تأكيد كلمة المرور")]
+            [Compare("Password", ErrorMessage = "كلمة المرور غير متطابقة")]
             public string ConfirmPassword { get; set; }
 
-            [Required]
-            [StringLength(30, MinimumLength = 3)]
+            [Required(ErrorMessage = "هذا الحقل مطلوب")]
+            [StringLength(30, MinimumLength = 3,
+                ErrorMessage = "يجب أن يكون الاسم بين 3 و 30 حرف")]
+            [Display(Name = "الاسم بالكامل")]
             public string FullName { get; set; }
 
-            [Required]
-            [StringLength(200, MinimumLength = 5)]
+            [Required(ErrorMessage = "هذا الحقل مطلوب")]
+            [StringLength(200, MinimumLength = 5,
+                ErrorMessage = "يجب أن يكون العنوان بين 5 و 200 حرف")]
             [RegularExpression(@"^[a-zA-Z0-9\u0600-\u06FF\s,.-]+$",
-                ErrorMessage = "Address contains invalid characters")]
+                ErrorMessage = "العنوان يجب أن يحتوي على حروف أو أرقام فقط ويمكن استخدام (، . -)")]
+            [Display(Name = "العنوان")]
             public string Address { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "هذا الحقل مطلوب")]
+            [Display(Name = "النوع")]
             public Gender Gender { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "هذا الحقل مطلوب")]
+            [Display(Name = "المنطقة")]
             public region Region { get; set; }
 
-            [Required]
-            [Range(10, 60)]
+            [Required(ErrorMessage = "هذا الحقل مطلوب")]
+            [Range(10, 60, ErrorMessage = "العمر يجب أن يكون بين 10 و 60 سنة")]
+            [Display(Name = "العمر")]
             public int Age { get; set; }
 
-            [Required]
-            [RegularExpression("^(01)(0|1|2|5)[0-9]{8}$", ErrorMessage = "Phone Number is not in the correct format")]
+            [Required(ErrorMessage = "هذا الحقل مطلوب")]
+            [RegularExpression("^(01)(0|1|2|5)[0-9]{8}$",
+                ErrorMessage = "رقم الهاتف يجب أن يكون 11 رقم ويبدأ بـ 010 أو 011 أو 012 أو 015")]
+            [Display(Name = "رقم الهاتف")]
             public string PhoneNumber { get; set; }
         }
-
         private async Task LoadRegionsAsync()
         {
             var regions = Enum.GetValues(typeof(region))
@@ -119,21 +129,32 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
+                //var Admin = CreateUser();
+                //user.PhoneNumber = "01556473252";
+                //user.Location = new Location { Address = "Assiut };
+                //user.gender = Gender.Female;
+                //    user.FullName = "Asmaa Ibrahim";
+                //    user.Age = 22;
+                //    user.Region = region.دير_مواس;
+                //    user.Email = "asmaaomarr111@gmail.com";
+                //    user.Password = "Asmaa_@123";
+                //    user ConfirmPassword = "Asmaa_@123";
+                    var user = CreateUser();
+                    await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
 
-                user.PhoneNumber = Input.PhoneNumber;
-                user.Location = new Location { Address = Input.Address };
-                user.gender = Input.Gender;
-                user.FullName = Input.FullName;
-                user.Age = Input.Age;
-                user.Region = Input.Region;
+                    user.PhoneNumber = Input.PhoneNumber;
+                    user.Location = new Location { Address = Input.Address };
+                    user.gender = Input.Gender;
+                    user.FullName = Input.FullName;
+                    user.Age = Input.Age;
+                    user.Region = Input.Region;
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                    await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                    var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
-                    var allowedRoles = new[] { "Merchant", "Courier" };
+                    var allowedRoles = new[] { "Merchant", "Courier"};
 
                     if (string.IsNullOrEmpty(RoleFromHome))
                     {

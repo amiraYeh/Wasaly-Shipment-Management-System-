@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "الرئيسية - وصلي";
     Layout = "_Layout";
 }
@@ -11,7 +10,7 @@
             <div class="col-lg-4 d-none d-lg-block text-center">
                 <div style="font-size: 230px; opacity: 0.15; transform: scaleX(-1);">🚴</div>
             </div>
-           
+
 
             <div class="col-lg-8 col-12 text-start pe-lg-5 pe-4 px-lg-5 px-sm-5 ms-auto">
                 <h1 class="fw-bold text-white mb-4" style="font-size: clamp(2.5rem, 6vw, 5rem); line-height: 1.1;">
@@ -20,15 +19,26 @@
                 <p class="h3 text-light opacity-75 mb-5" style="max-width: 700px; margin-right: 0; margin-left: auto;">
                     منصة تربط التجار بمناديب موثقين لتوصيل سريع وآمن
                 </p>
-               
-               
+
+
             </div>
-           
+
 
         </div>
         <div class="d-flex justify-content-start gap-3 mb-5 px-5 ">
-            <a href="#" class="btn btn-primary btn-lg px-5 py-3 rounded-pill">ابدأ الشحن الآن</a>
-            <a href="#" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill">انضم كمندوب</a>
+            <a asp-page="/Account/Register"
+               asp-area="Identity"
+               asp-route-RoleFromHome="Merchant"
+               class="btn btn-primary btn-lg px-5 py-3 rounded-pill">
+                ابدا الشحن الان
+            </a>
+            <a asp-page="/Account/Register"
+               asp-area="Identity"
+               asp-route-RoleFromHome="Courier"
+               class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill"
+               style="background-color: #1A1A2E;">
+                انضم كمندوب
+            </a>
         </div>
 
         <div class="row g-0 mt-3 pt-5 text-center">
@@ -194,7 +204,13 @@
                     <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> تقارير تفصيلية</li>
                     <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> دعم فني 24/7</li>
                 </ul>
-                <a href="/Account/Register" class="btn btn-orange btn-lg px-5 mt-3 rounded-pill text-white">ابدأ الآن مجاناً</a>
+
+                <a asp-page="/Account/Register"
+                   asp-area="Identity"
+                   asp-route-RoleFromHome="Merchant"
+                   class="btn btn-orange btn-lg px-5 mt-3 rounded-pill text-white">
+                    ابدا الشحن الان
+                </a>
             </div>
         </div>
     </div>
@@ -230,12 +246,14 @@
                         <span>مكافآت وحوافز</span>
                     </div>
                 </div>
-
-                <a href="/Account/Register?role=Courier"
+                <a asp-page="/Account/Register"
+                   asp-area="Identity"
+                   asp-route-RoleFromHome="Courier"
                    class="btn btn-lg px-5 py-3 text-white rounded-3 shadow-sm hover-bright"
                    style="background-color: #1A1A2E;">
                     انضم الآن
                 </a>
+
             </div>
 
             <!-- الصورة التوضيحية (الموبايل) -->
@@ -430,3 +448,4 @@
     }
 </script> *@
 }
+

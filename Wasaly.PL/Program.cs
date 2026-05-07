@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Wasaly.BLL;
+using Wasaly.BLL.@interface;
 using Wasaly.BLL.Services;
 using Wasaly.DAL.Data.Context;
 using Wasaly.DAL.Models;
@@ -74,7 +74,7 @@ namespace Wasaly.PL
             app.UseRouting();
 
             app.UseAuthorization();
-           
+            app.MapRazorPages();
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -180,7 +180,7 @@ namespace Wasaly.DAL.Migrations
 
                     b.HasKey("WasalyIdentityUserId");
 
-                    b.ToTable("Couriers", (string)null);
+                    b.ToTable("Couriers");
                 });
 
             modelBuilder.Entity("Wasaly.DAL.Models.CourierAssignment", b =>
@@ -197,10 +197,9 @@ namespace Wasaly.DAL.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("CourierId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ShipmentId")
+                    b.Property<int?>("ShipmentId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
@@ -215,7 +214,7 @@ namespace Wasaly.DAL.Migrations
 
                     b.HasIndex("ShipmentId");
 
-                    b.ToTable("CourierAssignments", null, t =>
+                    b.ToTable("CourierAssignments", t =>
                         {
                             t.HasCheckConstraint("CK_Courier_Status", "[Status] IN ( 'Assigned', 'Accepted','Rejected')");
                         });
@@ -244,20 +243,23 @@ namespace Wasaly.DAL.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<int>("OTPCode")
-                        .HasColumnType("int");
+                    b.Property<string>("OTPCode")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
 
-                    b.Property<int>("ShipmentId")
+                    b.Property<int?>("ShipmentId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ShipmentId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[ShipmentId] IS NOT NULL");
 
-                    b.ToTable("DeliveryOTP", null, t =>
+                    b.ToTable("DeliveryOTP", t =>
                         {
-                            t.HasCheckConstraint("CK_DeliveryOTP_Code", "[OTPCode] >= 100000 AND [OTPCode] <= 999999");
+                            t.HasCheckConstraint("CK_DeliveryOTP_Code_Format", "LEN([OTPCode]) = 6 AND [OTPCode] NOT LIKE '%[^0-9]%'");
                         });
                 });
 
@@ -281,7 +283,7 @@ namespace Wasaly.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations", (string)null);
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("Wasaly.DAL.Models.Merchant", b =>
@@ -301,48 +303,7 @@ namespace Wasaly.DAL.Migrations
 
                     b.HasKey("WasalyIdentityUserId");
 
-                    b.ToTable("Merchants", (string)null);
-                });
-
-            modelBuilder.Entity("Wasaly.DAL.Models.Notification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsRead")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WasalyIdentityUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WasalyIdentityUserId");
-
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Merchants");
                 });
 
             modelBuilder.Entity("Wasaly.DAL.Models.Shipment", b =>
@@ -353,38 +314,54 @@ namespace Wasaly.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CourierAssignmentId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<DateTime?>("DeliveredAt")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
+                    b.Property<double?>("CurrentLatitude")
+                        .HasColumnType("float");
 
-                    b.Property<int?>("DeliveryOTPId")
-                        .HasColumnType("int");
+                    b.Property<double?>("CurrentLongitude")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime?>("DeliveredAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int>("DropLocationId")
+                    b.Property<double?>("DistanceKm")
+                        .HasColumnType("float");
+
+                    b.Property<int?>("DropLocationId")
                         .HasColumnType("int");
 
                     b.Property<string>("MerchantId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("PickupLocationId")
+                    b.Property<int?>("PickupLocationId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("RecipientEmail")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("RecipientName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("RecipientPhone")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -401,10 +378,6 @@ namespace Wasaly.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourierAssignmentId");
-
-                    b.HasIndex("DeliveryOTPId");
-
                     b.HasIndex("DropLocationId");
 
                     b.HasIndex("MerchantId");
@@ -414,7 +387,7 @@ namespace Wasaly.DAL.Migrations
                     b.HasIndex("TrackingNumber")
                         .IsUnique();
 
-                    b.ToTable("Shipments", null, t =>
+                    b.ToTable("Shipments", t =>
                         {
                             t.HasCheckConstraint("CK_Shipment_Status", "[Status] IN ('Created','Accepted','PickedUp','Delivered')");
                         });
@@ -448,7 +421,7 @@ namespace Wasaly.DAL.Migrations
 
                     b.HasIndex("ShipmentId");
 
-                    b.ToTable("ShipmentTrackings", null, t =>
+                    b.ToTable("ShipmentTrackings", t =>
                         {
                             t.HasCheckConstraint("CK_Shipment_Status", "[Status] IN ('Created','Accepted','PickedUp','Delivered')")
                                 .HasName("CK_Shipment_Status1");
@@ -613,14 +586,12 @@ namespace Wasaly.DAL.Migrations
                     b.HasOne("Wasaly.DAL.Models.Courier", "Courier")
                         .WithMany("assignments")
                         .HasForeignKey("CourierId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Wasaly.DAL.Models.Shipment", "Shipment")
-                        .WithMany()
+                        .WithMany("CourierAssignments")
                         .HasForeignKey("ShipmentId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Courier");
 
@@ -630,10 +601,9 @@ namespace Wasaly.DAL.Migrations
             modelBuilder.Entity("Wasaly.DAL.Models.DeliveryOTP", b =>
                 {
                     b.HasOne("Wasaly.DAL.Models.Shipment", "Shipment")
-                        .WithOne()
+                        .WithOne("DeliveryOTP")
                         .HasForeignKey("Wasaly.DAL.Models.DeliveryOTP", "ShipmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Shipment");
                 });
@@ -649,50 +619,22 @@ namespace Wasaly.DAL.Migrations
                     b.Navigation("WasalyIdentityUser");
                 });
 
-            modelBuilder.Entity("Wasaly.DAL.Models.Notification", b =>
-                {
-                    b.HasOne("Wasaly.DAL.Models.WasalyIdentityUser", "WasalyIdentityUser")
-                        .WithMany("notifications")
-                        .HasForeignKey("WasalyIdentityUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("WasalyIdentityUser");
-                });
-
             modelBuilder.Entity("Wasaly.DAL.Models.Shipment", b =>
                 {
-                    b.HasOne("Wasaly.DAL.Models.CourierAssignment", "CourierAssignment")
-                        .WithMany()
-                        .HasForeignKey("CourierAssignmentId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Wasaly.DAL.Models.DeliveryOTP", "DeliveryOTP")
-                        .WithMany()
-                        .HasForeignKey("DeliveryOTPId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Wasaly.DAL.Models.Location", "DropLocation")
                         .WithMany("DropShipments")
                         .HasForeignKey("DropLocationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Wasaly.DAL.Models.Merchant", "Merchant")
                         .WithMany("shipments")
                         .HasForeignKey("MerchantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Wasaly.DAL.Models.Location", "PickupLocation")
                         .WithMany("PickupShipments")
                         .HasForeignKey("PickupLocationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CourierAssignment");
-
-                    b.Navigation("DeliveryOTP");
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("DropLocation");
 
@@ -704,7 +646,7 @@ namespace Wasaly.DAL.Migrations
             modelBuilder.Entity("Wasaly.DAL.Models.ShipmentTracking", b =>
                 {
                     b.HasOne("Wasaly.DAL.Models.Shipment", "Shipment")
-                        .WithMany("ShipmentTrackings")
+                        .WithMany("Trackings")
                         .HasForeignKey("ShipmentId")
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -743,12 +685,11 @@ namespace Wasaly.DAL.Migrations
 
             modelBuilder.Entity("Wasaly.DAL.Models.Shipment", b =>
                 {
-                    b.Navigation("ShipmentTrackings");
-                });
+                    b.Navigation("CourierAssignments");
 
-            modelBuilder.Entity("Wasaly.DAL.Models.WasalyIdentityUser", b =>
-                {
-                    b.Navigation("notifications");
+                    b.Navigation("DeliveryOTP");
+
+                    b.Navigation("Trackings");
                 });
 #pragma warning restore 612, 618
         }
