@@ -8,6 +8,25 @@
     var currentUser = SignInManager.IsSignedIn(User)
         ? await UserManager.GetUserAsync(User)
         : null;
+
+}
+
+
+@{
+    string controllerName = "";
+
+    if (User.IsInRole("Admin"))
+    {
+        controllerName = "Admin";
+    }
+    else if (User.IsInRole("Merchant"))
+    {
+        controllerName = "Merchant";
+    }
+    else if (User.IsInRole("Courier"))
+    {
+        controllerName = "Courier";
+    }
 }
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -82,6 +101,16 @@
 
                                 <i class="fa fa-right-from-bracket me-1"></i>
                                 تسجيل خروج
+                            </button>
+                        </form>
+
+                        <form asp-controller="@controllerName" asp-action="Index" asp-route-id="@currentUser.Id">
+                            <button type="submit"
+                                    class="btn text-white px-4 py-2"
+                                    style="background-color:#1a2e4a; border:none; border-radius:10px;">
+
+                                <i class="fa fa-right-from-bracket me-1"></i>
+                                الذهاب الى الداشبورد
                             </button>
                         </form>
                     }

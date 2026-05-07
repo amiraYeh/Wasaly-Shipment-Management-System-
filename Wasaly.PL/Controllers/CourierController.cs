@@ -11,10 +11,20 @@ namespace Wasaly.PL.Controllers
     public class CourierController : Controller
     {
         private readonly ICourierService _courierService;
-       // private readonly UserManager<WasalyIdentityUser> _userManager;
-        public CourierController(ICourierService courierService, UserManager<WasalyIdentityUser> userManager)
+        // private readonly UserManager<WasalyIdentityUser> _userManager;
+        private readonly SignInManager<WasalyIdentityUser> _signInManager;
+        private readonly UserManager<WasalyIdentityUser> _userManager;
+      
+      
+        public CourierController(ICourierService courierService, 
+            UserManager<WasalyIdentityUser> userManager,
+            IUserStore<WasalyIdentityUser> userStore,
+            SignInManager<WasalyIdentityUser> signInManager,
+            RoleManager<IdentityRole> roleManager)
         {
             _courierService= courierService;
+               _userManager = userManager;
+            _signInManager = signInManager;
            // _userManager=userManager;
 
         }
@@ -111,11 +121,12 @@ namespace Wasaly.PL.Controllers
             TempData["Error"] = message;
             return View(model);
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string id)
         {
-            //var courierId = _userManager.GetUserId(User);
+           
+            //var courierId = _userManager.GetUserAsync(User);
             var courierId = "remonda_courier";
-            var dashboard = await _courierService.GetDashboardAsync(courierId);
+            var dashboard = await _courierService.GetDashboardAsync(id);
             ViewData["Balance"] = dashboard.Balance.ToString("F0");
             return View(dashboard);
         }

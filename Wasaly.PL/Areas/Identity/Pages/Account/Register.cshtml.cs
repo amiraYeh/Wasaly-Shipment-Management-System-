@@ -154,7 +154,7 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    var allowedRoles = new[] { "Merchant", "Courier"};
+                    var allowedRoles = new[] { "Merchant", "Courier","Admin"};
 
                     if (string.IsNullOrEmpty(RoleFromHome))
                     {
