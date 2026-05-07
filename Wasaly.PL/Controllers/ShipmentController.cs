@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Asn1.Cmp;
 using System.Threading.Tasks;
 using Wasaly.BLL.Services;
@@ -9,6 +10,7 @@ using Wasaly.DAL.Repositories.IRepositories;
 
 namespace Wasaly.PL.Controllers
 {
+    [Authorize(Roles = "Merchant")]
     public class ShipmentController : Controller
     {
         private readonly IShipmentService _shipmentService;
