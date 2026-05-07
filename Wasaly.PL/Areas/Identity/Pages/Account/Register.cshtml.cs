@@ -77,6 +77,7 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
             public string Address { get; set; }
             public double Latitude { get; set; }
             public double Longitude { get; set; }
+
             [Required(ErrorMessage = "هذا الحقل مطلوب")]
             [Display(Name = "النوع")]
             public Gender Gender { get; set; }
