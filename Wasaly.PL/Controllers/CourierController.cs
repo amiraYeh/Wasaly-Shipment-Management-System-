@@ -121,12 +121,12 @@ namespace Wasaly.PL.Controllers
             TempData["Error"] = message;
             return View(model);
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string id)
         {
            
-            var courierId = _userManager.GetUserAsync(User);
+            //var courierId = _userManager.GetUserAsync(User);
             var courierId = "remonda_courier";
-            var dashboard = await _courierService.GetDashboardAsync(courierId);
+            var dashboard = await _courierService.GetDashboardAsync(id);
             ViewData["Balance"] = dashboard.Balance.ToString("F0");
             return View(dashboard);
         }
