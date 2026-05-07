@@ -102,6 +102,44 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
+        //public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        //{
+        //    returnUrl ??= Url.Content("~/");
+
+        //    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        // This doesn't count login failures towards account lockout
+        //        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+        //        var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+        //        if (result.Succeeded)
+        //        {
+        //            _logger.LogInformation("User logged in.");
+        //            return LocalRedirect(returnUrl);
+        //        }
+        //        if (result.RequiresTwoFactor)
+        //        {
+        //            return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+        //        }
+        //        if (result.IsLockedOut)
+        //        {
+        //            _logger.LogWarning("User account locked out.");
+        //            return RedirectToPage("./Lockout");
+        //        }
+        //        else
+        //        {
+        //            ModelState.AddModelError(string.Empty, "تسجيل الدخول غير صالح");
+        //            return Page();
+        //        }
+        //    }
+
+
+
+        //        // If we got this far, something failed, redisplay form
+        //        return Page();
+        //    }
+
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
@@ -110,18 +148,38 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(
+                    Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+
+                    // جيبي الـ User بالـ Username بدل الـ Email
+                    var user = await _signInManager.UserManager.GetUserAsync(User);
+
+                    // لو لسه null جربي بالـ Email
+                    user ??= await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+
+                    if (user == null)
+                        return LocalRedirect(returnUrl);
+
+                    var roles = await _signInManager.UserManager.GetRolesAsync(user);
+
+                    if (roles.Contains("Admin"))
+                        return RedirectToAction("Index", "Admin");
+                    else if (roles.Contains("Merchant"))
+                        return RedirectToAction("Index", "Merchant");
+                    else if (roles.Contains("Courier"))
+                        return RedirectToAction("Index", "Courier");
+                    else
+                        return LocalRedirect(returnUrl);
                 }
+
                 if (result.RequiresTwoFactor)
-                {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                }
+                    return RedirectToPage("./LoginWith2fa",
+                        new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
@@ -134,8 +192,9 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
+
     }
-}
+    }
+

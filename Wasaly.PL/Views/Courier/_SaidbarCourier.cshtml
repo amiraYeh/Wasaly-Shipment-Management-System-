@@ -1,10 +1,10 @@
 ﻿@{
     var action = ViewContext.RouteData.Values["action"]?.ToString();
 }
-
+<div >
 <a asp-controller="Courier" asp-action="Index"
    class="sidebar-item @(action == "Index" ? "active" : "")">
-    <i class="bi bi-house-fill fs-5"></i> الرئيسية
+        <i class="bi bi-house-fill fs-5"></i>  الرئيسية
 </a>
 <a asp-controller="Courier" asp-action="AvailableShipments"
    class="sidebar-item @(action == "AvailableShipments" ? "active" : "")">
@@ -18,3 +18,16 @@
    class="sidebar-item @(action == "Earnings" ? "active" : "")">
     <i class="bi bi-wallet2-fill fs-5"></i> أرباحي
 </a>
+</div>
+<div class="p-3 border-top border-white-10 mt-auto ">
+    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="~/"
+          method="post">
+        <button type="submit" class="btn btn-outline-danger w-100 border-0 text-white" style="background: rgba(231, 76, 60, 0.1);">
+            تسجيل الخروج
+        </button>
+    </form>
+</div>
+
+
+
+

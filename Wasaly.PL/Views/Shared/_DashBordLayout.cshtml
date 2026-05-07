@@ -54,18 +54,25 @@
                 </div>
             </div>
 
-            <!-- Nav -->
-            @if (User.IsInRole("Admin"))
+            <!-- Nav: allow pages to supply a 'SidebarData' section; otherwise use default partials -->
+            @if (IsSectionDefined("SidebarData"))
             {
-                @await Html.PartialAsync("_SaidbarAdmin")
+                @RenderSection("SidebarData", required: false)
             }
-            else if (User.IsInRole("Courier"))
+            else
             {
-                @await Html.PartialAsync("_SaidbarCourier")
-            }
-            else if (User.IsInRole("Merchant"))
-            {
-                @await Html.PartialAsync("_SaidbarMerchant")
+                @if (User.IsInRole("Admin"))
+                {
+                    @await Html.PartialAsync("_SaidbarAdmin")
+                }
+                else if (User.IsInRole("Courier"))
+                {
+                    @await Html.PartialAsync("_SaidbarCourier")
+                }
+                else if (User.IsInRole("Merchant"))
+                {
+                    @await Html.PartialAsync("_SaidbarMerchant")
+                }
             }
 
         </aside>
@@ -76,18 +83,25 @@
         <!-- Main Content -->
         <main class="main-content">
 
-            <!-- Navbar -->
-            @if (User.IsInRole("Admin"))
+            <!-- Navbar: allow pages to supply a 'NavbarData' section; otherwise use default partials -->
+            @if (IsSectionDefined("NavbarData"))
             {
-                @await Html.PartialAsync("_AdminNV")
+                @RenderSection("NavbarData", required: false)
             }
-            else if (User.IsInRole("Courier"))
+            else
             {
-                @await Html.PartialAsync("_CourierNV")
-            }
-            else if (User.IsInRole("Merchant"))
-            {
-                @await Html.PartialAsync("_MerchantNV")
+                @if (User.IsInRole("Admin"))
+                {
+                    @await Html.PartialAsync("_AdminNV")
+                }
+                else if (User.IsInRole("Courier"))
+                {
+                    @await Html.PartialAsync("_CourierNV")
+                }
+                else if (User.IsInRole("Merchant"))
+                {
+                    @await Html.PartialAsync("_MerchantNV")
+                }
             }
 
             <!-- Content -->
