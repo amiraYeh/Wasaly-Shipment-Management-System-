@@ -8,7 +8,7 @@ namespace Wasaly.DAL.Enums
 {
     public enum Gender
     {
-        Male,
-        Female
+        ذكر,
+        أنثى
     }
 }
