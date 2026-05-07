@@ -1,22 +1,25 @@
 ﻿<nav class="top-navbar d-flex justify-content-between align-items-center">
 
+    <!-- Right: Toggle + Title -->
     <div class="d-flex align-items-center gap-3">
-        <!-- زر التوجل للموبايل -->
         <button id="sidebarToggle" class="btn d-lg-none border-0 fs-4">
             <i class="fas fa-bars"></i>
         </button>
         <h4 class="fw-bold mb-0">@ViewData["Title"]</h4>
     </div>
 
-    <div class="d-flex align-items-center gap-4">
-        <div class="position-relative">
-            <span class="fs-4">🔔</span>
-            <span class="position-absolute top-0 start-0 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+    <!-- Left: Balance + Avatar -->
+    <div class="d-flex align-items-center gap-3">
+
+        <!-- الرصيد -->
+        <div class="d-flex align-items-center gap-2 px-3 py-2 rounded-3"
+             style="background:#fff3ee;">
+            <i class="fas fa-wallet text-orange"></i>
+            <span class="fw-bold text-orange small">
+                @ViewData["Balance"] ج
+            </span>
         </div>
 
-        <div class="d-flex align-items-center gap-2">
-            <span class="fw-semibold">مرحباً، المندوب </span>
-            <div class="avatar-circle bg-orange d-flex align-items-center justify-content-center text-white">👤</div>
-        </div>
+
     </div>
 </nav>
