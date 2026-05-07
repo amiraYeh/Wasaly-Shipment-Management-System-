@@ -17,6 +17,13 @@ namespace Wasaly.DAL.Data.Context
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(builder);
+            builder.Entity<Courier>()
+          .Property(c => c.Balance)
+          .HasColumnType("decimal(18,2)");
+
+            builder.Entity<Shipment>()
+                   .Property(s => s.Price)
+                   .HasColumnType("decimal(18,2)");
         }
 
         public virtual DbSet<Courier> Couriers { get; set; }
