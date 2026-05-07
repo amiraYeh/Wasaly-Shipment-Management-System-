@@ -176,7 +176,9 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
                     {
                         if (RoleFromHome == "Courier")
                         {
-                            return RedirectToPage($"/Account/CorierRoleRegisteration", new { id = user.Id, returnUrl = "/" });
+                            // send the courier to the courier extra-info page and ask that page to redirect
+                            // to the courier dashboard after completion
+                            return RedirectToPage($"/Account/CorierRoleRegisteration", new { id = user.Id, returnUrl = "/Courier/Index" });
                         }
                         else if (RoleFromHome == "Merchant")
                         {
