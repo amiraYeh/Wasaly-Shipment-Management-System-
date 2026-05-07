@@ -70,13 +70,13 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
             public string FullName { get; set; }
 
             [Required(ErrorMessage = "هذا الحقل مطلوب")]
-            [StringLength(200, MinimumLength = 5,
-                ErrorMessage = "يجب أن يكون العنوان بين 5 و 200 حرف")]
-            [RegularExpression(@"^[a-zA-Z0-9\u0600-\u06FF\s,.-]+$",
-                ErrorMessage = "العنوان يجب أن يحتوي على حروف أو أرقام فقط ويمكن استخدام (، . -)")]
+            [StringLength(200, MinimumLength = 5)]
+         
             [Display(Name = "العنوان")]
+            // في InputModel
             public string Address { get; set; }
-
+            public double Latitude { get; set; }
+            public double Longitude { get; set; }
             [Required(ErrorMessage = "هذا الحقل مطلوب")]
             [Display(Name = "النوع")]
             public Gender Gender { get; set; }
@@ -143,8 +143,13 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
                     await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
 
                     user.PhoneNumber = Input.PhoneNumber;
-                    user.Location = new Location { Address = Input.Address };
-                    user.gender = Input.Gender;
+                user.Location = new Location
+                {
+                    Address = Input.Address,
+                    Latitude = Input.Latitude,
+                    Longitude = Input.Longitude
+                };
+                user.gender = Input.Gender;
                     user.FullName = Input.FullName;
                     user.Age = Input.Age;
                     user.Region = Input.Region;
