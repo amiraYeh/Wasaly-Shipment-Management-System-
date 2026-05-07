@@ -147,21 +147,19 @@ namespace Wasaly.BLL.Services
 
         public async Task<bool> GenerateAndSendOtpAsync(int shipmentId)
         {
-            // 1. تأكد إن الشحنة PickedUp
             var shipment = await _courierRepository.GetShipmentWithDetailsAsync(shipmentId);
 
             if (shipment == null || shipment.Status != ShipmentStatus.PickedUp)
                 return false;
 
-            // 2. لو فيه OTP قديم امسحه
             var oldOtp = await _courierRepository.GetOtpByShipmentAsync(shipmentId);
             if (oldOtp != null)
                 await _courierRepository.DeleteOtpAsync(oldOtp);
 
-            // 3. توليد OTP بـ Cryptographically Secure Random
+
             var otpCode = GenerateSecureOtp();
 
-            // 4. حفظ الـ OTP في الداتابيز
+
             var otp = new DeliveryOTP
             {
                 ShipmentId = shipmentId,
@@ -181,7 +179,7 @@ namespace Wasaly.BLL.Services
 
         private static string GenerateSecureOtp()
         {
-            // Cryptographically Secure Random
+
             var bytes = new byte[4];
             using var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
             rng.GetBytes(bytes);
@@ -193,26 +191,24 @@ namespace Wasaly.BLL.Services
 
         public async Task<(bool Success, string Message)> VerifyOtpAndDeliverAsync(VerifyOtpVM model, string courierId)
         {
-            // 1. جيب الـ OTP
+
             var otp = await _courierRepository.GetOtpByShipmentAsync(model.ShipmentId);
 
-            // 2. موجود؟
             if (otp == null)
                 return (false, "لم يتم إرسال كود لهذه الشحنة");
 
-            // 3. اتستخدم قبل كده؟
+
             if (otp.IsUsed)
                 return (false, "تم استخدام هذا الكود من قبل");
 
-            // 4. انتهت صلاحيته؟
             if (otp.ExpiryTime < DateTime.Now)
                 return (false, "انتهت صلاحية الكود، اطلب كود جديد");
 
-            // 5. الكود صح؟
-            if (otp.OTPCode != model.OtpCode)
-                return (false, "الكود غير صحيح ❌");
 
-            // 6. جيب الشحنة وتأكد إن المندوب مخول
+            if (otp.OTPCode != model.OtpCode)
+                return (false, "الكود غير صحيح ");
+
+
             var shipment = await _courierRepository.GetShipmentWithDetailsAsync(model.ShipmentId);
             if (shipment == null)
                 return (false, "الشحنة غير موجودة");
@@ -223,11 +219,12 @@ namespace Wasaly.BLL.Services
             if (!isAssigned)
                 return (false, "أنت غير مسئول بتسليم هذه الشحنة");
 
-            // 7. جيب اسم المندوب
+
             var courierName = await _courierRepository.GetCourierNameAsync(courierId);
 
-            // 8. كل حاجة تمام — نسلم الشحنة
+
             otp.IsUsed = true;
+            shipment.DeliveredAt = DateTime.Now;
 
             await _courierRepository.UpdateShipmentStatusAsync(model.ShipmentId, ShipmentStatus.Delivered);
 
@@ -260,24 +257,23 @@ namespace Wasaly.BLL.Services
                 CourierName = courier.WasalyIdentityUser.FullName,
                 Balance = courier.Balance,
 
-                // توصيلات اليوم
+
                 TodayDeliveries = allAssignments
                     .Count(a => a.Shipment.Status == ShipmentStatus.Delivered
                              && a.Shipment.DeliveredAt?.Date == today),
 
-                // أرباح الأسبوع
                 WeekEarnings = allAssignments
                     .Where(a => a.Shipment.Status == ShipmentStatus.Delivered
                              && a.Shipment.DeliveredAt >= weekAgo)
                     .Sum(a => a.Shipment.Price),
 
-                // نسبة القبول
+
                 AcceptanceRate = allAssignments.Any()
                     ? (int)(allAssignments.Count(a => a.Status == CourierStatus.Accepted)
                       * 100.0 / allAssignments.Count)
                     : 0,
 
-                // آخر الشحنات
+
                 RecentShipments = allAssignments
                     .Where(a => a.Shipment.Status == ShipmentStatus.Delivered)
                     .OrderByDescending(a => a.Shipment.DeliveredAt)

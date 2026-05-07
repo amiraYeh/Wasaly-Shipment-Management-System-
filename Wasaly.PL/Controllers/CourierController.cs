@@ -7,26 +7,22 @@ using Wasaly.DAL.Models;
 
 namespace Wasaly.PL.Controllers
 {
-    //[Authorize(Roles = "Courier")]
+    [Authorize(Roles = "Courier")]
     public class CourierController : Controller
     {
         private readonly ICourierService _courierService;
-        // private readonly UserManager<WasalyIdentityUser> _userManager;
         private readonly SignInManager<WasalyIdentityUser> _signInManager;
         private readonly UserManager<WasalyIdentityUser> _userManager;
-      
-      
-        public CourierController(ICourierService courierService, 
+
+
+        public CourierController (ICourierService courierService,
             UserManager<WasalyIdentityUser> userManager,
             IUserStore<WasalyIdentityUser> userStore,
             SignInManager<WasalyIdentityUser> signInManager,
             RoleManager<IdentityRole> roleManager)
         {
-            _courierService= courierService;
-               _userManager = userManager;
-            _signInManager = signInManager;
-           // _userManager=userManager;
-
+            _courierService = courierService;
+            _userManager = userManager;
         }
         public async Task<IActionResult> AvailableShipments()
         {
@@ -38,8 +34,7 @@ namespace Wasaly.PL.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AcceptShipment(int shipmentId)
         {
-            //var courierId = _userManager.GetUserId(User);
-            var courierId = "remonda_courier";
+            var courierId = _userManager.GetUserId(User);
 
             var result = await _courierService.AcceptShipmentAsync(shipmentId, courierId);
 
@@ -52,8 +47,7 @@ namespace Wasaly.PL.Controllers
         }
         public async Task<IActionResult> MyShipments()
         {
-            //var courierId = _userManager.GetUserId(User);
-            var courierId = "remonda_courier";
+            var courierId = _userManager.GetUserId(User);
             var shipments = await _courierService.GetCourierShipmentsAsync(courierId);
             return View(shipments);
         }
@@ -63,8 +57,7 @@ namespace Wasaly.PL.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PickupShipment(int shipmentId)
         {
-            //var courierId = _userManager.GetUserId(User);
-            var courierId = "remonda_courier";
+            var courierId = _userManager.GetUserId(User);
 
             var result = await _courierService.PickupShipmentAsync(shipmentId, courierId);
 
@@ -93,14 +86,12 @@ namespace Wasaly.PL.Controllers
             return RedirectToAction(nameof(VerifyOtp), new { shipmentId });
         }
 
-        // GET - صفحة إدخال OTP
         public IActionResult VerifyOtp(int shipmentId)
         {
             var model = new VerifyOtpVM { ShipmentId = shipmentId };
             return View(model);
         }
 
-        // POST - التحقق من OTP
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerifyOtp(VerifyOtpVM model)
@@ -108,8 +99,7 @@ namespace Wasaly.PL.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            //var courierId = _userManager.GetUserId(User);
-            var courierId = "remonda_courier";
+            var courierId = _userManager.GetUserId(User);
             var (success, message) = await _courierService.VerifyOtpAndDeliverAsync(model, courierId);
 
             if (success)
@@ -123,18 +113,15 @@ namespace Wasaly.PL.Controllers
         }
         public async Task<IActionResult> Index(string id)
         {
-           
-            //var courierId = _userManager.GetUserAsync(User);
-            var courierId = "remonda_courier";
-            var dashboard = await _courierService.GetDashboardAsync(id);
+            var courierId = _userManager.GetUserId(User);
+            var dashboard = await _courierService.GetDashboardAsync(courierId);
             ViewData["Balance"] = dashboard.Balance.ToString("F0");
             return View(dashboard);
         }
 
         public async Task<IActionResult> Earnings()
         {
-            // var courierId = _userManager.GetUserId(User);
-            var courierId = "remonda_courier";
+            var courierId = _userManager.GetUserId(User);
             var dashboard = await _courierService.GetDashboardAsync(courierId);
             ViewData["Balance"] = dashboard.Balance.ToString("F0");
             return View(dashboard);
