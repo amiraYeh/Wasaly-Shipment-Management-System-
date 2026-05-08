@@ -17,5 +17,6 @@ namespace Wasaly.DAL.Models
         public ICollection<Shipment> shipments { get; set; }
 
         public string BusinessType { get; set; } = null!;
+        public double? Balance { get; set; }
     }
 }
