@@ -1,0 +1,220 @@
+﻿@model Wasaly.BLL.ViewModels.MerchantDashboardVM
+@{
+    ViewData["Title"] = "الرئيسية";
+    Layout = "~/Views/Shared/_DashBordLayout.cshtml";
+    ViewData["Balance"] = Model.Balance;
+}
+ 
+ <div >
+ 
+    <!-- Welcome -->
+    <div class="welcome">
+        <h2>مرحباً، @Model.MerchantName 👋</h2>
+        <p>إليك ملخص نشاطك اليوم</p>
+    </div>
+ 
+    <!-- Balance Card -->
+    <div class="balance-card">
+        <div class="balance-info">
+            <div class="balance-label">رصيدك الحالي</div>
+            <div class="balance-amount">@Model.Balance جنيه</div>
+        </div>
+    </div>
+</div>
+<br /> <br/> <br/>
+<!-- Stats -->
+<div class="stats-grid">
+    <div class="stat-card" style="width: 400px; height: 200px;">
+        <br />
+        <div class="stat-label">شحنات اليوم</div>
+        <div class="stat-value">@Model.TodayShipments</div>
+    </div>
+    <div class="stat-card" style="width: 400px; height: 200px;">
+        <br/>
+        <div class="stat-label">شحنات هذا الشهر</div>
+        <div class="stat-value">@Model.MonthShipments</div>
+    </div>
+    <div class="stat-card" style="width: 400px; height: 200px;">
+        <br />
+        <div class="stat-label">إجمالي المدفوع</div>
+        <div class="stat-value">@Model.TotalPaid ج</div>
+    </div>
+  
+</div>
+
+@section Scripts{
+
+}
+@section Styles{
+    <style>
+ 
+:root{
+  --orange:#f97316;
+  --orange-dark:#ea6c0a;
+  --orange-light:#fff7ed;
+  --sidebar-bg:#1c1917;
+  --sidebar-active:#2c2420;
+  --sidebar-text:#e7e5e4;
+  --sidebar-muted:#a8a29e;
+  --white:#ffffff;
+  --bg:#f8f7f5;
+  --card-bg:#ffffff;
+  --text:#1c1917;
+  --text-muted:#78716c;
+  --border:#e8e5e0;
+  --purple:#7c3aed;
+  --shadow:0 2px 16px rgba(0,0,0,0.07);
+  --radius:16px;
+}
+ 
+
+.balance-card{
+  background:linear-gradient(135deg, var(--orange) 0%, #fb923c 60%, #fdba74 100%);
+  border-radius:var(--radius);
+  padding:28px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+ 
+.balance-card::before{
+  content:'';position:absolute;
+  width:200px;height:200px;border-radius:50%;
+  background:rgba(255,255,255,0.08);
+  top:-60px;left:-40px;
+}
+.balance-card::after{
+  content:'';position:absolute;
+  width:140px;height:140px;border-radius:50%;
+  background:rgba(255,255,255,0.06);
+  bottom:-50px;left:80px;
+}
+ 
+.balance-info{position:relative;z-index:1;}
+.balance-label{font-size:14px;opacity:0.85;margin-bottom:6px;}
+.balance-amount{font-size:42px;font-weight:900;letter-spacing:-1px;line-height:1;}
+.balance-last{font-size:12px;opacity:0.7;margin-top:8px;}
+ 
+.btn-charge{
+  position:relative;z-index:1;
+  background:rgba(255,255,255,0.22);
+  border:1.5px solid rgba(255,255,255,0.4);
+  color:#fff;font-family:'Cairo',sans-serif;
+  font-size:14px;font-weight:700;
+  padding:11px 22px;border-radius:999px;
+  cursor:pointer;backdrop-filter:blur(4px);
+  transition:all 0.18s;white-space:nowrap;
+}
+.btn-charge:hover{background:rgba(255,255,255,0.35);}
+ 
+/* STATS GRID */
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+}
+ 
+.stat-card{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px 22px;
+  text-align:center;
+  transition:box-shadow 0.18s,transform 0.18s;
+} 
+.stat-card:hover{box-shadow:var(--shadow);transform:translateY(-2px);}
+ 
+.stat-label{font-size:13px;color:var(--text-muted);margin-bottom:8px;}
+.stat-value{font-size:26px;font-weight:800;color:var(--orange);}
+ 
+/* ACTION CARDS */
+.actions-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;
+}
+ 
+.action-card{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:32px 24px;
+  text-align:center;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.action-card:hover{box-shadow:var(--shadow);transform:translateY(-3px);border-color:var(--orange);}
+ 
+.action-icon{font-size:40px;margin-bottom:12px;display:block;}
+.action-title{font-size:17px;font-weight:700;margin-bottom:6px;}
+.action-desc{font-size:13px;color:var(--text-muted);}
+ 
+/* RECENT SHIPMENTS */
+.section-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+}
+.section-title{font-size:16px;font-weight:700;}
+.view-all{
+  font-size:13px;color:var(--orange);
+  text-decoration:none;font-weight:600;
+  cursor:pointer;
+}
+ 
+.shipments-table{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+ 
+.shipments-table table{
+  width:100%;border-collapse:collapse;
+  font-size:13px;
+}
+ 
+.shipments-table th{
+  background:#fafaf9;
+  padding:12px 18px;
+  text-align:right;
+  font-weight:600;
+  color:var(--text-muted);
+  border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+ 
+.shipments-table td{
+  padding:13px 18px;
+  border-bottom:1px solid var(--border);
+  color:var(--text);
+}
+.shipments-table tr:last-child td{border-bottom:none;}
+.shipments-table tr:hover td{background:#fafaf9;}
+ 
+.status-badge{
+  display:inline-flex;align-items:center;
+  padding:4px 12px;border-radius:999px;
+  font-size:12px;font-weight:600;
+}
+.s-ongoing{background:#eff6ff;color:#2563eb;}
+.s-done{background:#f0fdf4;color:#16a34a;}
+.s-cancelled{background:#fef2f2;color:#dc2626;}
+.s-pending{background:#fefce8;color:#ca8a04;}
+ 
+.stars-sm{color:#fbbf24;font-size:13px;letter-spacing:1px;}
+ 
+/* Animations */
+.content > *{
+  opacity:0;transform:translateY(14px);
+  animation:rise 0.4s forwards;
+}
+.content > *:nth-child(1){animation-delay:0.05s}
+.content > *:nth-child(2){animation-delay:0.1s}
+.content > *:nth-child(3){animation-delay:0.15s}
+.content > *:nth-child(4){animation-delay:0.2s}
+.content > *:nth-child(5){animation-delay:0.25s}
+ 
+</style>
+
+}
+
+

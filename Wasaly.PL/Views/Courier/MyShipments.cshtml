@@ -23,4 +23,47 @@ else
             @await Html.PartialAsync("_CurrentShipmentCard", item)
         }
     </div>
+} 
+
+@section Scripts{
+    <script>
+
+        document.addEventListener("DOMContentLoaded",function startSendingLocation(@Model[0].ShipmentId) {
+            if (!navigator.geolocation) {
+                alert("المتصفح لا يدعم GPS");
+                return;
+            }
+
+            navigator.geolocation.watchPosition(
+                async (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+
+                    const form = new FormData();
+                    form.append("shipmentId", id);
+                    form.append("lat", lat);
+                    form.append("lng", lng);
+
+                    await fetch('/Shipment/UpdateLocation', {
+                        method: 'POST',
+                        body  : form
+                    });
+
+                    document.getElementById("status-message").innerText =
+                        📍 موقعك: ${lat.toFixed(4)}, ${lng.toFixed(4)};
+                },
+                (error) => {
+                    alert("تعذر الحصول على الموقع");
+                },
+                {
+                    enableHighAccuracy: true,  
+                    maximumAge        : 0,     
+                    timeout           : 5000
+                }
+            );
+        };
+
+// ابدأ لما الصفحة تفتح
+startSendingLocation();
+</script>
 }
