@@ -1,9 +1,9 @@
 ﻿@page
 @model RegisterModel
+@using Wasaly.BLL.Services
 @using Wasaly.DAL.Models
 @inject SignInManager<WasalyIdentityUser> SignInManager
-@inject UserManager<WasalyIdentityUser> UserManager
-
+@inject IGoogleMapService GoogleMapService
 @{
     Layout = null;
 }
@@ -40,10 +40,22 @@
                 </div>
                 <span asp-validation-for="Input.FullName" class="text-danger"></span>
 
-                <label>العنوان</label>
-                <div class="input-group">
-                    <input asp-for="Input.Address" />
-                    <i class="fa fa-location-dot"></i>
+                <!-- ======= DELIVERY LOCATION ======= -->
+                <div class="mb-3">
+                    <label>العنوان</label>
+                    <div class="input-group">
+                        <input type="text" id="delivery-input" class="form-control" autocomplete="off" />
+                        <span class="input-group-text">
+                            <button type="button" id="btn-detect-delivery" class="btn btn-outline-secondary mt-1">
+                                <i class="fa-solid fa-location-crosshairs"></i>
+                            </button>
+                        </span>
+                    </div>
+
+                    <!-- Hidden fields - بتتملى من Google Maps -->
+                    <input type="hidden" asp-for="Input.Address" id="delivery-fulladdress" />
+                    <input type="hidden" asp-for="Input.Latitude" id="delivery-lat" />
+                    <input type="hidden" asp-for="Input.Longitude" id="delivery-lng" />
                 </div>
                 <span asp-validation-for="Input.Address" class="text-danger"></span>
 
@@ -66,21 +78,14 @@
                 <div class="input-group">
                     <select asp-for="Input.Gender">
                         <option value="">اختار الجنس</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
+                        <option value="ذكر">ذكر</option>
+                        <option value="أنثى">أنثى</option>
                     </select>
                     <i class="fa fa-venus-mars"></i>
                 </div>
                 <span asp-validation-for="Input.Gender" class="text-danger"></span>
 
-                <label>المركز</label>
-                <div class="input-group">
-                    <select asp-for="Input.Region" asp-items="Model.Regions">
-                        <option value="">اختار المركز</option>
-                    </select>
-                    <i class="fa fa-map"></i>
-                </div>
-                <span asp-validation-for="Input.Region" class="text-danger"></span>
+                
 
                 <label>كلمة المرور</label>
                 <div class="input-group">
@@ -102,8 +107,141 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    
+        <script>
+            function initMap() {
 
+                // ========== HELPER: Extract address parts ==========
+                function getAddressComponent(components, type) {
+                    const match = components.find(c => c.types.includes(type));
+                    return match ? match.long_name : "";
+                }
+
+                // ========== SETUP AUTOCOMPLETE ==========
+                function setupAutocomplete(inputId, fieldIds) {
+                    const input = document.getElementById(inputId);
+
+                    const autocomplete = new google.maps.places.Autocomplete(input, {
+                        // Restrict to Egypt — remove or change for other countries
+                        componentRestrictions: { country: "eg" },
+
+                        // What data to return
+                        fields: ["formatted_address", "geometry", "address_components", "name"]
+                    });
+
+                    autocomplete.addListener("place_changed", () => {
+                        const place = autocomplete.getPlace();
+
+                        if (!place.geometry) {
+                            alert("لم يتم العثور على العنوان، حاول مرة أخرى");
+                            return;
+                        }
+
+                        const components = place.address_components;
+
+                        // ✅ Fill all hidden fields automatically
+                        document.getElementById(fieldIds.fullAddress).value = place.formatted_address;
+                        document.getElementById(fieldIds.lat).value        = place.geometry.location.lat();
+                        document.getElementById(fieldIds.lng).value        = place.geometry.location.lng();
+                        document.getElementById(fieldIds.city).value       = getAddressComponent(components, "locality") ||
+                                                                              getAddressComponent(components, "administrative_area_level_1");
+                        document.getElementById(fieldIds.street).value     = getAddressComponent(components, "route");
+                        document.getElementById(fieldIds.district).value   = getAddressComponent(components, "sublocality") ||
+                                                                              getAddressComponent(components, "neighborhood");
+
+                        // ✅ Show the full address in the textbox
+                        input.value = place.formatted_address;
+
+                    });
+                }
+
+                // ========== DETECT CURRENT LOCATION BUTTON ==========
+                function detectCurrentLocation(inputId, fieldIds) {
+                    if (!navigator.geolocation) {
+                        alert("المتصفح لا يدعم تحديد الموقع");
+                        return;
+                    }
+
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+
+                        // Reverse geocode — coords to address
+                        const geocoder = new google.maps.Geocoder();
+                        geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+                            if (status === "OK" && results[0]) {
+                                const place = results[0];
+                                const components = place.address_components;
+
+                                document.getElementById(inputId).value                  = place.formatted_address;
+                                document.getElementById(fieldIds.fullAddress).value     = place.formatted_address;
+                                document.getElementById(fieldIds.lat).value             = lat;
+                                document.getElementById(fieldIds.lng).value             = lng;
+                                document.getElementById(fieldIds.city).value            = getAddressComponent(components, "locality");
+                                document.getElementById(fieldIds.street).value          = getAddressComponent(components, "route");
+                                document.getElementById(fieldIds.district).value        = getAddressComponent(components, "sublocality");
+                            } else {
+                                alert("تعذر تحديد العنوان");
+                            }
+                        });
+                    });
+                }
+
+                // ========== INIT BOTH INPUTS ==========
+                setupAutocomplete("pickup-input", {
+                    fullAddress : "pickup-fulladdress",
+                    lat         : "pickup-lat",
+                    lng         : "pickup-lng",
+                    // city        : "pickup-city",
+                    // street      : "pickup-street",
+                    // district    : "pickup-district"
+                });
+
+                setupAutocomplete("delivery-input", {
+                    fullAddress : "delivery-fulladdress",
+                    lat         : "delivery-lat",
+                    lng         : "delivery-lng",
+                    // city        : "delivery-city",
+                    // street      : "delivery-street",
+                    // district    : "delivery-district"
+                });
+
+                // ========== DETECT LOCATION BUTTONS ==========
+                document.getElementById("btn-detect-pickup").addEventListener("click", () => {
+                    detectCurrentLocation("pickup-input", {
+                        fullAddress : "pickup-fulladdress",
+                        lat         : "pickup-lat",
+                        lng         : "pickup-lng",
+                        // city        : "pickup-city",
+                        // street      : "pickup-street",
+                        // district    : "pickup-district"
+                    });
+                });
+
+                document.getElementById("btn-detect-delivery").addEventListener("click", () => {
+                    detectCurrentLocation("delivery-input", {
+                        fullAddress : "delivery-fulladdress",
+                        lat         : "delivery-lat",
+                        lng         : "delivery-lng",
+                        // city        : "delivery-city",
+                        // street      : "delivery-street",
+                        // district    : "delivery-district"
+                    });
+                });
+            }
+        </script>
+        <!-- Load Google Maps with Places library -->
+        <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=@GoogleMapService.GetApi()&libraries=places&callback=initMap">
+        </script>
+        <script src="https://kit.fontawesome.com/5e0bf04421.js" crossorigin="anonymous"></script>
+
+    }
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+</body>
+@* 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-}
+} *@

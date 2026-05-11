@@ -81,7 +81,12 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
 
             await _context.Couriers.AddAsync(courier);
             await _context.SaveChangesAsync();
+            var User = _context.Couriers.FirstOrDefault(u => u.WasalyIdentityUser.Id == courier.WasalyIdentityUserId);
+           if (User.isVerfied==false)
+            {
+                return LocalRedirect(ReturnUrl ?? "/Courier/FalseVerfied");
 
+            }
             await _signInManager.SignInAsync(user, isPersistent: false);
 
             // redirect courier to courier dashboard if no ReturnUrl provided

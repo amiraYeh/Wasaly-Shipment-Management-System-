@@ -5,7 +5,7 @@
 }
 
 <!-- Header -->
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-3">
     <div>
         <h5 class="fw-bold mb-1">الطلبات المتاحة في منطقتك</h5>
         <p class="text-muted small mb-0">اختر الطلب المناسب لك وابدأ التوصيل</p>
@@ -15,23 +15,19 @@
     </span>
 </div>
 
-
 <!-- Filter Bar -->
-<div class="bg-white rounded-3 p-2 shadow-sm mb-3 d-flex align-items-center gap-3 flex-wrap container">
-
-    <!-- Location Status -->
+<div class="bg-white rounded-3 p-2 shadow-sm mb-3 d-flex align-items-center gap-3 flex-wrap">
     <span class="badge bg-light text-muted small" id="locationStatus">
         <i class="fas fa-spinner fa-spin me-1"></i> جاري تحديد موقعك...
     </span>
-
-    <!-- Distance Buttons -->
     <div class="d-flex gap-2 flex-wrap">
-        <button class="btn btn-filter active" data-km="999">الكل</button>
-        <button class="btn btn-filter" data-km="10">10 كم</button>
-        <button class="btn btn-filter" data-km="20">20 كم</button>
-        <button class="btn btn-filter" data-km="30">30 كم</button>
+        <button class="btn btn-sm btn-outline-secondary rounded-pill active-filter" data-km="999">الكل</button>
+        <button class="btn btn-sm btn-outline-secondary rounded-pill" data-km="10">10 كم</button>
+        <button class="btn btn-sm btn-outline-secondary rounded-pill" data-km="20">20 كم</button>
+        <button class="btn btn-sm btn-outline-secondary rounded-pill" data-km="30">30 كم</button>
     </div>
 </div>
+
 <!-- No Results -->
 <div id="noResults" class="text-center py-5 d-none">
     <i class="fas fa-map-marker-alt text-muted" style="font-size:3rem;"></i>
@@ -53,7 +49,7 @@ else
     <div class="row g-3" id="shipmentsContainer">
         @foreach (var order in Model)
         {
-            <div class="col-12 col-md-6 shipment-item"
+            <div class="col-12 col-md-6 col-lg-4 shipment-item"
                  data-lat="@order.PickupLatitude.ToString("F6", System.Globalization.CultureInfo.InvariantCulture)"
                  data-lng="@order.PickupLongitude.ToString("F6", System.Globalization.CultureInfo.InvariantCulture)"
                  data-distance="999">
@@ -65,43 +61,10 @@ else
 
 @section Styles {
     <style>
-        .btn-filter {
-            border: 2px solid #dee2e6;
-            border-radius: 20px;
-            padding: 6px 16px;
-            font-size: .85rem;
-            background: white;
-            color: #6c757d;
-            transition: all 0.2s;
-        }
-
-            .btn-filter.active {
-                border-color: #FF6B35;
-                background: #FF6B35;
-                color: white;
-            }
-
-            .btn-filter:hover:not(.active) {
-                border-color: #FF6B35;
-                color: #FF6B35;
-            }
-
-        .order-card-hover {
-            border: 2px solid transparent;
-            transition: all 0.2s;
-        }
-
-            .order-card-hover:hover {
-                border-color: #FF6B35;
-                box-shadow: 0 8px 25px rgba(255,107,53,0.15) !important;
-            }
-
-        .form-range::-webkit-slider-thumb {
-            background: #FF6B35;
-        }
-
-        .form-range::-webkit-slider-runnable-track {
-            background: #ffe0d3;
+        .active-filter {
+            background: #FF6B35 !important;
+            border-color: #FF6B35 !important;
+            color: white !important;
         }
     </style>
 }
@@ -150,7 +113,6 @@ else
                 const lng = parseFloat(card.dataset.lng);
                 const dist = calcDistance(courierLat, courierLng, lat, lng);
                 card.dataset.distance = dist.toFixed(2);
-
                 const badge = card.querySelector('.distance-badge');
                 if (badge) badge.textContent = dist.toFixed(1) + ' كم';
             });
@@ -162,21 +124,26 @@ else
             let visible = 0;
 
             items.forEach(card => {
+                if (!courierLat) {
+                    card.style.display = '';
+                    visible++;
+                    return;
+                }
                 const dist = parseFloat(card.dataset.distance);
-                const show = !courierLat || dist <= currentKm;
+                const show = dist <= currentKm;
                 card.style.display = show ? '' : 'none';
                 if (show) visible++;
             });
 
             document.getElementById('countBadge').textContent = visible + ' طلب';
-            document.getElementById('noResults').classList.toggle('d-none', visible > 0);
+            document.getElementById('noResults').classList.toggle('d-none', visible > 0 || !courierLat);
         }
 
-        // ─── Buttons فقط ───
-        document.querySelectorAll('.btn-filter').forEach(btn => {
+        // ─── Buttons ───
+        document.querySelectorAll('[data-km]').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
+                document.querySelectorAll('[data-km]').forEach(b => b.classList.remove('active-filter'));
+                btn.classList.add('active-filter');
                 currentKm = parseFloat(btn.dataset.km);
                 filterShipments();
             });
