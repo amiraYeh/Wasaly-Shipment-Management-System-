@@ -27,7 +27,7 @@ namespace Wasaly.BLL.Services
             foreach (var ship in shipments)
             {
                 var courdata = ship.CourierAssignments.FirstOrDefault(c => c.ShipmentId == ship.Id);
-                //if (courdata != null)
+                if (courdata != null)
                 {
                     shipmentList.Add(new ShipmentVM()
                     {
@@ -43,7 +43,7 @@ namespace Wasaly.BLL.Services
 
                     });
                 }
-                //return shipmentList;
+                return shipmentList;
             }
             return shipmentList;
         }
