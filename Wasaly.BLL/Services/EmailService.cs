@@ -1,12 +1,8 @@
 ﻿using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using MailKit.Net.Smtp;
-using System.Text;
 using System.Threading.Tasks;
+using MailKit.Net.Smtp;
 using Wasaly.BLL.Services.Interfaces;
 using Wasaly.BLL.Settings;
 
@@ -43,6 +39,36 @@ namespace Wasaly.BLL.Services
                     <p>أعطِ الكود للمندوب عند استلام طلبك</p>
                     <hr/>
                     <small style='color: gray;'>فريق وصلي 🚚</small>
+                </div>"
+            };
+
+            // 3. بعت الإيميل
+            using var smtp = new SmtpClient();
+            await smtp.ConnectAsync(_settings.Host, _settings.Port, SecureSocketOptions.StartTls);
+            await smtp.AuthenticateAsync(_settings.SenderEmail, _settings.Password);
+            await smtp.SendAsync(message);
+            await smtp.DisconnectAsync(true);
+        }
+
+        public async Task SendAccountApprovedAsync(string recipientEmail, string recipientName)
+        {
+            // 1. جهز الإيميل
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(_settings.SenderName, _settings.SenderEmail));
+            message.To.Add(new MailboxAddress(recipientName, recipientEmail));
+            message.Subject = "تم توثيق حسابك - وصلني";
+
+            // 2. محتوى الإيميل
+            message.Body = new TextPart("html")
+            {
+                Text = $@"
+                <div style='font-family: Arial; text-align: right; direction: rtl;'>
+                    <h2>مرحباً {recipientName} 👋</h2>
+                    <p>تم قبول وتوثيق حسابك في منصة <strong>وصلني</strong> بنجاح.</p>
+                    <p>الآن يمكنك الدخول إلى لوحة التحكم وبدء قبول الشحنات وإدارة مهامك.</p>
+                    <p>بالتوفيق 🚚</p>
+                    <hr/>
+                    <small style='color: gray;'>فريق وصلي</small>
                 </div>"
             };
 

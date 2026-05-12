@@ -5,16 +5,19 @@ using Wasaly.BLL.@interface;
 using Wasaly.BLL.ViewModels;
 using Wasaly.BLL.ViewModels.AdminVM;
 using Wasaly.DAL.Repositories.IRepositories;
+using Wasaly.BLL.Services.Interfaces;
 
 namespace Wasaly.BLL.Services
 {
     public class AdminService : IAdminService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IEmailService _emailService;
 
-        public AdminService(IUserRepository userRepository)
+        public AdminService(IUserRepository userRepository, IEmailService emailService)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
         }
 
         public async Task<AdminStatsVM> GetDashboardStatsAsync()
@@ -65,7 +68,23 @@ namespace Wasaly.BLL.Services
 
         public async Task<bool> UpdateCourierVerificationAsync(string id, bool status)
         {
-            return await _userRepository.UpdateCourierStatusAsync(id, status);
+            var success = await _userRepository.UpdateCourierStatusAsync(id, status);
+
+            if (success && status)
+            {
+                // send notification email when account approved
+                var courier = await _userRepository.GetCourierByIdAsync(id);
+                var name = courier?.WasalyIdentityUser?.FullName ?? courier?.WasalyIdentityUser?.UserName ?? "المندوب";
+                var email = courier?.WasalyIdentityUser?.UserName;
+
+                if (!string.IsNullOrWhiteSpace(email))
+                {
+                    // fire-and-forget is acceptable here; await to ensure delivery attempt
+                    await _emailService.SendAccountApprovedAsync(email, name);
+                }
+            }
+
+            return success;
         }
 
         // Ensure image paths returned are web-accessible.
