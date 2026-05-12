@@ -46,7 +46,7 @@ namespace Wasaly.PL.Controllers
             List<ShipmentVM> list = new List<ShipmentVM>();
             list = await _shipmentService.GetShipmentsAsync(id);
 
-
+            TempData["Success"] = null;
             return View(list);
         }
         [HttpGet]
