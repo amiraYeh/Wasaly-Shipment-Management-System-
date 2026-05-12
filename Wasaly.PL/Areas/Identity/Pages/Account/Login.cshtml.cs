@@ -165,6 +165,11 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
                 {
                     var user = await _userManager.FindByNameAsync(Input.Email);
 
+                    // جيبي الـ User بالـ Username بدل الـ Email
+                    var user = await _signInManager.UserManager.GetUserAsync(User);
+
+                    // لو لسه null جربي بالـ Email
+                    user ??= await _signInManager.UserManager.FindByNameAsync(Input.Email);
                     _logger.LogInformation("User found: {Email}, Id: {Id}", user?.Email, user?.Id);
 
                     if (user == null)

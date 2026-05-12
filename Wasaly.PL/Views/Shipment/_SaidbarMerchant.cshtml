@@ -2,8 +2,8 @@
     var action = ViewContext.RouteData.Values["action"]?.ToString();
 }
 <div>
-    <a asp-controller="Merchant" asp-action="Index"
-           class="sidebar-item @(action == "Index" ? "active" : "")">
+    <a asp-controller="Shipment" asp-action="MerchantDashboard"
+           class="sidebar-item @(action == "MerchantDashboard" ? "active" : "")">
         <i class="bi bi-house-fill fs-5"></i> الرئيسية
     </a>
 

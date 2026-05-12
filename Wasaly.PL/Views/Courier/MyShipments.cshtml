@@ -25,7 +25,53 @@ else
     </div>
 } 
 
-@section Scripts{
+@section Scripts
+{
+    <script>
+    function startSendingLocation() 
+    {
+        if (!navigator.geolocation) 
+        {
+            alert("المتصفح لا يدعم GPS");
+            return;
+        }
+
+    // watchPosition = بيتابع الموقع باستمرار مع تحرك المندوب
+    navigator.geolocation.watchPosition(
+    async (position) => {
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
+
+    // ✅ بيبعت الموقع الحقيقي للـ Backend
+    const form = new FormData();
+    form.append("shipmentId", "@Model[0].ShipmentId");
+    form.append("lat", lat);
+    form.append("lng", lng);
+
+    await fetch('/Shipment/UpdateLocation', {
+    method: 'POST',
+    body  : form
+    });
+
+    document.getElementById("status-message").innerText =
+    📍 موقعك: ${lat.toFixed(4)}, ${lng.toFixed(4)};
+    },
+    (error) => {
+    alert("تعذر الحصول على الموقع");
+    },
+    {
+    enableHighAccuracy: true,  // ✅ دقة عالية
+    maximumAge        : 0,     // ✅ موقع جديد دايما
+    timeout           : 5000
+    }
+    );
+    }
+
+    // ابدأ لما الصفحة تفتح
+    startSendingLocation();
+ </script> 
+}
+@* @section Scripts{
     <script>
 
         document.addEventListener("DOMContentLoaded",function startSendingLocation(@Model[0].ShipmentId) {
@@ -52,7 +98,7 @@ else
                     document.getElementById("status-message").innerText =
                         📍 موقعك: ${lat.toFixed(4)}, ${lng.toFixed(4)};
                 },
-                (error) => {
+                (error) => {{
                     alert("تعذر الحصول على الموقع");
                 },
                 {
@@ -60,10 +106,12 @@ else
                     maximumAge        : 0,     
                     timeout           : 5000
                 }
+                }
             );
         };
+        
 
-// ابدأ لما الصفحة تفتح
-startSendingLocation();
+    // ابدأ لما الصفحة تفتح
+    startSendingLocation();
 </script>
-}
+} *@
