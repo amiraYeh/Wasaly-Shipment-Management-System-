@@ -7,6 +7,7 @@ using Wasaly.BLL.ViewModels;
 using Wasaly.BLL.ViewModels.AdminVM;
 using Wasaly.DAL.Models;
 using Wasaly.DAL.Repositories.IRepositories;
+using Wasaly.BLL.Services.Interfaces;
 
 namespace Wasaly.BLL.Services
 {

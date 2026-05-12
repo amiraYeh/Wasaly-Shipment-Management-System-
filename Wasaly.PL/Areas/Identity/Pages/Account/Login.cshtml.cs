@@ -15,6 +15,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Wasaly.DAL.Models;
+using Wasaly.DAL.Repositories.IRepositories;
 
 namespace Wasaly.PL.Areas.Identity.Pages.Account
 {
@@ -22,11 +23,13 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<WasalyIdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly IUserRepository _userRepository;
 
-        public LoginModel(SignInManager<WasalyIdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<WasalyIdentityUser> signInManager, ILogger<LoginModel> logger, IUserRepository userRepository)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userRepository = userRepository;
         }
 
         /// <summary>
@@ -102,44 +105,6 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
-        //public async Task<IActionResult> OnPostAsync(string returnUrl = null)
-        //{
-        //    returnUrl ??= Url.Content("~/");
-
-        //    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        // This doesn't count login failures towards account lockout
-        //        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        //        var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-        //        if (result.Succeeded)
-        //        {
-        //            _logger.LogInformation("User logged in.");
-        //            return LocalRedirect(returnUrl);
-        //        }
-        //        if (result.RequiresTwoFactor)
-        //        {
-        //            return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-        //        }
-        //        if (result.IsLockedOut)
-        //        {
-        //            _logger.LogWarning("User account locked out.");
-        //            return RedirectToPage("./Lockout");
-        //        }
-        //        else
-        //        {
-        //            ModelState.AddModelError(string.Empty, "تسجيل الدخول غير صالح");
-        //            return Page();
-        //        }
-        //    }
-
-
-
-        //        // If we got this far, something failed, redisplay form
-        //        return Page();
-        //    }
-
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
@@ -155,10 +120,7 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User logged in.");
 
-                    // جيبي الـ User بالـ Username بدل الـ Email
                     var user = await _signInManager.UserManager.GetUserAsync(User);
-
-                    // لو لسه null جربي بالـ Email
                     user ??= await _signInManager.UserManager.FindByEmailAsync(Input.Email);
 
                     if (user == null)
@@ -168,12 +130,23 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
 
                     if (roles.Contains("Admin"))
                         return RedirectToAction("Index", "Admin");
-                    else if (roles.Contains("Merchant"))
-                        return RedirectToAction("Index", "Merchant");
-                    else if (roles.Contains("Courier"))
+
+                    if (roles.Contains("Merchant"))
+                        return RedirectToAction("MerchantDashboard", "Shipment");
+
+                    if (roles.Contains("Courier"))
+                    {
+                        // Check courier verification status and redirect to pending page if not verified
+                        var courier = await _userRepository.GetCourierByIdAsync(user.Id);
+                        if (courier == null || !courier.isVerfied)
+                        {
+                            return RedirectToPage("/Account/PendingVerificationModel", new { area = "Identity" });
+                        }
+
                         return RedirectToAction("Index", "Courier");
-                    else
-                        return LocalRedirect(returnUrl);
+                    }
+
+                    return LocalRedirect(returnUrl);
                 }
 
                 if (result.RequiresTwoFactor)
@@ -196,5 +169,5 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
         }
 
     }
-    }
+}
 
