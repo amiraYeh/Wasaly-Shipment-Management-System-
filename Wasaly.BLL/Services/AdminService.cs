@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Wasaly.BLL.@interface;
+using Wasaly.BLL.Services.Interfaces;
 using Wasaly.BLL.ViewModels;
 using Wasaly.BLL.ViewModels.AdminVM;
+using Wasaly.DAL.Models;
 using Wasaly.DAL.Repositories.IRepositories;
 using Wasaly.BLL.Services.Interfaces;
 
@@ -14,10 +16,10 @@ namespace Wasaly.BLL.Services
         private readonly IUserRepository _userRepository;
         private readonly IEmailService _emailService;
 
-        public AdminService(IUserRepository userRepository, IEmailService emailService)
+        public AdminService(IUserRepository userRepository ,IEmailService emailService)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
+            _emailService = emailService;
         }
 
         public async Task<AdminStatsVM> GetDashboardStatsAsync()
@@ -68,24 +70,24 @@ namespace Wasaly.BLL.Services
 
         public async Task<bool> UpdateCourierVerificationAsync(string id, bool status)
         {
-            var success = await _userRepository.UpdateCourierStatusAsync(id, status);
-
-            if (success && status)
+            bool isVerfication= await _userRepository.UpdateCourierStatusAsync(id, status);
+            if (isVerfication && status)
             {
-                // send notification email when account approved
                 var courier = await _userRepository.GetCourierByIdAsync(id);
-                var name = courier?.WasalyIdentityUser?.FullName ?? courier?.WasalyIdentityUser?.UserName ?? "المندوب";
-                var email = courier?.WasalyIdentityUser?.UserName;
-
+                var name = courier?.WasalyIdentityUser?.FullName ?? courier.WasalyIdentityUser?.UserName ?? "المندوب";
+                var email = courier.WasalyIdentityUser?.UserName;
                 if (!string.IsNullOrWhiteSpace(email))
                 {
-                    // fire-and-forget is acceptable here; await to ensure delivery attempt
-                    await _emailService.SendAccountApprovedAsync(email, name);
+                    await _emailService.SendCourierAcceptedEmailAsync(email, name);
                 }
-            }
 
-            return success;
+            }
+            
+            return isVerfication;
+
         }
+
+
 
         // Ensure image paths returned are web-accessible.
         private static string MapToWebPath(string? storedPath)

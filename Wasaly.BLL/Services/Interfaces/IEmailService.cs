@@ -4,7 +4,10 @@ namespace Wasaly.BLL.Services.Interfaces
 {
     public interface IEmailService
     {
-        Task SendOtpAsync(string recipientEmail, string recipientName, string otpCode);
-        Task SendAccountApprovedAsync(string recipientEmail, string recipientName);
+        Task EmailAsync(string recipientEmail,string recipientName, string subject,string body);
+
+        Task SendOtpAsync(string recipientEmail,string recipientName,string otpCode);
+
+        Task SendCourierAcceptedEmailAsync(string recipientEmail,string recipientName);
     }
 }
