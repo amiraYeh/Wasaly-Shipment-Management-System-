@@ -53,7 +53,7 @@ else
                     document.getElementById("status-message").innerText =
                         📍 موقعك: ${lat.toFixed(4)}, ${lng.toFixed(4)};
                 },
-                (error) => {
+                (error) => {{
                     alert("تعذر الحصول على الموقع");
                 },
                 {
@@ -61,10 +61,12 @@ else
                     maximumAge        : 0,     
                     timeout           : 5000
                 }
+                }
             );
         };
+        
 
-// ابدأ لما الصفحة تفتح
-startSendingLocation();
+    // ابدأ لما الصفحة تفتح
+    startSendingLocation();
 </script>
 } *@
