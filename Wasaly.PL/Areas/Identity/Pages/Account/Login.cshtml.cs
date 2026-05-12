@@ -25,12 +25,14 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
         private readonly SignInManager<WasalyIdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<WasalyIdentityUser> _userManager;
 
 
         public LoginModel(SignInManager<WasalyIdentityUser> signInManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;
+            UserManager<WasalyIdentityUser> userManager;
             ApplicationDbContext context;
         }
 
@@ -161,7 +163,7 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
 
                 try
                 {
-                    var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+                    var user = await _userManager.FindByNameAsync(Input.Email);
 
                     _logger.LogInformation("User found: {Email}, Id: {Id}", user?.Email, user?.Id);
 
