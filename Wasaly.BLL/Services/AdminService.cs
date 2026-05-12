@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Wasaly.BLL.@interface;
+using Wasaly.BLL.Services.Interfaces;
 using Wasaly.BLL.ViewModels;
 using Wasaly.BLL.ViewModels.AdminVM;
+using Wasaly.DAL.Models;
 using Wasaly.DAL.Repositories.IRepositories;
 
 namespace Wasaly.BLL.Services
@@ -11,10 +13,12 @@ namespace Wasaly.BLL.Services
     public class AdminService : IAdminService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IEmailService _emailService;
 
-        public AdminService(IUserRepository userRepository)
+        public AdminService(IUserRepository userRepository ,IEmailService emailService)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _emailService = emailService;
         }
 
         public async Task<AdminStatsVM> GetDashboardStatsAsync()
@@ -65,8 +69,24 @@ namespace Wasaly.BLL.Services
 
         public async Task<bool> UpdateCourierVerificationAsync(string id, bool status)
         {
-            return await _userRepository.UpdateCourierStatusAsync(id, status);
+            bool isVerfication= await _userRepository.UpdateCourierStatusAsync(id, status);
+            if (isVerfication && status)
+            {
+                var courier = await _userRepository.GetCourierByIdAsync(id);
+                var name = courier?.WasalyIdentityUser?.FullName ?? courier.WasalyIdentityUser?.UserName ?? "المندوب";
+                var email = courier.WasalyIdentityUser?.UserName;
+                if (!string.IsNullOrWhiteSpace(email))
+                {
+                    await _emailService.SendCourierAcceptedEmailAsync(email, name);
+                }
+
+            }
+            
+            return isVerfication;
+
         }
+
+
 
         // Ensure image paths returned are web-accessible.
         private static string MapToWebPath(string? storedPath)

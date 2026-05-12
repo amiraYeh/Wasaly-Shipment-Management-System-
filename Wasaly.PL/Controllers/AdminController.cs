@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wasaly.BLL.@interface;
+using Wasaly.BLL.Services.Interfaces;
 
 namespace Wasaly.PL.Controllers
 {
@@ -11,7 +12,7 @@ namespace Wasaly.PL.Controllers
         private readonly IAdminService _adminService;
 
   
-        public AdminController(IAdminService adminService)
+        public AdminController(IAdminService adminService,IEmailService emailService)
 
         {
 
@@ -46,7 +47,7 @@ namespace Wasaly.PL.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateCourierVerification(string id, bool status)
+        public async Task<IActionResult> UpdateCourierVerification(string id, bool status, string recipientEmail, string recipientName)
         {
             await _adminService.UpdateCourierVerificationAsync(id, status);
             return RedirectToAction("CourierDetails", new { id });
