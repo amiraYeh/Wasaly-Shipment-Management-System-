@@ -8,12 +8,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Wasaly.DAL.Data.Context;
 using Wasaly.DAL.Models;
 
 namespace Wasaly.PL.Areas.Identity.Pages.Account
@@ -22,11 +24,14 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<WasalyIdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly ApplicationDbContext _context;
+
 
         public LoginModel(SignInManager<WasalyIdentityUser> signInManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;
+            ApplicationDbContext context;
         }
 
         /// <summary>
@@ -143,58 +148,68 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
-
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return Page();
+
+            var result = await _signInManager.PasswordSignInAsync(
+                Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
+            if (result.Succeeded)
             {
-                var result = await _signInManager.PasswordSignInAsync(
-                    Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                _logger.LogInformation("User logged in.");
 
-                if (result.Succeeded)
+                var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+                if (user == null)
+                    return LocalRedirect(returnUrl);
+
+                var roles = await _signInManager.UserManager.GetRolesAsync(user);
+
+                if (roles.Contains("Admin"))
+                    return RedirectToAction("Index", "Admin");
+
+                if (roles.Contains("Merchant"))
+                    return RedirectToAction("Index", "Merchant");
+
+                if (roles.Contains("Courier"))
                 {
-                    _logger.LogInformation("User logged in.");
+                    // ✅ تحقق من الـ Courier وحالة التحقق
+                    var courier = await _context.Couriers
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(c => c.WasalyIdentityUserId == user.Id);
 
-                    // جيبي الـ User بالـ Username بدل الـ Email
-                    var user = await _signInManager.UserManager.GetUserAsync(User);
+                    // لو مسجلش بياناته كـ Courier بعد — وديه يكمل التسجيل
+                    if (courier == null)
+                        return RedirectToPage("/Account/CorierRoleRegisteration",
+                            new { area = "Identity", id = user.Id, returnUrl });
 
-                    // لو لسه null جربي بالـ Email
-                    user ??= await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+                    // لو مسجل بس لسه مش verified — وديه صفحة الانتظار
+                    if (!courier.isVerfied)
+                    {
+                        await _signInManager.SignOutAsync(); // مسجلش دخول لحد ما يتوثق
+                        return RedirectToPage($"/Account/PendingVerificationModel");
+                    }
 
-                    if (user == null)
-                        return LocalRedirect(returnUrl);
-
-                    var roles = await _signInManager.UserManager.GetRolesAsync(user);
-
-                    if (roles.Contains("Admin"))
-                        return RedirectToAction("Index", "Admin");
-                    else if (roles.Contains("Merchant"))
-                        return RedirectToAction("Index", "Merchant");
-                    else if (roles.Contains("Courier"))
-                        return RedirectToAction("Index", "Courier");
-                    else
-                        return LocalRedirect(returnUrl);
+                    return RedirectToAction("Index", "Courier");
                 }
 
-                if (result.RequiresTwoFactor)
-                    return RedirectToPage("./LoginWith2fa",
-                        new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "تسجيل الدخول غير صالح");
-                    return Page();
-                }
+                return LocalRedirect(returnUrl);
             }
 
+            if (result.RequiresTwoFactor)
+                return RedirectToPage("./LoginWith2fa",
+                    new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+
+            if (result.IsLockedOut)
+            {
+                _logger.LogWarning("User account locked out.");
+                return RedirectToPage("./Lockout");
+            }
+
+            ModelState.AddModelError(string.Empty, "تسجيل الدخول غير صالح");
             return Page();
         }
-
     }
     }
 

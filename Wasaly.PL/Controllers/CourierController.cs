@@ -7,7 +7,7 @@ using Wasaly.DAL.Models;
 
 namespace Wasaly.PL.Controllers
 {
-    //[Authorize(Roles = "Courier")]
+    [Authorize(Roles = "Courier")]
     public class CourierController : Controller
     {
         private readonly ICourierService _courierService;
@@ -25,10 +25,7 @@ namespace Wasaly.PL.Controllers
             _userManager = userManager;
         }
 
-        [Authorize(Roles = "Courier")]
-        public IActionResult FalseVerfied() => View("RevisionCourier");
-
-        [Authorize(Roles = "Courier")]
+       
         public async Task<IActionResult> AvailableShipments()
         {
             var allShipments=await _courierService.GetAvailableShipmentsAsync();
