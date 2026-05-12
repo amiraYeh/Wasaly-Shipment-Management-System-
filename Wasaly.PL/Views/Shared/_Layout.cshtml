@@ -81,7 +81,7 @@
                 <!-- 4. الزراير: بتظهر في الاتنين (Nav و Toggle) -->
                 <div class="d-flex flex-column flex-lg-row gap-3 px-3 px-lg-0 pb-4 pb-lg-0 ms-lg-4">
 
-                   @*  @if (SignInManager.IsSignedIn(User) && currentUser != null)
+                    @if (SignInManager.IsSignedIn(User) && currentUser != null)
                     {
                         <span class="py-2 px-3 text-dark align-self-center fw-medium">
                             <i class="fa fa-user-circle me-1" style="color:#FF6B35;"></i>
@@ -104,19 +104,11 @@
                             </button>
                         </form>
 
-                        <form asp-controller="@controllerName" asp-action="Index" asp-route-id="@currentUser.Id">
-                            <button type="submit"
-                                    class="btn text-white px-4 py-2"
-                                    style="background-color:#1a2e4a; border:none; border-radius:10px;">
+                        
+                    }
 
-                                <i class="fa fa-right-from-bracket me-1"></i>
-                                الذهاب الى الداشبورد
-                            </button>
-                        </form>
-                    } *@
-
-                    @* else
-                    { *@
+                    else
+                    { 
                         <a asp-area="Identity"
                            asp-page="/Account/Login"
                            class="btn px-4 py-2"
@@ -130,7 +122,7 @@
                         </a>
 
 
-                  @*   } *@
+                   } 
 
                 </div>
 

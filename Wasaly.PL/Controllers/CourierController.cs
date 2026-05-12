@@ -7,7 +7,7 @@ using Wasaly.DAL.Models;
 
 namespace Wasaly.PL.Controllers
 {
-    [Authorize(Roles = "Courier")]
+    //[Authorize(Roles = "Courier")]
     public class CourierController : Controller
     {
         private readonly ICourierService _courierService;
@@ -116,7 +116,6 @@ namespace Wasaly.PL.Controllers
             TempData["Error"] = message;
             return View(model);
         }
-        [Authorize(Roles = "Courier")]
 
         public async Task<IActionResult> Index(string id)
         {
@@ -125,7 +124,6 @@ namespace Wasaly.PL.Controllers
             ViewData["Balance"] = dashboard.Balance.ToString("F0");
             return View(dashboard);
         }
-        [Authorize(Roles = "Courier")]
 
         public async Task<IActionResult> Earnings()
         {
