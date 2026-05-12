@@ -171,7 +171,9 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
                     else if (roles.Contains("Merchant"))
                         return RedirectToAction("Index", "Shipment");
                     else if (roles.Contains("Courier"))
-                        return RedirectToAction("Index", "Courier");
+                        
+
+                            return RedirectToAction("Index", "Courier");
                     else
                         return LocalRedirect(returnUrl);
                 }

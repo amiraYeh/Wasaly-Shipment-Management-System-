@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Wasaly.BLL.@interface;
 using Wasaly.BLL.Services;
+using Wasaly.BLL.Services.Interfaces;
+using Wasaly.BLL.Settings;
 using Wasaly.DAL.Data.Context;
 using Wasaly.DAL.Enums;
 using Wasaly.DAL.Models;
@@ -30,6 +32,8 @@ namespace Wasaly.PL
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddCourierServices(builder.Configuration);
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+            builder.Services.AddScoped<IEmailService, EmailService>();
 
             builder.Services.AddRazorPages();
             builder.Services.ConfigureApplicationCookie(options =>
