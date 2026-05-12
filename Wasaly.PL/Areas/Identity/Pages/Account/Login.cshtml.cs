@@ -155,59 +155,64 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
 
             var result = await _signInManager.PasswordSignInAsync(
                 Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-
             if (result.Succeeded)
             {
                 _logger.LogInformation("User logged in.");
 
-                var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
-                if (user == null)
-                    return LocalRedirect(returnUrl);
-
-                var roles = await _signInManager.UserManager.GetRolesAsync(user);
-
-                if (roles.Contains("Admin"))
-                    return RedirectToAction("Index", "Admin");
-
-                if (roles.Contains("Merchant"))
-                    return RedirectToAction("Index", "Merchant");
-
-                if (roles.Contains("Courier"))
+                try
                 {
-                    // ✅ تحقق من الـ Courier وحالة التحقق
-                    var courier = await _context.Couriers
-                        .AsNoTracking()
-                        .FirstOrDefaultAsync(c => c.WasalyIdentityUserId == user.Id);
+                    var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
 
-                    // لو مسجلش بياناته كـ Courier بعد — وديه يكمل التسجيل
-                    if (courier == null)
-                        return RedirectToPage("/Account/CorierRoleRegisteration",
-                            new { area = "Identity", id = user.Id, returnUrl });
-
-                    // لو مسجل بس لسه مش verified — وديه صفحة الانتظار
-                    if (!courier.isVerfied)
-                    {
-                        await _signInManager.SignOutAsync(); // مسجلش دخول لحد ما يتوثق
-                        return RedirectToPage($"/Account/PendingVerificationModel");
-                    }
+                    _logger.LogInformation("User found: {Email}, Id: {Id}", user?.Email, user?.Id);
 
                     if (user == null)
+                    {
+                        _logger.LogWarning("User not found after login!");
                         return LocalRedirect(returnUrl);
+                    }
 
+                    var roles = await _signInManager.UserManager.GetRolesAsync(user);
+
+                    _logger.LogInformation("Roles: {Roles}", string.Join(", ", roles));
 
                     if (roles.Contains("Admin"))
                         return RedirectToAction("Index", "Admin");
-                    else if (roles.Contains("Merchant"))
-                        return RedirectToAction("Index", "Shipment");
-                    else if (roles.Contains("Courier"))
-                        
 
-                            return RedirectToAction("Index", "Courier");
-                    else
-                        return LocalRedirect(returnUrl);
+                    if (roles.Contains("Merchant"))
+                        return RedirectToAction("Index", "Merchant");
+
+                    if (roles.Contains("Courier"))
+                    {
+                        var courier = await _context.Couriers
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(c => c.WasalyIdentityUserId == user.Id);
+
+                        _logger.LogInformation("Courier found: {Found}, Verified: {Verified}",
+                            courier != null, courier?.isVerfied);
+
+                        if (courier == null)
+                            return RedirectToPage("/Account/CorierRoleRegisteration",
+                                new { area = "Identity", id = user.Id, returnUrl });
+
+                        if (!courier.isVerfied)
+                        {
+                            await _signInManager.SignOutAsync();
+                            return RedirectToPage("/Account/PendingVerification",
+                                new { area = "Identity" });
+                        }
+
+                        return RedirectToAction("Index", "Courier");
+                    }
+
+                    return LocalRedirect(returnUrl);
                 }
-
-                return LocalRedirect(returnUrl);
+                catch (Exception ex)
+                {
+                    // ← ده هيقولك الـ error الحقيقي
+                    _logger.LogError(ex, "Error during post-login redirect");
+                    ModelState.AddModelError(string.Empty, $"خطأ: {ex.Message}");
+                    return Page();
+                }
             }
 
             if (result.RequiresTwoFactor)
