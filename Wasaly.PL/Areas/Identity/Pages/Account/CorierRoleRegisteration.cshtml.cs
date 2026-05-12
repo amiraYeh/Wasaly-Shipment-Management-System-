@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Wasaly.BLL.ViewModels;
 using Wasaly.DAL.Data.Context;
 using Wasaly.DAL.Models;
@@ -37,7 +38,7 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                return NotFound("??? ???????? ??? ?????");
+                return NotFound("Page Not Found");
             }
 
             return Page();
@@ -81,12 +82,22 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
 
             await _context.Couriers.AddAsync(courier);
             await _context.SaveChangesAsync();
-            var User = _context.Couriers.FirstOrDefault(u => u.WasalyIdentityUser.Id == courier.WasalyIdentityUserId);
-           if (User.isVerfied==false)
+            var User = await _context.Couriers
+                  .AsNoTracking()
+                  .FirstOrDefaultAsync(c => c.WasalyIdentityUserId == id);
+            if (User == null)
             {
-                return LocalRedirect(ReturnUrl ?? "/Courier/FalseVerfied");
+                ModelState.AddModelError("", "Courier record not found after save.");
+                return Page();
+            }
+          
+                if (!User.isVerfied)
+                {
+                    TempData["ShowVerificationModal"] = true;  
+                 return RedirectToPage($"/Account/PendingVerificationModel");
 
             }
+
             await _signInManager.SignInAsync(user, isPersistent: false);
 
             // redirect courier to courier dashboard if no ReturnUrl provided

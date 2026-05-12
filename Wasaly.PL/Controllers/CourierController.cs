@@ -25,10 +25,7 @@ namespace Wasaly.PL.Controllers
             _userManager = userManager;
         }
 
-        [Authorize(Roles = "Courier")]
-        public IActionResult FalseVerfied() => View("RevisionCourier");
-
-        [Authorize(Roles = "Courier")]
+       
         public async Task<IActionResult> AvailableShipments()
         {
             var allShipments=await _courierService.GetAvailableShipmentsAsync();
@@ -116,7 +113,6 @@ namespace Wasaly.PL.Controllers
             TempData["Error"] = message;
             return View(model);
         }
-        [Authorize(Roles = "Courier")]
 
         public async Task<IActionResult> Index(string id)
         {
@@ -125,7 +121,6 @@ namespace Wasaly.PL.Controllers
             ViewData["Balance"] = dashboard.Balance.ToString("F0");
             return View(dashboard);
         }
-        [Authorize(Roles = "Courier")]
 
         public async Task<IActionResult> Earnings()
         {

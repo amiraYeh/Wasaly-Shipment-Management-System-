@@ -58,7 +58,7 @@ namespace Wasaly.BLL.Services
                         Price = ship.Price
                     });
                 }
-                //return shipmentList;
+                return shipmentList;
             }
             return shipmentList;
         }
