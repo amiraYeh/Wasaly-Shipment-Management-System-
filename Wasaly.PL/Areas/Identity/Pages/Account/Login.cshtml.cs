@@ -159,7 +159,7 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
                     var user = await _signInManager.UserManager.GetUserAsync(User);
 
                     // لو لسه null جربي بالـ Email
-                    user ??= await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+                    user ??= await _signInManager.UserManager.FindByNameAsync(Input.Email);
 
                     if (user == null)
                         return LocalRedirect(returnUrl);
