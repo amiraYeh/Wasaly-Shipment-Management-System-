@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Wasaly.BLL.Attributes;
 using Wasaly.DAL.Models;
 
 namespace Wasaly.BLL.ViewModels
@@ -24,9 +25,11 @@ namespace Wasaly.BLL.ViewModels
         [Display(Name ="الوزن")]
         [Range(1,100)]
         public double Weight { get; set; }
+        public DateTime myDate { get; set; } = DateTime.Now;
         [Required]
-        [Display(Name ="معاد التسليم")]
-        public DateTime? DeliveredAt { get; set; }
+        [Display(Name = "معاد التسليم")]
+        [FutureDate( ErrorMessage ="تاريخ التسليم يجب أن يكون في المستقبل")]
+        public DateTime? DeliveredAt { get; set; } = DateTime.Now;
         [Required]
         [Display(Name ="اسم المشترى")]
         [StringLength(50,MinimumLength =5)]

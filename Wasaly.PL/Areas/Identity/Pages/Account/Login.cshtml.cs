@@ -191,7 +191,20 @@ namespace Wasaly.PL.Areas.Identity.Pages.Account
                         return RedirectToPage($"/Account/PendingVerificationModel");
                     }
 
-                    return RedirectToAction("Index", "Courier");
+                    if (user == null)
+                        return LocalRedirect(returnUrl);
+
+
+                    if (roles.Contains("Admin"))
+                        return RedirectToAction("Index", "Admin");
+                    else if (roles.Contains("Merchant"))
+                        return RedirectToAction("Index", "Shipment");
+                    else if (roles.Contains("Courier"))
+                        
+
+                            return RedirectToAction("Index", "Courier");
+                    else
+                        return LocalRedirect(returnUrl);
                 }
 
                 return LocalRedirect(returnUrl);

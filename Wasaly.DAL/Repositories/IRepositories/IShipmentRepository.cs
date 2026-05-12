@@ -9,14 +9,16 @@ namespace Wasaly.DAL.Repositories.IRepositories
 {
     public interface IShipmentRepository
     {
-        public Task<List<Shipment>> GetAllAsync();
+        public Task<List<Shipment>> GetAllAsync(string merchantId);
         public Task<Shipment> GetAsync(int? id);
         public Task<int> AddAsync(Shipment shipment);
         public Task<int> UpdateAsync(Shipment shipment);
         public Task DeleteAsync(int? id);
 
         public Task<Tuple<string, int?, double, double>> GetCourierData(int? shipmentId);
-        public Task<object> getCurrentLoc(int id);
+        //public Task<object> getCurrentLoc(int id);
+
+        public Task<Merchant> getMerchantData(string id);
 
     }
 }

@@ -22,9 +22,11 @@ namespace Wasaly.DAL.Repositories
         {
            _context = context;
         } 
-        public async Task<List<Shipment>> GetAllAsync()
+        public async Task<List<Shipment>> GetAllAsync(string merchantId)
         {
-            return await _context.Shipments.Include(s => s.DropLocation).Include(s => s.CourierAssignments).ThenInclude(c=>c.Courier).ThenInclude(cc=>cc.WasalyIdentityUser).ToListAsync();        
+            return await _context.Shipments.Include(s => s.DropLocation)
+                        .Include(s => s.CourierAssignments).ThenInclude(c=>c.Courier).ThenInclude(cc=>cc.WasalyIdentityUser)
+                        .Where(s => s.MerchantId == merchantId).ToListAsync();        
         } 
         public async Task<Shipment> GetAsync(int? id)
         {
@@ -96,38 +98,26 @@ namespace Wasaly.DAL.Repositories
             if (assignment != null)
             {
                 var cour = await _context.Couriers.Include(c=>c.WasalyIdentityUser).FirstOrDefaultAsync(c=>c.WasalyIdentityUserId ==assignment.CourierId);
-              //  return await _context.CourierAssignments
-              //.Where(a => a.CourierId == courierId
-              //       && a.Status == CourierStatus.Accepted
-              //       && a.Shipment.Status != ShipmentStatus.Delivered)
-              //.Include(a => a.Shipment)
-              //    .ThenInclude(s => s.PickupLocation)
-              //.Include(a => a.Shipment)
-              //    .ThenInclude(s => s.DropLocation)
-              //.Include(a => a.Shipment)
-              //    .ThenInclude(s => s.Trackings)
-              //.OrderByDescending(a => a.AssignedAt)
-              //.ToListAsync();
-                //var courier = _context.Users.Find(courAssigiment.CourierId);
                 var name = cour.WasalyIdentityUser.FullName;
                 var rate = cour.WasalyIdentityUser.Rating;
                 
                 double lng = 33.5;
                 double lat = 20.5;
-                //var rate = courAssigiment.Courier.WasalyIdentityUser.Rating;
-                //double lat = courier.Location.Latitude;
-                //double lat = courAssigiment.Courier.WasalyIdentityUser.Location.Latitude;
-                //double lng = courier.Location.Longitude;
-                //double lng = courAssigiment.Courier.WasalyIdentityUser.Location.Longitude;
                 Tuple<string, int?,double,double> res = new Tuple<string, int?,double,double>(name, rate,lat,lng);
                 return res;
             }
             return null;
         }
 
-        public Task<object> getCurrentLoc(int id)
+        public async Task<Merchant> getMerchantData(string id)
         {
-            throw new NotImplementedException();
+            if(id == null)
+                return null;
+
+            var merchant = await _context.Merchants.Include(m => m.shipments).ThenInclude(s => s.CourierAssignments).Include(m => m.WasalyIdentityUser).FirstOrDefaultAsync(m => m.WasalyIdentityUserId == id);
+            if (merchant == null)
+                return null;
+            return merchant;
         }
     }
 }
