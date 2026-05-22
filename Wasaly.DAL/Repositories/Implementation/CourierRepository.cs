@@ -61,7 +61,7 @@ namespace Wasaly.DAL.Repositories
                 .Include(s => s.PickupLocation)
                 .Include(s => s.DropLocation)
                 .Include(s => s.Merchant)
-                    .ThenInclude(m => m.WasalyIdentityUser)
+                .ThenInclude(m => m.WasalyIdentityUser)
                 .Include(s => s.CourierAssignments)
                 .Include(s => s.Trackings)
                 .FirstOrDefaultAsync(s => s.Id == shipmentId);
