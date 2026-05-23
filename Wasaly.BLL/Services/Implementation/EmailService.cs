@@ -21,8 +21,6 @@ namespace Wasaly.BLL.Services
 
         public async Task EmailAsync(string recipientEmail,string recipientName, string subject,string body)
         {
-            //if (string.IsNullOrWhiteSpace(recipientEmail))
-            //    recipientEmail = "remonda.n.s753@gmail.com";
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(_settings.SenderName, _settings.SenderEmail));
             message.To.Add(new MailboxAddress(recipientName, recipientEmail));
