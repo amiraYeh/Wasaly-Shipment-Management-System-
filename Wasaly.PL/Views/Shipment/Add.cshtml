@@ -2,94 +2,121 @@
 @model AddShipmentVM
 
 @{
-    // Layout = "~/Views/Admin/_AdminLayout.cshtml";
-    Layout = "_DashBordLayout"; 
+    Layout = "_DashBordLayout";
     ViewData["Title"] = "شحنة جديدة";
 }
-<section class="hidden max-w-4xl mx-auto space-y-10" id="merchant-shipment">
-  <div class="container text-black align-items-center">
 
-    <h4>أضافة شحنة جديدة</h4>
-    <hr />
-    <div class="row">
-        <div class="col-md-4">
-        <form asp-action="Add" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-            </div>
+<section class="max-w-4xl mx-auto py-3 bg-white rounded-3" id="merchant-shipment">
+    <div class="container text-black px-4">
 
-            <div class="form-group">
-                <label asp-for="PickupLocation"></label>
-                <div class="input-group">
-                    <input type="text" id="pickup-input" class="form-control" autocomplete="off" />
-                    <span class="input-group-text">
-                        <button type="button" id="btn-detect-pickup" class="btn btn-outline-secondary mt-1" />
-						<i class="fa-solid fa-location-crosshairs"> </i>
-                    </span>
-                </div>
-
-                <!-- Hidden fields filled automatically by Google Maps -->
-                <input type="hidden" asp-for="PickupLocation.Address" id="pickup-fulladdress" />
-                <input type="hidden" asp-for="PickupLocation.Latitude" id="pickup-lat" />
-                <input type="hidden" asp-for="PickupLocation.Longitude" id="pickup-lng" />
-            </div>
-
-            <!-- ======= DELIVERY LOCATION ======= -->
-            <div class="mb-3">
-                <label asp-for="DropLocation"></label>
-                <div class="input-group">
-                    <input type="text" id="delivery-input" class="form-control" autocomplete="off" />
-                    <span class="input-group-text">
-                        <button type="button" id="btn-detect-delivery" class="btn btn-outline-secondary mt-1"/>
-                        <i class="fa-solid fa-location-crosshairs"> </i>
-                    </span>         
-                </div>
-
-                <!-- Hidden fields filled automatically by Google Maps -->
-                <input type="hidden" asp-for=" DropLocation.Address" id="delivery-fulladdress" />
-                <input type="hidden" asp-for=" DropLocation.Latitude" id="delivery-lat" />
-                <input type="hidden" asp-for=" DropLocation.Longitude" id="delivery-lng" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Weight" class="control-label"></label>
-                <input asp-for="Weight" class="form-control" />
-                <span asp-validation-for="Weight" class="text-danger"></span>
-            </div>
-           
-            <div class="form-group">
-                <label asp-for="DeliveredAt" class="control-label"></label>
-                <input asp-for="DeliveredAt" class="form-control" />
-                <span asp-validation-for="DeliveredAt" class="text-danger"></span>
-            </div>
-                <div class="form-group">
-                    <label asp-for="RecipientName" class="control-label"></label>
-                    <input asp-for="RecipientName" class="form-control" />
-                    <span asp-validation-for="RecipientName" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="RecipientEmail" class="control-label"></label>
-                    <input asp-for="RecipientEmail" class="form-control" />
-                    <span asp-validation-for="RecipientEmail" class="text-danger"></span>
-                </div>
-                <br />
-            <div class="form-group">
-                <input type="submit" value="حفظ " class="btn btn-primary" />
-            </div>
-           </form>
+        <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
+            <h3 class="fw-bold text-dark m-0">إضافة شحنة جديدة</h3>
+            <span class="text-muted small">يرجى ملء تفاصيل الشحنة أدناه</span>
         </div>
-    </div>
 
-</div>
-    </section>
+        <form asp-action="Add" method="post" class="needs-validation">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="PickupLocation" class="form-label fw-semibold text-secondary mb-2"></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white text-muted"><i class="fa-solid fa-map-pin"></i></span>
+                            <input type="text" id="pickup-input" class="form-control border-start-0 ps-0" placeholder="ابحث عن مكان الاستلام..." autocomplete="off" />
+                            <button type="button" id="btn-detect-pickup" class="btn btn-light border" title="تحديد موقعي الحالي">
+                                <i class="fa-solid fa-location-crosshairs text-primary"></i>
+                            </button>
+                        </div>
+
+                        <input type="hidden" asp-for="PickupLocation.Address" id="pickup-fulladdress" />
+                        <input type="hidden" asp-for="PickupLocation.Latitude" id="pickup-lat" />
+                        <input type="hidden" asp-for="PickupLocation.Longitude" id="pickup-lng" />
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="DropLocation" class="form-label fw-semibold text-secondary mb-2"></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white text-muted"><i class="fa-solid fa-location-dot"></i></span>
+                            <input type="text" id="delivery-input" class="form-control border-start-0 ps-0" placeholder="ابحث عن مكان التوصيل..." autocomplete="off" />
+                            <button type="button" id="btn-detect-delivery" class="btn btn-light border" title="تحديد موقعي الحالي">
+                                <i class="fa-solid fa-location-crosshairs text-primary"></i>
+                            </button>
+                        </div>
+
+                        <input type="hidden" asp-for="DropLocation.Address" id="delivery-fulladdress" />
+                        <input type="hidden" asp-for="DropLocation.Latitude" id="delivery-lat" />
+                        <input type="hidden" asp-for="DropLocation.Longitude" id="delivery-lng" />
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="RecipientName" class="form-label fw-semibold text-secondary mb-2"></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white text-muted"><i class="fa-regular fa-user"></i></span>
+                            <input asp-for="RecipientName" class="form-control border-start-0 ps-0" placeholder="اسم الشخص المستلم كامل" />
+                        </div>
+                        <span asp-validation-for="RecipientName" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="RecipientEmail" class="form-label fw-semibold text-secondary mb-2"></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white text-muted"><i class="fa-regular fa-envelope"></i></span>
+                            <input asp-for="RecipientEmail" class="form-control border-start-0 ps-0" placeholder="name@example.com" />
+                        </div>
+                        <span asp-validation-for="RecipientEmail" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="DeliveredAt" class="form-label fw-semibold text-secondary mb-2"></label>
+                        <input asp-for="DeliveredAt" class="form-control" />
+                        <span asp-validation-for="DeliveredAt" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Weight" class="form-label fw-semibold text-secondary mb-2"></label>
+                        <div class="input-group">
+                            <input asp-for="Weight" class="form-control" placeholder="0.0" />
+                            <span class="input-group-text bg-light text-muted">كجم</span>
+                        </div>
+                        <span asp-validation-for="Weight" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="Description" class="form-label fw-semibold text-secondary mb-2"></label>
+                        <input asp-for="Description" class="form-control" placeholder="تفاصيل إضافية أو وصف محتويات الشحنة..." />
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 border-top pt-3 mt-4">
+                <button type="reset" class="btn btn-light border px-4 fw-medium text-secondary">إلغاء</button>
+                <button type="submit" class="btn btn-primary px-5 fw-medium">حفظ الشحنة</button>
+            </div>
+        </form>
+
+    </div>
+</section>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 
     <script>
         function initMap() {
@@ -105,10 +132,7 @@
                 const input = document.getElementById(inputId);
 
                 const autocomplete = new google.maps.places.Autocomplete(input, {
-                    // Restrict to Egypt — remove or change for other countries
                     componentRestrictions: { country: "eg" },
-
-                    // What data to return
                     fields: ["formatted_address", "geometry", "address_components", "name"]
                 });
 
@@ -122,7 +146,6 @@
 
                     const components = place.address_components;
 
-                    // ✅ Fill all hidden fields automatically
                     document.getElementById(fieldIds.fullAddress).value = place.formatted_address;
                     document.getElementById(fieldIds.lat).value        = place.geometry.location.lat();
                     document.getElementById(fieldIds.lng).value        = place.geometry.location.lng();
@@ -132,9 +155,7 @@
                     document.getElementById(fieldIds.district).value   = getAddressComponent(components, "sublocality") ||
                                                                           getAddressComponent(components, "neighborhood");
 
-                    // ✅ Show the full address in the textbox
                     input.value = place.formatted_address;
-
                 });
             }
 
@@ -149,7 +170,6 @@
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
 
-                    // Reverse geocode — coords to address
                     const geocoder = new google.maps.Geocoder();
                     geocoder.geocode({ location: { lat, lng } }, (results, status) => {
                         if (status === "OK" && results[0]) {
@@ -174,19 +194,13 @@
             setupAutocomplete("pickup-input", {
                 fullAddress : "pickup-fulladdress",
                 lat         : "pickup-lat",
-                lng         : "pickup-lng",
-                // city        : "pickup-city",
-                // street      : "pickup-street",
-                // district    : "pickup-district"
+                lng         : "pickup-lng"
             });
 
             setupAutocomplete("delivery-input", {
                 fullAddress : "delivery-fulladdress",
                 lat         : "delivery-lat",
-                lng         : "delivery-lng",
-                // city        : "delivery-city",
-                // street      : "delivery-street",
-                // district    : "delivery-district"
+                lng         : "delivery-lng"
             });
 
             // ========== DETECT LOCATION BUTTONS ==========
@@ -194,10 +208,7 @@
                 detectCurrentLocation("pickup-input", {
                     fullAddress : "pickup-fulladdress",
                     lat         : "pickup-lat",
-                    lng         : "pickup-lng",
-                    // city        : "pickup-city",
-                    // street      : "pickup-street",
-                    // district    : "pickup-district"
+                    lng         : "pickup-lng"
                 });
             });
 
@@ -205,18 +216,13 @@
                 detectCurrentLocation("delivery-input", {
                     fullAddress : "delivery-fulladdress",
                     lat         : "delivery-lat",
-                    lng         : "delivery-lng",
-                    // city        : "delivery-city",
-                    // street      : "delivery-street",
-                    // district    : "delivery-district"
+                    lng         : "delivery-lng"
                 });
             });
         }
     </script>
-    <!-- Load Google Maps with Places library -->
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=@ViewBag.ApiKey&libraries=places&callback=initMap">
     </script>
     <script src="https://kit.fontawesome.com/5e0bf04421.js" crossorigin="anonymous"></script>
-
 }
