@@ -1,4 +1,4 @@
-﻿@model Wasaly.BLL.ViewModels.VerifyOtpVM
+@model Wasaly.BLL.ViewModels.VerifyOtpVM
 @{
     ViewData["Title"] = "تأكيد التسليم";
     Layout = "~/Views/Shared/_DashBordLayout.cshtml";
@@ -7,50 +7,67 @@
 <div class="row justify-content-center">
     <div class="col-12 col-md-6 col-lg-5">
 
-        <div class="order-card text-center">
+        <div class="otp-card text-center">
 
-            <!-- Icon -->
-            <div class="rounded-circle bg-orange d-inline-flex align-items-center
-                        justify-content-center mb-3"
-                 style="width:70px;height:70px;">
+            <div class="otp-icon-wrap mb-3">
                 <i class="bi bi-shield-lock-fill text-white" style="font-size:2rem;"></i>
             </div>
 
             <h5 class="fw-bold mb-1">أدخل كود التسليم</h5>
             <p class="text-muted small mb-4">اطلب الكود من العميل لتأكيد التسليم</p>
 
-            <form asp-action="VerifyOtp" method="post">
+            @if (TempData["Success"] != null)
+            {
+                <div class="result-banner result-banner--success mb-4">
+                    <i class="bi bi-check-circle-fill me-2" style="font-size:1.3rem;"></i>
+                    <div>
+                        <div class="fw-bold">تم التسليم بنجاح! 🎉</div>
+                        <div class="small">@TempData["Success"]</div>
+                    </div>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="result-banner result-banner--error mb-4" id="errorBanner">
+                    <i class="bi bi-x-circle-fill me-2" style="font-size:1.3rem;"></i>
+                    <div>
+                        <div class="fw-bold">الكود غير صحيح</div>
+                        <div class="small">@TempData["Error"] — حاول مرة أخرى</div>
+                    </div>
+                </div>
+            }
+
+            <form asp-action="VerifyOtp" method="post" id="otpForm">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="ShipmentId" />
 
-                <!-- OTP Boxes -->
-                <div class="d-flex justify-content-center gap-2 mb-4" id="otpBoxes">
+                <div class="otp-boxes mb-2" id="otpBoxes">
                     @for (int i = 0; i < 6; i++)
                     {
                         <input type="text"
-                               class="otp-input"
+                               class="otp-box"
                                maxlength="1"
                                inputmode="numeric"
-                               pattern="[0-9]" />
+                               pattern="[0-9]"
+                               autocomplete="off" />
                     }
                 </div>
 
                 <input type="hidden" asp-for="OtpCode" id="otpHidden" />
-                <span asp-validation-for="OtpCode" class="text-danger small d-block mb-3"></span>
+                <span asp-validation-for="OtpCode" class="text-danger small d-block mb-3" id="otpValidation"></span>
 
-                <button type="submit" class="btn btn-orange text-white w-100 fw-bold py-2">
+                <button type="submit" class="btn btn-otp-submit w-100 fw-bold py-2">
                     <i class="bi bi-check-circle me-1"></i> تأكيد التسليم
                 </button>
             </form>
 
             <hr class="my-3" />
 
-            <!-- إعادة إرسال -->
             <p class="text-muted small mb-2">لم يصل الكود للعميل؟</p>
             <form asp-action="GenerateOtp" method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="shipmentId" value="@Model.ShipmentId" />
-                <button class="btn btn-outline-secondary btn-sm">
+                <button class="btn btn-resend btn-sm">
                     <i class="bi bi-arrow-clockwise me-1"></i> إعادة إرسال OTP
                 </button>
             </form>
@@ -59,29 +76,162 @@
     </div>
 </div>
 
+@section Styles {
+    <style>
+        .otp-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem 1.75rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,.08);
+        }
+
+        .otp-icon-wrap {
+            width: 70px;
+            height: 70px;
+            background: #FF6B35;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .otp-boxes {
+            display: flex;
+            justify-content: center;
+            gap: .5rem;
+        }
+        .otp-box {
+            width: 46px;
+            height: 56px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e293b;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+            outline: none;
+            background: #f9fafb;
+        }
+        .otp-box:focus {
+            border-color: #FF6B35;
+            box-shadow: 0 0 0 3px rgba(255,107,53,.15);
+            background: white;
+        }
+
+        .otp-box.is-error {
+            border-color: #ef4444 !important;
+            background: #fef2f2 !important;
+            animation: shake .35s ease;
+        }
+        .otp-box.is-success {
+            border-color: #22c55e !important;
+            background: #f0fdf4 !important;
+        }
+
+        @@keyframes shake {
+            0%,100% { transform: translateX(0); }
+            25%      { transform: translateX(-5px); }
+            75%      { transform: translateX(5px); }
+        }
+
+        .result-banner {
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+            text-align: start;
+            animation: slideDown .35s ease;
+        }
+        .result-banner--success { background:#f0fdf4; color:#15803d; border:1px solid #86efac; }
+        .result-banner--error   { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; }
+
+        @@keyframes slideDown {
+            from { opacity:0; transform:translateY(-8px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        .btn-otp-submit {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: .75rem;
+            font-size: 1rem;
+            transition: background .2s, transform .15s;
+        }
+        .btn-otp-submit:hover {
+            background: #e85d28;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .btn-resend {
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background: transparent;
+            transition: all .2s;
+        }
+        .btn-resend:hover {
+            background: #f8f9fa;
+            border-color: #adb5bd;
+        }
+    </style>
+}
+
 @section Scripts {
     <script>
-        const boxes  = document.querySelectorAll('.otp-input');
+        const boxes  = document.querySelectorAll('.otp-box');
         const hidden = document.getElementById('otpHidden');
+        const form   = document.getElementById('otpForm');
+        const hadError = !!document.getElementById('errorBanner');
+
+        if (hadError) {
+            boxes.forEach(b => b.classList.add('is-error'));
+        }
+
+        boxes.forEach(b => {
+            b.addEventListener('keydown', () => {
+                boxes.forEach(x => x.classList.remove('is-error'));
+            });
+        });
 
         boxes.forEach((box, i) => {
             box.addEventListener('input', () => {
                 box.value = box.value.replace(/\D/g, '');
                 if (box.value && i < boxes.length - 1) boxes[i + 1].focus();
-                hidden.value = [...boxes].map(b => b.value).join('');
+                syncHidden();
             });
+
             box.addEventListener('keydown', e => {
                 if (e.key === 'Backspace' && !box.value && i > 0) boxes[i - 1].focus();
             });
+
             box.addEventListener('paste', e => {
                 e.preventDefault();
                 const pasted = e.clipboardData.getData('text').replace(/\D/g, '');
                 [...pasted].forEach((char, j) => {
                     if (boxes[i + j]) boxes[i + j].value = char;
                 });
-                hidden.value = [...boxes].map(b => b.value).join('');
+                syncHidden();
                 boxes[Math.min(i + pasted.length, boxes.length - 1)].focus();
             });
+        });
+
+        function syncHidden() {
+            hidden.value = [...boxes].map(b => b.value).join('');
+        }
+
+        form.addEventListener('submit', e => {
+            const code = [...boxes].map(b => b.value).join('');
+            if (code.length < 6) {
+                e.preventDefault();
+                boxes.forEach(b => {
+                    if (!b.value) b.classList.add('is-error');
+                });
+            }
         });
     </script>
 }

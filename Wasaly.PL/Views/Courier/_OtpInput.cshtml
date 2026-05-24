@@ -14,7 +14,6 @@
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="ShipmentId" />
 
-        <!-- OTP Boxes -->
         <div class="d-flex justify-content-center gap-2 mb-4" id="otpBoxes">
             @for (int i = 0; i < 6; i++)
             {
@@ -29,7 +28,7 @@
         <input type="hidden" asp-for="OtpCode" id="otpHidden" />
         <span asp-validation-for="OtpCode" class="text-danger small d-block mb-3"></span>
 
-        <button type="submit" class="btn btn-orange text-white w-100 fw-bold py-2">
+        <button type="submit" class="btn btn-orange text-white w-100 fw-bold py-2" >
             <i class="bi bi-check-circle me-1"></i> تأكيد التسليم
         </button>
     </form>

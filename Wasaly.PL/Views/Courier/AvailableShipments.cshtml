@@ -4,7 +4,6 @@
     Layout = "~/Views/Shared/_DashBordLayout.cshtml";
 }
 
-<!-- Header -->
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
         <h5 class="fw-bold mb-1">الطلبات المتاحة في منطقتك</h5>
@@ -15,7 +14,6 @@
     </span>
 </div>
 
-<!-- Filter Bar -->
 <div class="bg-white rounded-3 p-2 shadow-sm mb-3 d-flex align-items-center gap-3 flex-wrap">
     <span class="badge bg-light text-muted small" id="locationStatus">
         <i class="fas fa-spinner fa-spin me-1"></i> جاري تحديد موقعك...
@@ -28,14 +26,12 @@
     </div>
 </div>
 
-<!-- No Results -->
 <div id="noResults" class="text-center py-5 d-none">
     <i class="fas fa-map-marker-alt text-muted" style="font-size:3rem;"></i>
     <h6 class="text-muted mt-3">لا توجد طلبات في هذا النطاق</h6>
     <p class="text-muted small">جرب توسيع نطاق البحث</p>
 </div>
 
-<!-- Shipments -->
 @if (!Model.Any())
 {
     <div class="bg-white rounded-3 p-5 text-center shadow-sm">
@@ -75,7 +71,6 @@ else
         let courierLng = null;
         let currentKm = 999;
 
-        // ─── GPS ───
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 pos => {
@@ -93,7 +88,6 @@ else
             );
         }
 
-        // ─── Haversine ───
         function calcDistance(lat1, lng1, lat2, lng2) {
             const R = 6371;
             const dLat = toRad(lat2 - lat1);
@@ -105,7 +99,6 @@ else
         }
         function toRad(deg) { return deg * Math.PI / 180; }
 
-        // ─── حساب المسافات ───
         function calculateDistances() {
             if (!courierLat) return;
             document.querySelectorAll('.shipment-item').forEach(card => {
@@ -118,7 +111,6 @@ else
             });
         }
 
-        // ─── فلترة ───
         function filterShipments() {
             const items = document.querySelectorAll('.shipment-item');
             let visible = 0;
@@ -139,7 +131,6 @@ else
             document.getElementById('noResults').classList.toggle('d-none', visible > 0 || !courierLat);
         }
 
-        // ─── Buttons ───
         document.querySelectorAll('[data-km]').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('[data-km]').forEach(b => b.classList.remove('active-filter'));

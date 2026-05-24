@@ -2,7 +2,6 @@
 
 <div class="bg-white rounded-3 p-3 shadow-sm h-100 order-card-hover">
 
-    <!-- المسافة -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <span class="badge bg-light text-muted distance-badge small">
             <i class="fas fa-route me-1"></i> جاري الحساب...
@@ -10,7 +9,6 @@
         <small class="text-muted">#@Model.TrackingNumber</small>
     </div>
 
-    <!-- العناوين -->
     <div class="mb-3">
         <div class="d-flex align-items-start gap-2 mb-2">
             <span>🟢</span>
@@ -28,19 +26,16 @@
         </div>
     </div>
 
-    <!-- الوزن والوقت -->
     <div class="d-flex justify-content-between text-muted small pb-2 mb-2 border-bottom">
         <span><i class="fas fa-box me-1"></i>@Model.Weight كجم</span>
         <span><i class="fas fa-clock me-1"></i>منذ @((DateTime.Now - Model.CreatedAt).Minutes) د</span>
     </div>
 
-    <!-- السعر -->
     <div class="fw-black text-orange mb-3" style="font-size:1.6rem;">
         @Model.Price.ToString("F0")
         <span class="fs-6 fw-normal">جنيه</span>
     </div>
 
-    <!-- زرار القبول -->
     <form asp-action="AcceptShipment" method="post">
         @Html.AntiForgeryToken()
         <input type="hidden" name="shipmentId" value="@Model.Id" />
