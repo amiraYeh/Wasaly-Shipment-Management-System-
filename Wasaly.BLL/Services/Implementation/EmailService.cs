@@ -53,6 +53,21 @@ namespace Wasaly.BLL.Services
 
             await EmailAsync(recipientEmail, recipientName, subject, body);
         }
+        public async Task SendShipmentOnWayEmailAsync(string recipientEmail, string recipientName, string trackingNumber)
+        {
+            var subject = "طلبك في الطريق إليك 🚴 - وصلني";
+            var body = $@"
+                 <div style='font-family: Arial; text-align: right; direction: rtl;'>
+                    <h2>مرحباً {recipientName} 👋</h2>
+                    <p>طلبك رقم <strong>#{trackingNumber}</strong> في الطريق إليك الآن!</p>
+                    <p>المندوب استلم طلبك وهو في طريقه إليك.</p>
+                    <p>يرجى التواجد في عنوان التسليم.</p>
+                    <hr/>
+                    <small style='color:gray;'>فريق وصلني 🚚</small>
+                 </div>";
+
+            await EmailAsync(recipientEmail, recipientName, subject, body);
+        }
 
         public async Task SendOtpAsync(string recipientEmail, string recipientName, string otpCode)
         {
