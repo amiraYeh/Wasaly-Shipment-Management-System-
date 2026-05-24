@@ -79,20 +79,22 @@ namespace Wasaly.BLL.Services
             await _courierRepository.SaveAsync();
             return true;
         }
+
+
         public async Task<CourierShipmentVM?> GetShipmentDetailsAsync(int shipmentId, string courierId)
         {
             var shipments = await GetCourierShipmentsAsync(courierId);
             return shipments.FirstOrDefault(s => s.ShipmentId == shipmentId);
         }
+
         public async Task<bool> PickupShipmentAsync(int shipmentId, string courierId)
         {
-            Shipment? shipment = await _courierRepository.GetShipmentWithDetailsAsync(shipmentId);
+            var shipment = await _courierRepository.GetShipmentWithDetailsAsync(shipmentId);
             if (shipment == null || shipment.Status != ShipmentStatus.Accepted) return false;
-            var isAssigned =  shipment.CourierAssignments
-                            .Any(a => a.CourierId == courierId && a.Status == CourierStatus.Accepted);
 
-            if (!isAssigned)
-                return false;
+            var isAssigned = shipment.CourierAssignments
+                .Any(a => a.CourierId == courierId && a.Status == CourierStatus.Accepted);
+            if (!isAssigned) return false;
 
             var courierName = await _courierRepository.GetCourierNameAsync(courierId);
 
@@ -103,9 +105,21 @@ namespace Wasaly.BLL.Services
                 TimeStamp = DateTime.Now,
                 Note = $"تم استلام الشحنة من التاجر بواسطة {courierName}"
             };
+
             await _courierRepository.AddTrackingAsync(tracking);
             await _courierRepository.UpdateShipmentStatusAsync(shipmentId, ShipmentStatus.PickedUp);
             await _courierRepository.SaveAsync();
+
+            // بعت إيميل للعميل 
+            if (!string.IsNullOrEmpty(shipment.RecipientEmail))
+            {
+                await _emailService.SendShipmentOnWayEmailAsync(
+                    shipment.RecipientEmail,
+                    shipment.RecipientName,
+                    shipment.TrackingNumber
+                );
+            }
+
             return true;
         }
 
