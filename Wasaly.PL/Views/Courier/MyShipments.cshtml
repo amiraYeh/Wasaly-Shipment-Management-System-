@@ -1,15 +1,38 @@
-﻿@model List<Wasaly.BLL.ViewModels.CourierShipmentVM>
+@model List<Wasaly.BLL.ViewModels.CourierShipmentVM>
 @using Wasaly.DAL.Enums
 @{
-    ViewData["Title"] = "شحناتي الحالية";
+    ViewData["Title"] = "شحناتي";
     Layout = "~/Views/Shared/_DashBordLayout.cshtml";
 }
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-toast alert-toast--success" id="toastMsg">
+        <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert-toast alert-toast--error" id="toastMsg">
+        <i class="bi bi-x-circle-fill me-2"></i> @TempData["Error"]
+    </div>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h5 class="fw-bold mb-1">شحناتي</h5>
+        <p class="text-muted small mb-0">جميع الشحنات المرتبطة بحسابك</p>
+    </div>
+    <span class="badge bg-orange rounded-pill px-3 py-2">
+        @Model.Count شحنة
+    </span>
+</div>
 
 @if (!Model.Any())
 {
     <div class="bg-white rounded-3 p-5 text-center shadow-sm">
         <div style="font-size:4rem;">📭</div>
-        <h5 class="fw-bold mt-3 mb-2">لا توجد شحنات حالية</h5>
+        <h5 class="fw-bold mt-3 mb-2">لا توجد شحنات حتى الآن</h5>
         <a asp-action="AvailableShipments" class="btn btn-orange text-white mt-2">
             ابحث عن شحنات
         </a>
@@ -17,56 +40,165 @@
 }
 else
 {
-    <div class="d-flex flex-column gap-4">
-        @foreach (var item in Model)
-        {
-            @await Html.PartialAsync("_CurrentShipmentCard", item)
-        }
+    <div class="bg-white rounded-3 shadow-sm overflow-hidden">
+        <div class="table-responsive">
+            <table class="table shipments-table mb-0">
+                <thead>
+                    <tr>
+                        <th>رقم الشحنة</th>
+                        <th>من</th>
+                        <th>إلى</th>
+                        <th>الحالة</th>
+                        <th>السعر</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <span class="fw-bold text-orange">#@item.TrackingNumber</span>
+                            </td>
+                            <td>
+                                <span class="text-muted small">
+                                    <i class="bi bi-geo-alt text-success me-1"></i>
+                                    @(item.PickupAddress?.Length > 25
+                                        ? item.PickupAddress.Substring(0, 25) + "..."
+                                        : item.PickupAddress)
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-muted small">
+                                    <i class="bi bi-geo-alt-fill text-danger me-1"></i>
+                                    @(item.DropAddress?.Length > 25
+                                        ? item.DropAddress.Substring(0, 25) + "..."
+                                        : item.DropAddress)
+                                </span>
+                            </td>
+                            <td>
+                                @{
+                                    var (badgeClass, badgeText) = item.ShipmentStatus switch
+                                    {
+                                        ShipmentStatus.Accepted  => ("badge-status--accepted",  "تم القبول"),
+                                        ShipmentStatus.PickedUp  => ("badge-status--pickedup",  "في الطريق"),
+                                        ShipmentStatus.Delivered => ("badge-status--delivered", "تم التسليم"),
+                                        _                        => ("badge-status--default",   item.ShipmentStatus.ToString())
+                                    };
+                                }
+                                <span class="badge-status @badgeClass">@badgeText</span>
+                            </td>
+                            <td>
+                                <span class="fw-bold">@item.Price.ToString("F0") ج</span>
+                            </td>
+                            <td>
+                                <a asp-action="ShipmentDetails"
+                                   asp-route-shipmentId="@item.ShipmentId"
+                                   class="btn btn-details">
+                                    <i class="bi bi-eye me-1"></i> تفاصيل
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-} 
+}
 
+@section Styles {
+    <style>
+        .alert-toast {
+            position: fixed;
+            top: 1.2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            padding: .75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: .9rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,.12);
+            animation: slideDown .35s ease, fadeOut .4s ease 3.5s forwards;
+        }
+        .alert-toast--success { background:#ecfdf5; color:#166534; border:1px solid #bbf7d0; }
+        .alert-toast--error   { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; }
 
-@* @section Scripts{
+        @@keyframes slideDown {
+            from { opacity:0; transform:translateX(-50%) translateY(-12px); }
+            to   { opacity:1; transform:translateX(-50%) translateY(0); }
+        }
+        @@keyframes fadeOut {
+            to { opacity:0; }
+        }
+
+        .shipments-table thead tr {
+            background: #f8f9fa;
+        }
+        .shipments-table thead th {
+            color: #6c757d;
+            font-size: .8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            padding: 1rem 1.2rem;
+            border-bottom: 2px solid #f0f0f0;
+            white-space: nowrap;
+        }
+        .shipments-table tbody td {
+            padding: 1rem 1.2rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f5f5f5;
+            font-size: .9rem;
+        }
+        .shipments-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .shipments-table tbody tr {
+            transition: background .15s;
+        }
+        .shipments-table tbody tr:hover {
+            background: #fffaf8;
+        }
+
+        .badge-status {
+            display: inline-block;
+            padding: .3rem .85rem;
+            border-radius: 999px;
+            font-size: .78rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .badge-status--accepted  { background:#fff7ed; color:#c2410c; }
+        .badge-status--pickedup  { background:#eff6ff; color:#1d4ed8; }
+        .badge-status--delivered { background:#f0fdf4; color:#15803d; }
+        .badge-status--default   { background:#f3f4f6; color:#4b5563; }
+
+        .btn-details {
+            background: #fff3ee;
+            color: #FF6B35;
+            border: 1px solid #ffd4c0;
+            border-radius: 8px;
+            padding: .35rem .9rem;
+            font-size: .82rem;
+            font-weight: 600;
+            transition: all .2s;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+        .btn-details:hover {
+            background: #FF6B35;
+            color: white;
+            border-color: #FF6B35;
+        }
+    </style>
+}
+
+@section Scripts {
     <script>
-
-        document.addEventListener("DOMContentLoaded",function startSendingLocation(@Model[0].ShipmentId) {
-            if (!navigator.geolocation) {
-                alert("المتصفح لا يدعم GPS");
-                return;
-            }
-
-            navigator.geolocation.watchPosition(
-                async (position) => {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-
-                    const form = new FormData();
-                    form.append("shipmentId", id);
-                    form.append("lat", lat);
-                    form.append("lng", lng);
-
-                    await fetch('/Shipment/UpdateLocation', {
-                        method: 'POST',
-                        body  : form
-                    });
-
-                    document.getElementById("status-message").innerText =
-                        📍 موقعك: ${lat.toFixed(4)}, ${lng.toFixed(4)};
-                },
-                (error) => {{
-                    alert("تعذر الحصول على الموقع");
-                },
-                {
-                    enableHighAccuracy: true,  
-                    maximumAge        : 0,     
-                    timeout           : 5000
-                }
-                }
-            );
-        };
-        
-
-    // ابدأ لما الصفحة تفتح
-    startSendingLocation();
-</script>
-} *@
+        setTimeout(() => {
+            const t = document.getElementById('toastMsg');
+            if (t) t.remove();
+        }, 4000);
+    </script>
+}

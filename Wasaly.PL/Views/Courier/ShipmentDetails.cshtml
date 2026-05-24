@@ -1,0 +1,257 @@
+@model Wasaly.BLL.ViewModels.CourierShipmentVM
+@using Wasaly.DAL.Enums
+@{
+    ViewData["Title"] = "تفاصيل الشحنة";
+    Layout = "~/Views/Shared/_DashBordLayout.cshtml";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-toast alert-toast--success" id="toastMsg">
+        <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert-toast alert-toast--error" id="toastMsg">
+        <i class="bi bi-x-circle-fill me-2"></i> @TempData["Error"]
+    </div>
+}
+
+<div class="mb-3">
+    <a asp-action="MyShipments" class="btn-back">
+        <i class="bi bi-arrow-right me-1"></i> العودة لشحناتي
+    </a>
+</div>
+
+<div class="detail-wrapper">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h6 class="fw-bold mb-0 fs-5">
+            شحنة <span class="text-orange">#@Model.TrackingNumber</span>
+        </h6>
+        @{
+            var (badgeClass, badgeText) = Model.ShipmentStatus switch
+            {
+                ShipmentStatus.Accepted  => ("badge-status--accepted",  "تم القبول"),
+                ShipmentStatus.PickedUp  => ("badge-status--pickedup",  "في الطريق"),
+                ShipmentStatus.Delivered => ("badge-status--delivered", "تم التسليم ✓"),
+                _                        => ("badge-status--default",   Model.ShipmentStatus.ToString())
+            };
+        }
+        <span class="badge-status @badgeClass fs-6 px-3 py-2">@badgeText</span>
+    </div>
+
+    <div class="info-grid mb-4">
+        <div class="info-item">
+            <div class="info-label"><i class="bi bi-geo-alt text-orange me-1"></i> من</div>
+            <div class="info-value">@Model.PickupAddress</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label"><i class="bi bi-geo-alt-fill text-danger me-1"></i> إلى</div>
+            <div class="info-value">@Model.DropAddress</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label"><i class="bi bi-box-seam text-orange me-1"></i> الوزن</div>
+            <div class="info-value">@Model.Weight كجم</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label"><i class="bi bi-wallet2 text-orange me-1"></i> الأجر</div>
+            <div class="info-value text-orange fw-bold">@Model.Price.ToString("F0") جنيه</div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column gap-3 mb-4">
+        <div class="route-point route-point--pickup">
+            <span class="route-dot route-dot--green"></span>
+            <div class="flex-grow-1">
+                <div class="route-label text-success">نقطة الاستلام</div>
+                <div class="fw-semibold">@Model.PickupAddress</div>
+                @if (Model.ShipmentStatus != ShipmentStatus.Accepted)
+                {
+                    <div class="small text-success mt-1">✓ تم الاستلام</div>
+                }
+            </div>
+        </div>
+        <div class="route-point route-point--drop">
+            <span class="route-dot route-dot--red"></span>
+            <div class="flex-grow-1">
+                <div class="route-label text-danger">نقطة التسليم</div>
+                <div class="fw-semibold">@Model.DropAddress</div>
+                <a href="#" class="small text-primary mt-1 d-block">📍 عرض على الخريطة</a>
+            </div>
+        </div>
+    </div>
+
+    @await Html.PartialAsync("_TrackingTimeline", Model.TrackingHistory)
+
+    <div class="mt-4">
+        @if (Model.ShipmentStatus == ShipmentStatus.Accepted)
+        {
+            <form asp-action="PickupShipment" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="shipmentId" value="@Model.ShipmentId" />
+                <button class="btn btn-action btn-action--green w-100">
+                    <i class="bi bi-check2-circle me-2"></i> تأكيد الاستلام من التاجر
+                </button>
+            </form>
+        }
+
+        @if (Model.ShipmentStatus == ShipmentStatus.PickedUp)
+        {
+            <form asp-action="GenerateOtp" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="shipmentId" value="@Model.ShipmentId" />
+                <button class="btn btn-action btn-action--orange w-100">
+                    <i class="bi bi-shield-lock me-2"></i> وصلت للعميل - طلب OTP
+                </button>
+            </form>
+        }
+
+        @if (Model.ShipmentStatus == ShipmentStatus.Delivered)
+        {
+            <div class="delivered-banner">
+                <i class="bi bi-patch-check-fill me-2" style="font-size:1.4rem;"></i>
+                <div>
+                    <div class="fw-bold">تم التسليم بنجاح</div>
+                    <div class="small opacity-75">تم إضافة الأرباح لرصيدك</div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+@section Styles {
+    <style>
+        .alert-toast {
+            position: fixed;
+            top: 1.2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            padding: .75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: .9rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,.12);
+            animation: slideDown .35s ease, fadeOut .4s ease 3.5s forwards;
+        }
+        .alert-toast--success { background:#ecfdf5; color:#166534; border:1px solid #bbf7d0; }
+        .alert-toast--error   { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; }
+
+        @@keyframes slideDown {
+            from { opacity:0; transform:translateX(-50%) translateY(-12px); }
+            to   { opacity:1; transform:translateX(-50%) translateY(0); }
+        }
+        @@keyframes fadeOut { to { opacity:0; } }
+
+        /* ── Back Button ── */
+        .btn-back {
+            color: #6c757d;
+            font-size: .85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color .2s;
+        }
+        .btn-back:hover { color: #FF6B35; }
+
+        .detail-wrapper {
+            background: white;
+            border-radius: 16px;
+            padding: 1.75rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,.06);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .75rem;
+        }
+        .info-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: .85rem 1rem;
+        }
+        .info-label {
+            font-size: .75rem;
+            color: #9ca3af;
+            margin-bottom: .25rem;
+            font-weight: 600;
+        }
+        .info-value {
+            font-size: .9rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .route-point {
+            display: flex;
+            align-items: flex-start;
+            gap: .85rem;
+            padding: 1rem;
+            border-radius: 12px;
+        }
+        .route-point--pickup { background:#f0fdf4; border:1px solid #bbf7d0; }
+        .route-point--drop   { background:#fff5f5; border:1px solid #fecaca; }
+
+        .route-dot {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+        .route-dot--green { background: #22c55e; box-shadow: 0 0 0 4px #dcfce7; }
+        .route-dot--red   { background: #ef4444; box-shadow: 0 0 0 4px #fee2e2; }
+
+        .route-label { font-size: .78rem; font-weight: 600; margin-bottom: .2rem; }
+
+        .badge-status {
+            display: inline-block;
+            padding: .3rem .85rem;
+            border-radius: 999px;
+            font-size: .78rem;
+            font-weight: 600;
+        }
+        .badge-status--accepted  { background:#fff7ed; color:#c2410c; }
+        .badge-status--pickedup  { background:#eff6ff; color:#1d4ed8; }
+        .badge-status--delivered { background:#f0fdf4; color:#15803d; }
+        .badge-status--default   { background:#f3f4f6; color:#4b5563; }
+
+        .btn-action {
+            border: none;
+            border-radius: 12px;
+            padding: .85rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .btn-action--green  { background:#2ECC71; color:white; }
+        .btn-action--green:hover  { background:#27ae60; transform:translateY(-1px); }
+        .btn-action--orange { background:#FF6B35; color:white; }
+        .btn-action--orange:hover { background:#e85d28; transform:translateY(-1px); }
+
+        .delivered-banner {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border: 1px solid #86efac;
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            color: #15803d;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        setTimeout(() => {
+            const t = document.getElementById('toastMsg');
+            if (t) t.remove();
+        }, 4000);
+    </script>
+}

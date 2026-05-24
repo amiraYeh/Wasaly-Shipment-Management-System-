@@ -71,8 +71,7 @@ namespace Wasaly.DAL.Repositories
         {
             return await _context.CourierAssignments
                 .Where(a => a.CourierId == courierId
-                       && a.Status == CourierStatus.Accepted
-                       && a.Shipment.Status != ShipmentStatus.Delivered)
+                       && a.Status == CourierStatus.Accepted)
                 .Include(a => a.Shipment)
                     .ThenInclude(s => s.PickupLocation)
                 .Include(a => a.Shipment)

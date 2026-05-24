@@ -1,44 +1,57 @@
 @model List<Wasaly.BLL.ViewModels.TrackingHistoryVM>
+@using Wasaly.DAL.Enums
 
 @{
     var steps = new[]
     {
-        new { Label = "استلمت الشحنة", Icon = "bi-box-seam" },
-        new { Label = "في الطريق",     Icon = "bi-truck" },
-        new { Label = "طلب OTP",       Icon = "bi-shield-lock" },
-        new { Label = "تم التسليم",    Icon = "bi-patch-check-fill" }
+        new { Label = "استلمت الشحنة" },
+        new { Label = "في الطريق" },
+        new { Label = "طلب OTP" },
+        new { Label = "تم التسليم" }
     };
+
+    var currentStep = Model.Count - 1;
+    bool isDelivered = Model.Any(x => x.Status == ShipmentStatus.Delivered);
+    if (isDelivered) { currentStep = 3; }
 }
 
-<div class="d-flex align-items-start justify-content-between">
-    @for (int i = 0; i < steps.Length; i++)
-    {
-        bool isDone = i < Model.Count;
-        bool isLast = i == steps.Length - 1;
+<div class="position-relative my-5 mx-auto px-2" style="max-width: 700px;">
 
-        <div class="text-center flex-fill">
-            <!-- Circle -->
-            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-1
-                        @(isDone ? "bg-orange text-white" : "bg-light text-muted")"
-                 style="width:44px;height:44px;transition:all 0.3s;">
-                <i class="bi @steps[i].Icon"></i>
-            </div>
-            <!-- Label -->
-            <div class="small @(isDone ? "text-orange fw-semibold" : "text-muted")"
-                 style="font-size:.7rem;">
-                @steps[i].Label
-            </div>
+    <div class="position-absolute start-0 end-0" style="top: 20px; height: 4px; background-color: #e2e8f0; z-index: 1; margin: 0 40px;">
+        <div class="h-100 bg-success"
+             style="width: @(isDelivered ? "100" : ((currentStep * 100) / (steps.Length - 1)))%; transition: width 0.4s ease-edge;">
         </div>
+    </div>
 
-        @if (!isLast)
+    <div class="d-flex justify-content-between position-relative" style="z-index: 2;">
+        @for (int i = 0; i < steps.Length; i++)
         {
-            <!-- Line -->
-            <div class="flex-fill align-self-start"
-                 style="height:2px;
-                        margin-top:22px;
-                        background:@(isDone ? "#FF6B35" : "#dee2e6");
-                        transition:background 0.3s;">
+            bool isDone = isDelivered ? true : i < currentStep;
+            bool isActive = !isDelivered && i == currentStep;
+
+            <div class="flex-grow-1 text-center" style="max-width: 120px;">
+
+                <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2 fw-bold transition-all"
+                     style="width: 40px; height: 40px; font-size: 15px;
+                                @(isDone ? "background-color: #2ecc71; color: #ffffff;" :
+                                                   isActive ? "background-color: #ff6b35; color: #ffffff; transform: scale(1.05); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);" :
+                                                   "background-color: #cbd5e1; color: #64748b;")">
+
+                @if (isDone)
+                    {
+                        <span>✓</span>
+                    }
+                    else
+                    {
+                        <span>@(i + 1)</span>
+                    }
+                </div>
+
+                <div class="small-text @(isDone || isActive ? "text-dark fw-bold" : "text-muted")" style="font-size: 12px;">
+                    @steps[i].Label
+                </div>
+
             </div>
         }
-    }
+    </div>
 </div>

@@ -4,20 +4,15 @@
     Layout = "~/Views/Shared/_DashBordLayout.cshtml";
 }
 
-<!-- Welcome -->
 <div class="mb-4">
     <h4 class="fw-bold mb-1">مرحباً، @Model.CourierName 👋</h4>
     <p class="text-muted small mb-0">إليك ملخص أدائك اليوم</p>
 </div>
 
-<!-- Earnings Card -->
 @await Html.PartialAsync("_EarningsCard", Model)
 
-<!-- Stats -->
 @await Html.PartialAsync("_DashboardStats", Model)
 
-<!-- Quick Actions -->
 @await Html.PartialAsync("_QuickActions")
 
-<!-- Recent Deliveries -->
 @await Html.PartialAsync("_RecentDeliveries", Model)

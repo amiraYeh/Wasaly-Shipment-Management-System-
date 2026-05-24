@@ -4,13 +4,11 @@
 <div class="bg-white rounded-3 p-4 shadow-sm mb-4">
     <h6 class="fw-bold mb-4">شحنتك الحالية #@Model.TrackingNumber</h6>
 
-    <!-- تفاصيل الشحنة -->
     @await Html.PartialAsync("_ShipmentDetails", Model)
 
     <div>
         <div class="d-flex flex-column gap-3 mb-4">
 
-            <!-- نقطة الاستلام -->
             <div class="d-flex align-items-start gap-3 p-3 rounded-3"
                  style="background:#f0fdf4; border:1px solid #bbf7d0;">
                 <span style="font-size:1.5rem;">🟢</span>
@@ -24,7 +22,6 @@
                 </div>
             </div>
 
-            <!-- نقطة التسليم -->
             <div class="d-flex align-items-start gap-3 p-3 rounded-3"
                  style="background:#fff5f5; border:1px solid #fecaca;">
                 <span style="font-size:1.5rem;">🔴</span>
@@ -37,10 +34,8 @@
 
         </div>
 
-        <!-- Tracking Timeline -->
         @await Html.PartialAsync("_TrackingTimeline", Model.TrackingHistory)
 
-        <!-- الأزرار حسب الحالة -->
         <div class="mt-4">
             @if (Model.ShipmentStatus == ShipmentStatus.Accepted)
             {

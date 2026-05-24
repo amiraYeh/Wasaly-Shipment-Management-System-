@@ -739,7 +739,6 @@ body, html {
         transition: transform 0.3s;
     }
 
-        /* use the same 'active' class JS toggles */
         .sidebar.active {
             transform: translateX(0);
         }
@@ -794,17 +793,13 @@ body, html {
     background: var(--success-green);
     width: 100%;
 }
-/* تنسيقات خاصة للموبايل فقط (الشاشات الأصغر من 768px) */
-/* التنسيقات الخاصة بالموبايل */
 @media (max-width: 767.98px) {
-    /* 1. ضبط الـ Hero Section */
     .hero-section {
         text-align: center !important;
         padding-top: 2rem !important;
         padding-bottom: 2rem !important;
     }
 
-        /* 2. جعل العنوان يبدأ من أول السطر ويظهر بشكل كامل */
         .hero-section h1 {
             font-size: 1.8rem !important;
             line-height: 1.4 !important;
@@ -817,22 +812,22 @@ body, html {
             margin-bottom: 30px !important;
         }
 
-        /* 3. تنسيق الأزرار لتكون أصغر وبجانب بعضها أو تحت بعض بشكل شيك */
+
         .hero-section .d-flex {
-            flex-direction: row-reverse !important; /* عشان يفضل البرتقالي على الشمال والأسود ع اليمين */
+            flex-direction: row-reverse !important; 
             justify-content: center !important;
             gap: 10px !important;
-            flex-wrap: wrap; /* لو الشاشة صغيرة جداً ينزلوا تحت بعض */
+            flex-wrap: wrap; 
         }
 
         .hero-section .btn {
-            padding: 8px 15px !important; /* تصغير الحجم */
+            padding: 8px 15px !important; 
             font-size: 0.9rem !important;
-            min-width: 130px; /* ضمان عرض مناسب */
-            border-radius: 50px !important; /* شكل بيضاوي زي الصورة */
+            min-width: 130px; 
+            border-radius: 50px !important; 
         }
 
-    /* 4. إظهار الرسمة (العجلة) في النص تحت الأزرار */
+
     .hero-illustration {
         font-size: 150px !important;
         margin-top: 20px;
@@ -840,7 +835,7 @@ body, html {
         display: block !important;
     }
 
-    /* 5. ضبط شريط الإحصائيات (Stats Bar) */
+  
     .stats-bar {
         display: flex !important;
         flex-wrap: wrap;
@@ -849,7 +844,7 @@ body, html {
     }
 
         .stats-bar > div {
-            flex: 0 0 45%; /* يظهر كل اتنين جمب بعض */
+            flex: 0 0 45%; 
             margin-bottom: 10px;
         }
 }
@@ -870,29 +865,29 @@ html {
     scroll-behavior: smooth;
 }
 
-/* عشان لما ينزل للسكشن ميكونش الكلام مستخبي ورا الناف بار */
+
 section {
     scroll-margin-top: 70px;
 }
-/* تأكدي أن المارجن في اليمين لأن الصفحة RTL */
+
 .sidebar-item, .sidebar-item:hover {
     text-decoration: none !important;
 }
 
-/* تنسيقات الموبايل */
+
 @media (max-width: 991.98px) {
     .sidebar {
-        right: -260px; /* إخفاء خارج الشاشة يميناً */
+        right: -260px; 
         transition: all 0.3s ease;
         z-index: 1050;
     }
 
         .sidebar.active {
-            right: 0; /* إظهار عند التفعيل */
+            right: 0; 
         }
 
     .main-content {
-        margin-right: 0 !important; /* إلغاء الهامش في الموبايل */
+        margin-right: 0 !important; 
     }
 
     .sidebar-overlay {
@@ -909,5 +904,14 @@ section {
         .sidebar-overlay.show {
             display: block;
         }
+}
+
+
+.transition-all {
+    transition: all 0.3s ease-in-out;
+}
+
+.small-text {
+    white-space: nowrap;
 }/* لو بتستخدمي أيقونات Bootstrap */
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css");

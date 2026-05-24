@@ -14,6 +14,7 @@ namespace Wasaly.BLL.Services.Interfaces
         Task<bool> PickupShipmentAsync(int shipmentId, string courierId);
 
         Task<List<CourierShipmentVM>> GetCourierShipmentsAsync(string courierId);
+        Task<CourierShipmentVM?> GetShipmentDetailsAsync(int shipmentId, string courierId);
 
         Task<bool> GenerateAndSendOtpAsync(int shipmentId);
         Task<(bool Success, string Message)> VerifyOtpAndDeliverAsync(VerifyOtpVM model, string courierId);

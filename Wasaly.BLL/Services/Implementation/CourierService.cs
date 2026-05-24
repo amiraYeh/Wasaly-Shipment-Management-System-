@@ -79,7 +79,11 @@ namespace Wasaly.BLL.Services
             await _courierRepository.SaveAsync();
             return true;
         }
-
+        public async Task<CourierShipmentVM?> GetShipmentDetailsAsync(int shipmentId, string courierId)
+        {
+            var shipments = await GetCourierShipmentsAsync(courierId);
+            return shipments.FirstOrDefault(s => s.ShipmentId == shipmentId);
+        }
         public async Task<bool> PickupShipmentAsync(int shipmentId, string courierId)
         {
             Shipment? shipment = await _courierRepository.GetShipmentWithDetailsAsync(shipmentId);
