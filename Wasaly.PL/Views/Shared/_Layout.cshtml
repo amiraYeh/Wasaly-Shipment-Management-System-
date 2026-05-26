@@ -8,9 +8,7 @@
     var currentUser = SignInManager.IsSignedIn(User)
         ? await UserManager.GetUserAsync(User)
         : null;
-
 }
-
 
 @{
     string controllerName = "";
@@ -28,8 +26,9 @@
         controllerName = "Courier";
     }
 }
+
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" style="overflow-x:hidden;">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -39,117 +38,106 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap"
+          rel="stylesheet">
 
-    <link rel="stylesheet" href="~/css/waslni-style.css" asp-append-version="true" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="~/css/waslni-style.css"
+          asp-append-version="true" />
 </head>
-<body class="p-0 m-0" style="overflow-x: hidden;">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white py-2 shadow-sm">
+
+<body class="p-0 m-0 overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-2 shadow-sm fixed-top w-100">
         <div class="container">
-            <!-- 1. اللوجو -->
+
+            <!-- Logo -->
             <a class="navbar-brand logo-text d-flex align-items-center gap-2" href="#">
                 <span class="logo-icon">📦 وصلي</span>
             </a>
 
+            <!-- Toggle -->
+            <button class="navbar-toggler border-0 shadow-none"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav">
 
-
-            <!-- زرار التوجل (Hamburger) -->
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- الجزء اللي بيفتح ويقفل (التوجل) -->
+            <!-- Navbar Content -->
             <div class="collapse navbar-collapse" id="navbarNav">
 
-                <!-- 3. اللينكات اللي هتظهر جوه التوجل (الرئيسية، كيف نعمل، لماذا وصلني) -->
+                <!-- Main Links -->
                 <ul class="navbar-nav ms-auto gap-lg-4 gap-2 fw-normal text-start mt-4 mt-lg-0 px-3 px-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="#home">الرئيسية</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="#how">كيف نعمل</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="#features">لماذا وصلني</a></li>
 
-                    <!-- لاحظي هنا شلنا (للتجار، المناديب، تواصل معانا) من القائمة دي عشان متظهرش في التوجل -->
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">الرئيسية</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="#how">كيف نعمل</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="#features">لماذا وصلني</a>
+                    </li>
+
                 </ul>
-                <!-- 2. اللينكات اللي هتظهر في الـ Nav بس (ومش هتظهر في التوجل) -->
-                <!-- d-none بتخفيها في الموبايل و d-lg-flex بتظهرها في الكمبيوتر -->
+
+                <!-- Desktop Only Links -->
                 <div class="d-none d-lg-flex gap-3 mx-auto ms-3">
-                    <a class="nav-link text-dark" href="#merchants">للتجار</a>
-                    <a class="nav-link text-dark" href="#couriers">للمناديب</a>
-                    <a class="nav-link text-dark" href="#contact">تواصل معنا</a>
+
+                    <a class="nav-link text-dark" href="#merchants">
+                        للتجار
+                    </a>
+
+                    <a class="nav-link text-dark" href="#couriers">
+                        للمناديب
+                    </a>
+
+                    <a class="nav-link text-dark" href="#contact">
+                        تواصل معنا
+                    </a>
+
                 </div>
-                <!-- 4. الزراير: بتظهر في الاتنين (Nav و Toggle) -->
-               @*  <div class="d-flex flex-column flex-lg-row gap-3 px-3 px-lg-0 pb-4 pb-lg-0 ms-lg-4">
 
-                    @if (SignInManager.IsSignedIn(User) && currentUser != null)
-                    {
-                        <span class="py-2 px-3 text-dark align-self-center fw-medium">
-                            <i class="fa fa-user-circle me-1" style="color:#FF6B35;"></i>
-                            @currentUser.FullName
-                        </span>
+                <!-- Login Button -->
+                <div class="d-flex flex-column flex-lg-row gap-3 px-3 px-lg-0 pb-4 pb-lg-0 ms-lg-4">
 
-                        <form asp-area="Identity"
-                              asp-page="/Account/Logout"
-                              asp-route-returnUrl="@Url.Action("Index", "Home")"
-                              method="post">
+                    <a asp-area="Identity"
+                       asp-page="/Account/Login"
+                       class="btn px-4 py-2"
+                       style="background-color:white;
+                              color:#FF6B35;
+                              border:1.5px solid #FF6B35;
+                              border-radius:10px;
+                              font-weight:500;">
 
-                            @Html.AntiForgeryToken()
+                        تسجيل دخول
+                    </a>
 
-                            <button type="submit"
-                                    class="btn text-white px-4 py-2"
-                                    style="background-color:#1a2e4a; border:none; border-radius:10px;">
+                </div>
 
-                                <i class="fa fa-right-from-bracket me-1"></i>
-                                تسجيل خروج
-                            </button>
-                        </form>
-
-                        
-                    }
-
-                    else
-                    { 
-                        <a asp-area="Identity"
-                           asp-page="/Account/Login"
-                           class="btn px-4 py-2"
-                           style="background-color:white;
-                                              color:#FF6B35;
-                                              border:1.5px solid #FF6B35;
-                                              border-radius:10px;
-                                              font-weight:500;">
-
-                            تسجيل دخول
-                        </a>
-
-
-                   } 
-
-                </div> *@
-                <a asp-area="Identity"
-                   asp-page="/Account/Login"
-                   class="btn px-4 py-2"
-                   style="background-color:white;
-                                              color:#FF6B35;
-                                              border:1.5px solid #FF6B35;
-                                              border-radius:10px;
-                                              font-weight:500;">
-
-                    تسجيل دخول
-                </a>
-
-
-
-</div>
+            </div>
         </div>
     </nav>
 
-    @RenderBody()
+    <!-- Page Content -->
+    <main style="padding-top:90px;">
+        @RenderBody()
+    </main>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 
-   
 </body>
 </html>
